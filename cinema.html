@@ -385,36 +385,7 @@
         color: var(--bg-primary) !important;
         box-shadow: 0 0 10px var(--accent-main) !important;
     }
-    /* Add to your existing styles */
-.modal-frame {
-    pointer-events: auto !important;
-}
 
-/* Block all overlay elements that might appear above the iframe */
-.modal-frame ~ *,
-.modal-frame ~ [id*="ad"],
-.modal-frame ~ [class*="ad"],
-.modal-frame ~ [id*="popup"],
-.modal-frame ~ [class*="popup"],
-.modal-frame ~ [id*="banner"],
-.modal-frame ~ [class*="banner"] {
-    pointer-events: none !important;
-    display: none !important;
-}
-
-/* Specifically target common ad containers */
-#AdWidgetContainer,
-#ad720,
-#onexbet,
-#histats_counter,
-.histats_counter,
-[class*="ad_container"],
-[id*="ad_container"] {
-    pointer-events: none !important;
-    display: none !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-}
     </style>
 </head>
 <body class="h-screen flex flex-col antialiased" id="appBody">
@@ -907,178 +878,14 @@
 
 
         function buildVidlinkUrl(type, id, season, episode) {
-    if (type === 'tv') {
-        const s = parseInt(season || 1, 10) || 1;
-        const e = parseInt(episode || 1, 10) || 1;
-        return `https://vidsrc.xyz/embed/tv/${encodeURIComponent(id)}/${s}/${e}`;
-    } else {
-        return `https://vidsrc.xyz/embed/movie/${encodeURIComponent(id)}`;
-    }
-}
-function setupNavigationBlocking() {
-    // Block window.open from iframe
-    const iframe = document.getElementById('modalFrame');
-    iframe.addEventListener('load', function() {
-        try {
-            const iframeWindow = iframe.contentWindow;
-            
-            // Block window.open
-            iframeWindow.open = function() {
-                console.log('Blocked window.open attempt');
-                return {
-                    closed: true,
-                    focus: function() {},
-                    close: function() {},
-                    closed: true
-                };
-            };
-            
-            // Block navigation
-            iframeWindow.addEventListener('beforeunload', function(e) {
-                e.preventDefault();
-                e.returnValue = '';
-                return '';
-            });
-            
-            // Block link clicks that open new windows
-            const iframeDoc = iframe.contentDocument;
-            iframeDoc.addEventListener('click', function(e) {
-                if (e.target.tagName === 'A' && (e.target.target === '_blank' || e.target.href.includes('ads'))) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return false;
-                }
-            });
-            
-        } catch (e) {
-            console.log('Cross-origin restrictions prevent direct access');
-        }
-    });
-
-    // Block top-level navigation attempts
-    window.addEventListener('beforeunload', function(e) {
-        if (modalBackdrop.style.display === 'flex') {
-            e.preventDefault();
-            e.returnValue = 'Are you sure you want to leave? Video is playing.';
-            return e.returnValue;
-        }
-    });
-}
-async function openModalForCard(card) {
-    __CURRENT_MODAL_CARD = card;
-    const type = card.dataset.mediaType || card.dataset.type || 'movie';
-    const id = card.dataset.id;
-    const title = card.dataset.title || '';
-
-    modalTitle.textContent = title || '(untitled)';
-    modalBackdrop.style.display = 'flex';
-    modalBackdrop.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-
-    // Clear previous content
-    const modalContent = document.querySelector('.modal .w-full.h-full.relative');
-    modalContent.innerHTML = '';
-
-    // Create secure iframe
-    let url;
-    if (type === 'tv') {
-        seControls.style.display = 'flex';
-        seControls.setAttribute('aria-hidden', 'false');
-        const season = seasonSelect.value || '1';
-        const episode = episodeSelect.value || '1';
-        url = buildVidlinkUrl('tv', id, season, episode);
-    } else {
-        seControls.style.display = 'none';
-        seControls.setAttribute('aria-hidden', 'true');
-        url = buildVidlinkUrl('movie', id);
-    }
-
-    const secureIframe = createSecureIframe(url);
-    
-    // Setup protection
-    setupAdBlockerObserver();
-    setupNavigationBlocking();
-
-    closeBtn.focus();
-}
-function setupAdBlockerObserver() {
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach((node) => {
-                if (node.nodeType === 1) { // Element node
-                    // Block common ad elements
-                    const adSelectors = [
-                        '[id*="ad"]',
-                        '[class*="ad"]',
-                        '[id*="pop"]',
-                        '[class*="pop"]',
-                        '[id*="banner"]',
-                        '[class*="banner"]',
-                        '#AdWidgetContainer',
-                        '#ad720',
-                        '#onexbet',
-                        '#histats_counter',
-                        '.histats_counter',
-                        '[onclick*="window.open"]',
-                        '[href*="ads"]',
-                        '[src*="ad"]'
-                    ];
-                    
-                    adSelectors.forEach(selector => {
-                        const elements = node.querySelectorAll ? node.querySelectorAll(selector) : [];
-                        elements.forEach(el => {
-                            el.style.pointerEvents = 'none';
-                            el.style.display = 'none';
-                            el.remove();
-                        });
-                    });
-
-                    // Also check the node itself
-                    adSelectors.forEach(selector => {
-                        if (node.matches && node.matches(selector)) {
-                            node.style.pointerEvents = 'none';
-                            node.style.display = 'none';
-                            node.remove();
-                        }
-                    });
-                }
-            });
-        });
-    });
-
-    // Start observing when iframe loads
-    const iframe = document.getElementById('modalFrame');
-    if (iframe) {
-        iframe.addEventListener('load', () => {
-            try {
-                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                observer.observe(iframeDoc.body, {
-                    childList: true,
-                    subtree: true,
-                    attributes: true,
-                    attributeFilter: ['style', 'class', 'id']
-                });
-            } catch (e) {
-                // Cross-origin restrictions
-                console.log('Cannot access iframe content due to CORS');
+            if (type === 'tv') {
+                const s = parseInt(season || 1, 10) || 1;
+                const e = parseInt(episode || 1, 10) || 1;
+                return `https://vidlink.pro/tv/${encodeURIComponent(id)}/${s}/${e}?primaryColor=690fb3&secondaryColor=a2a2a2&iconColor=eefdec&icons=vid&player=jw&title=true&poster=true&autoplay=true&nextbutton=true`;
+            } else {
+                return `https://vidlink.pro/movie/${encodeURIComponent(id)}?primaryColor=690fb3&secondaryColor=a2a2a2&iconColor=eefdec&icons=vid&player=jw&title=true&poster=true&autoplay=true&nextbutton=true`;
             }
-        });
-    }
-}
-// Update the iframe creation with strict sandbox
-function createStrictIframe(url) {
-    const iframe = document.createElement('iframe');
-    iframe.className = 'modal-frame';
-    iframe.src = url;
-    iframe.title = 'Video frame';
-    iframe.loading = 'lazy';
-    iframe.allowFullscreen = true;
-    
-    // Very restrictive sandbox - only allow what's absolutely necessary
-    iframe.sandbox = 'allow-scripts allow-same-origin allow-forms';
-    
-    return iframe;
-}
+        }
 
         function buildPosterUrl(path, size = 'w500') {
             if (!path) return null;
