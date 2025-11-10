@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <base href="https://cdn.jsdelivr.net/gh/genizy/web-port@main/bendy/">
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Bendy and The Ink Machine</title>
+  <link rel="shortcut icon" href="TemplateData/favicon.ico">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+    }
+
+    body {
+      background: #d3d3d3; /* light grey */
+      position: fixed;
+      width: 100%;
+      height: 100%;
+    }
+
+    .webgl-content {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+    #unityContainer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* === Terminal Box === */
+    #terminal-box {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 500px;
+      height: 300px;
+      background-color: #2d2d2d;
+      color: #00ff00;
+      font-family: monospace;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+      cursor: grab;
+      user-select: none;
+      z-index: 1000;
+    }
+
+    #terminal-header {
+      background: #444;
+      color: white;
+      font-size: 14px;
+      padding: 5px 10px;
+      border-radius: 6px 6px 0 0;
+      margin: -15px -15px 10px -15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #terminal-header .buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .btn.red { background: #ff5f57; }
+    .btn.yellow { background: #ffbd2e; }
+    .btn.green { background: #28c840; }
+
+    #terminal-content {
+      overflow-y: auto;
+      height: calc(100% - 40px);
+      white-space: pre-wrap;
+    }
+  </style>
+
+  <script src="TemplateData/UnityProgress.js"></script>
+  <script src="Build/UnityLoader.js?1"></script>
+
+  <script>
+    // --- Merge Unity files ---
+    function mergeFiles(fileParts) {
+      return new Promise((resolve, reject) => {
+        let buffers = [];
+        function fetchPart(index) {
+          if (index >= fileParts.length) {
+            let mergedBlob = new Blob(buffers);
+            let mergedFileUrl = URL.createObjectURL(mergedBlob);
+            resolve(mergedFileUrl);
+            return;
+          }
+          fetch(fileParts[index])
+            .then(response => response.arrayBuffer())
+            .then(data => {
+              buffers.push(data);
+              fetchPart(index + 1);
+            })
+            .catch(reject);
+        }
+        fetchPart(0);
+      });
+    }
+
+    function getParts(file, start, end) {
+      let parts = [];
+      for (let i = start; i <= end; i++) {
+        parts.push(file + ".part" + i);
+      }
+      return parts;
+    }
+
+    function resizeUnityContainer() {
+      var container = document.getElementById("unityContainer");
+      container.style.width = window.innerWidth + "px";
+      container.style.height = window.innerHeight + "px";
+    }
+
+    // --- Make terminal draggable ---
+    document.addEventListener("DOMContentLoaded", () => {
+      const terminal = document.getElementById("terminal-box");
+      let isDragging = false;
+      let offsetX = 0, offsetY = 0;
+
+      terminal.addEventListener("mousedown", (e) => {
+        isDragging = true;
+        terminal.style.cursor = "grabbing";
+        const rect = terminal.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+      });
+
+      document.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+        terminal.style.left = `${e.clientX - offsetX}px`;
+        terminal.style.top = `${e.clientY - offsetY}px`;
+        terminal.style.transform = "none";
+      });
+
+      document.addEventListener("mouseup", () => {
+        isDragging = false;
+        terminal.style.cursor = "grab";
+      });
+    });
+
+    // --- Unity Load ---
+    Promise.all([
+      mergeFiles(getParts("Build/BATIM.data.unityweb", 1, 7))
+    ]).then(([dataUrl]) => {
+      window.dataUrll = dataUrl;
+      var json = {
+        "companyName": "DefaultCompany",
+        "productName": "OldCh2RippedTwo",
+        "productVersion": "1.0",
+        "dataUrl": "BATIM.data.unityweb",
+        "wasmCodeUrl": "BATIM.wasm.code.unityweb",
+        "wasmFrameworkUrl": "BATIM.wasm.framework.unityweb",
+        "graphicsAPI": ["WebGL 2.0", "WebGL 1.0"],
+        "webglContextAttributes": { "preserveDrawingBuffer": false },
+        "splashScreenStyle": "Dark",
+        "backgroundColor": "#231F20",
+        "developmentBuild": false,
+        "multithreading": false,
+        "unityVersion": "2019.4.17f1"
+      };
+
+      let blob = new Blob([JSON.stringify(json)], { type: 'application/json' });
+      let blobUrl = URL.createObjectURL(blob);
+
+      window.addEventListener('resize', resizeUnityContainer);
+      UnityLoader.instantiate("unityContainer", json, {
+        onProgress: UnityProgress,
+        url: blobUrl,
+        Module: {
+          onRuntimeInitialized: function () {
+            resizeUnityContainer();
+            document.querySelector("#terminal-box").remove();
+          }
+        }
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <div class="webgl-content">
+    <div id="terminal-box">
+      <div id="terminal-header">
+        <span>Terminal</span>
+        <div class="buttons">
+          <div class="btn red"></div>
+          <div class="btn yellow"></div>
+          <div class="btn green"></div>
+        </div>
+      </div>
+      <div id="terminal-content">
+        <p>Loading Unity build...</p>
+        <p>Fetching data parts...</p>
+        <p>Preparing WebGL environment...</p>
+      </div>
+    </div>
+
+    <div id="unityContainer"></div>
+  </div>
+</body>
+</html>
