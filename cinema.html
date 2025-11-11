@@ -1570,7 +1570,7 @@ function createStrictIframe(url) {
                         please use an ad blocker when watching on this site. the listed media contains ads. we suggest you use <strong class="text-accent-secondary">uBlock Origin</strong>.
                     </p>
                     <p class="text-sm text-gray-500">
-                        this message will only be shown once on this device.
+                        if you get redirected to a new website/tab close it
                     </p>
                 </div>
             `;
@@ -1581,20 +1581,14 @@ function createStrictIframe(url) {
                 false,
                 {
                     text: "Got It, Continue to Site",
-                    action: () => {
-                        localStorage.setItem('adblockerPopupDismissed', 'true');
-                        closePopup();
-                    }
+                    action: () => closePopup()
                 }
             );
             if (typeof lucide !== 'undefined') lucide.createIcons();
         }
 
         function checkAdblockerPopup() {
-            const dismissed = localStorage.getItem('adblockerPopupDismissed');
-            if (dismissed !== 'true') {
                 setTimeout(showAdblockerPopup, 100);
-            }
         }
 
 
