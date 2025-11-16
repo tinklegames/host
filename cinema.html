@@ -415,6 +415,85 @@
     opacity: 0 !important;
     visibility: hidden !important;
 }
+
+.update-log-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(0px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5000;
+    pointer-events: none;
+    opacity: 0;
+    transition: 
+        opacity 0.35s ease,
+        background 0.35s ease,
+        backdrop-filter 0.35s ease;
+}
+
+.update-log-backdrop.show {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(10px);
+    pointer-events: auto;
+}
+
+/* Modal box fade animation */
+.update-log-box {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 30px;
+    width: 90%;
+    max-width: 420px;
+    border-radius: 18px;
+    color: white;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    position: relative;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    transform: translateY(20px);
+    opacity: 0;
+    transition: 
+        opacity 0.35s ease,
+        transform 0.35s ease;
+}
+
+.update-log-backdrop.show .update-log-box {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Close button */
+.update-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: white;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.update-close-btn:hover {
+    opacity: 1;
+}
+#updateBtn {
+    transition: 
+        opacity 0.3s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+}
+
+#updateBtn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 15px var(--accent-main), 0 0 30px var(--accent-secondary);
+    background: rgba(0, 0, 0, 0.55);
+}
+
     </style>
 </head>
 <body class="h-screen flex flex-col antialiased" id="appBody">
@@ -1683,6 +1762,21 @@ function createStrictIframe(url) {
             })();
         });
     </script>
+<script>
+function showUpdateLog() {
+    const log = document.getElementById("updateLog");
+    log.classList.add("show");
+}
+
+function hideUpdateLog() {
+    const log = document.getElementById("updateLog");
+
+    log.classList.remove("show");
+
+}
+
+document.getElementById("updateLog").addEventListener("click", hideUpdateLog);
+</script>
 
     <div id="popupOverlay" class="popup-backdrop">
         <div class="popup bg-gray-900 rounded-xl shadow-2xl border border-gray-800">
@@ -1694,5 +1788,56 @@ function createStrictIframe(url) {
             </div>
         </div>
     </div>
+<!-- UPDATE LOG BUTTON -->
+<button id="updateBtn" class="fixed bottom-6 right-4 px-4 py-3 
+       bg-black/40 backdrop-blur-md 
+       rounded-xl border border-white/10 
+       shadow-lg text-white font-medium 
+       hover:bg-black/60 transition z-[6000] update-btn"
+       onclick="showUpdateLog()">
+    Update Log
+</button>
+
+
+<!-- UPDATE LOG POPUP -->
+<div id="updateLog" class="update-log-backdrop">
+    <div class="update-log-box" onclick="event.stopPropagation()">
+        <span class="update-close-btn" onclick="hideUpdateLog()">✕</span>
+        <h2 class="text-2xl font-bold mb-4">Update Log</h2>
+
+        <ul class="list-disc pl-5 space-y-2 text-gray-300">
+            <li>Added Joker: Folie à Deux (2024)</li>
+            <li>Added Real Steel (2011)</li>
+            <li>Added new themes in the settings menu</li>
+            <li>Fixed mobile layout & spacing issues</li>
+        </ul>
+    </div>
+</div>
+<script>
+const updateBtn = document.getElementById("updateBtn");
+
+// Hide update-btn when clicking ANY tmdb card
+document.addEventListener("click", (e) => {
+    if (e.target.closest(".tmdb-card")) {
+        updateBtn.style.opacity = "0";
+        updateBtn.style.pointerEvents = "none";
+    }
+});
+
+// Show the update-btn again when modal closes
+document.getElementById("closeBtn").addEventListener("click", () => {
+    updateBtn.style.opacity = "1";
+    updateBtn.style.pointerEvents = "auto";
+});
+
+// Show the update-btn again when backdrop is clicked (closing modal)
+document.getElementById("modalBackdrop").addEventListener("click", (e) => {
+    if (e.target.id === "modalBackdrop") {
+        updateBtn.style.opacity = "1";
+        updateBtn.style.pointerEvents = "auto";
+    }
+});
+</script>
+
 </body>
 </html>
