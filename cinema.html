@@ -494,6 +494,31 @@
     background: rgba(0, 0, 0, 0.55);
 }
 
+.suggestions-btn {
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.75rem;
+    background: var(--accent-main);
+    color: var(--bg-primary);
+    font-weight: 700;
+    box-shadow: 0 0 10px var(--accent-main);
+    transition: 
+        background 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.2s ease;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.suggestions-btn:hover {
+    background: var(--accent-secondary);
+    box-shadow: 0 0 15px var(--accent-secondary);
+    transform: translateY(-2px);
+}
+
+.suggestions-btn:active {
+    transform: translateY(0);
+}
+
     </style>
 </head>
 <body class="h-screen flex flex-col antialiased" id="appBody">
@@ -543,17 +568,25 @@
             <i data-lucide="clapperboard" class="w-6 h-6 inline-block mr-2 text-red-500"></i>
             Movies
         </h1>
-        <div class="flex flex-col md:flex-row gap-4 mb-8 max-w-4xl mx-auto w-full">
-            <div class="relative w-full md:w-2/3">
-                <input type="text" id="movieSearch" placeholder="Search movies by title..."
-                        oninput="filterContent('movie')"
-                        class="w-full p-3 pl-10 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-accent-main outline-none">
-                <i data-lucide="search" class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            </div>
-            <select id="movieGenreFilter" onchange="filterContent('movie')"
-                    class="w-full md:w-1/3 p-3 rounded-xl bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-accent-main outline-none appearance-none cursor-pointer">
-            </select>
-        </div>
+        <div class="flex flex-col md:flex-row gap-4 mb-8 max-w-4xl mx-auto w-full items-center">
+    <div class="relative w-full md:w-2/3">
+        <input type="text" id="movieSearch" placeholder="Search movies by title..."
+                oninput="filterContent('movie')"
+                class="w-full p-3 pl-10 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-accent-main outline-none">
+        <i data-lucide="search" class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+    </div>
+
+    <select id="movieGenreFilter" onchange="filterContent('movie')"
+            class="w-full md:w-1/3 p-3 rounded-xl bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-accent-main outline-none appearance-none cursor-pointer">
+    </select>
+
+    <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRXqdxNmkb1wNbh3i1eJOY3PK-hGQqLwqcrDIU32hHif63_Q/viewform?usp=publish-editor', '_blank')"
+            class="suggestions-btn">
+        Suggestions
+    </button>
+</div>
+
+
 
 
         <div class="grid" id="movieGrid">
