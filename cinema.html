@@ -1197,20 +1197,6 @@ function setupAdBlockerObserver() {
         });
     }
 }
-// Update the iframe creation with strict sandbox
-function createStrictIframe(url) {
-    const iframe = document.createElement('iframe');
-    iframe.className = 'modal-frame';
-    iframe.src = url;
-    iframe.title = 'Video frame';
-    iframe.loading = 'lazy';
-    iframe.allowFullscreen = true;
-    
-    // Very restrictive sandbox - only allow what's absolutely necessary
-    iframe.sandbox = 'allow-scripts allow-same-origin allow-forms';
-    
-    return iframe;
-}
 
         function buildPosterUrl(path, size = 'w500') {
             if (!path) return null;
