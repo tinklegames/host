@@ -1,0 +1,35 @@
+/* Hide by default on large screens */
+.mobile-controls {
+  display: none;
+}
+
+/* Show only on touch devices or small screens */
+@media (max-width: 1024px) {
+  .mobile-controls {
+    position: fixed;
+    bottom: 20px;
+    left: 20px; /* move to left side */
+    display: grid;
+    grid-template-columns: 60px 60px 60px;
+    grid-template-rows: 60px 60px 60px;
+    gap: 8px;
+    z-index: 9999;
+  }
+
+  .mobile-controls button {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    user-select: none;
+  }
+}
+
+/* D-pad layout */
+#btn-up   { grid-column: 2; grid-row: 1; }
+#btn-left { grid-column: 1; grid-row: 2; }
+#btn-down { grid-column: 2; grid-row: 2; }
+#btn-right{ grid-column: 3; grid-row: 2; }

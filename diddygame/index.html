@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Diddy Game</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <meta property="og:title" content="Diddy Game" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { background: #222; display: flex; flex-direction: column; align-items: center; }
+        canvas { 
+            background: #464646;
+            margin-top: 20px; 
+        }
+        #score { color: #fff; font-size: 20px; margin-top: 10px; }
+        #mainWrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+            width: 100%;
+        }
+        #sidebar {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-right: 240px;
+            min-width: 200px;
+        }
+        #leaderboard {
+            color: #fff;
+            font-size: 18px;
+            margin-top: 20px;
+            min-width: 180px;
+            background: rgba(40,40,40,0.9);
+            border-radius: 10px;
+            padding: 16px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            height: fit-content;
+        }
+        .mc-btn {
+            width: 60px;
+            height: 60px;
+            font-size: 32px;
+            margin: 4px;
+        }
+        canvas:fullscreen {
+            width: 100vw !important;
+            height: 100vh !important;
+            display: block;
+        }
+        
+        button,
+        a[role="button"],
+        #githubBtn,
+        #downloadBtn,
+        #volumeBtn,
+        #modeBtn,
+        #fullscreenBtn,
+        #skinBtn,
+        #pauseToggleBtn {
+            transition: transform 0.15s, box-shadow 0.15s, background 0.15s, filter 0.15s;
+        }
+
+        button:hover,
+        a[role="button"]:hover,
+        #githubBtn:hover,
+        #downloadBtn:hover,
+        #volumeBtn:hover,
+        #modeBtn:hover,
+        #fullscreenBtn:hover,
+        #skinBtn:hover,
+        #pauseToggleBtn:hover {
+            transform: scale(1.12);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+            filter: brightness(1.2);
+            background: rgba(255,255,255,0.08);
+        }
+    </style>
+</head>
+<body>
+    <h1 style="color:#fff;">Diddy Game</h1>
+    <div id="mainWrapper">
+        <div id="sidebar">
+            <div id="score">Score: 0</div>
+            <div id="highscore" style="color:#fff; font-size:18px; margin-top:5px;">High Score: 0</div>
+            <div id="leaderboard">
+                <strong>Global Leaderboard</strong>
+                <ol id="leaderboardList"></ol>
+            </div>
+        </div>
+        <div>
+            <canvas id="game" width="400" height="400"></canvas>
+        </div>
+    </div>
+    <button id="pauseToggleBtn" style="
+        position: absolute;
+        top: 188px;
+        right: 30px;
+        background: none;
+        border: none;
+        font-size: 32px;
+        color: #fff;
+        cursor: pointer;
+        z-index: 20;
+        outline: none;
+    ">
+        ⏸️
+    </button>
+    <div id="pauseMenu" style="display:none; position:absolute; top:50px; left:50%; transform:translateX(-50%); background:#333; color: #fff; padding:30px 50px; border-radius:10px; font-size:24px; z-index:10; text-align:center;">
+        <div>Paused</div>
+        <div style="font-size:16px; margin-top:10px;">Press ESC to resume</div>
+        <button id="resumeBtn" style="
+            margin-top: 20px;
+            font-size: 20px;
+            padding: 8px 24px;
+            border-radius: 8px;
+            border: none;
+            background: #444;
+            color: #fff;
+            cursor: pointer;
+        ">Resume</button>
+    </div>
+    <button id="volumeBtn" style="
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        background: none;
+        border: none;
+        font-size: 32px;
+        color: #fff;
+        cursor: pointer;
+        z-index: 20;
+        outline: none;
+    ">
+        🔊
+    </button>
+    <button id="modeBtn" style="
+        position: absolute;
+        top: 62px;
+        right: 30px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        z-index: 20;
+        outline: none;
+    ">
+        <span id="modeEmoji" style="font-size: 32px;">🌑</span>
+    </button>
+    <button id="fullscreenBtn" style="
+        position: absolute;
+        top: 146px;
+        right: 30px;
+        background: none;
+        border: none;
+        font-size: 32px;
+        color: #fff;
+        cursor: pointer;
+        z-index: 20;
+        outline: none;
+    ">
+        🖥️
+    </button>
+    <button id="musicNoteBtn" style="
+        position: absolute;
+        top: 230px;
+        right: 30px;
+        background: none;
+        border: none;
+        font-size: 32px;
+        color: #fff;
+        cursor: pointer;
+        z-index: 20;
+        outline: none;
+    ">
+        🎵
+    </button>
+    <div id="musicPopup" style="
+        display: none;
+        position: absolute;
+        top: 272px;
+        right: 30px;
+        background: #222;
+        color: #fff;
+        border-radius: 10px;
+        border: 1px solid #444;
+        padding: 12px 16px;
+        z-index: 30;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    ">
+        <label for="soundSelect" style="font-size:18px; margin-bottom:8px; display:block;">Choose Music:</label>
+        <select id="soundSelect" style="
+            font-size: 18px;
+            background: #222;
+            color: #fff;
+            border-radius: 6px;
+            border: 1px solid #444;
+            padding: 4px 8px;
+            outline: none;
+            width: 180px;
+        ">
+            <option value="music.mp3">Diddy</option>
+            <option value="music2.mp3">Touching kids</option>
+            <option value="music3.mp3">Baby Oil</option>
+            <option value="music4.mp3">Basement</option>
+        </select>
+    </div>
+    <audio id="bgMusic" src="music.mp3" loop></audio>
+    <script src="libs/firebase-app-compat.js"></script>
+    <script src="libs/firebase-database-compat.js"></script>
+    <script src="inline-script-1.js"></script>
+<div class="mobile-controls">
+  <button id="btn-left">⬅</button>
+  <button id="btn-up">⬆</button>
+  <button id="btn-down">⬇</button>
+  <button id="btn-right">➡</button>
+</div>
+<link rel="stylesheet" href="style.css">
+<script src="main.js"></script>
+</body>
+</html>
