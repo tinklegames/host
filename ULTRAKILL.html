@@ -1,105 +1,345 @@
 <!DOCTYPE html>
 <html lang="en-us">
-
-<head>
+  <head>
     <base href="https://cdn.jsdelivr.net/gh/genizy/web-port@master/ultrakill/">
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Unity WebGL Player | ULTRAKILL</title>
+
     <style>
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            height: 100%;
-            width: 100%;
-        }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 100%;
+        width: 100%;
+      }
 
-        #unity-container {
-            width: 100%;
-            height: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
+      body {
+        background-color: #d3d3d3;
+      }
+
+      /* Fullscreen container for the game */
+      #unity-container {
+        display: none; /* shown after load */
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+      }
+
+      #unity-canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      @keyframes blinkCursor {
+        50% {
+          border-right-color: transparent;
         }
+      }
+
+      @keyframes typeAndDelete {
+        0%,
+        10% {
+          width: 0;
+        }
+        45%,
+        55% {
+          width: 6.2em;
+        }
+        90%,
+        100% {
+          width: 0;
+        }
+      }
+
+      .terminal-loader {
+        border: 0.1em solid #333;
+        background-color: #1a1a1a;
+        color: #0f0;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 1em;
+        padding: 1.5em 1em;
+        width: 14em;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        border-radius: 4px;
+        position: absolute;
+        overflow: hidden;
+        box-sizing: border-box;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        cursor: move;
+        text-align: left;
+      }
+
+      .terminal-header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1.5em;
+        background-color: #333;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        padding: 0 0.4em;
+        box-sizing: border-box;
+        cursor: grab;
+      }
+
+      .terminal-controls {
+        float: right;
+      }
+
+      .control {
+        display: inline-block;
+        width: 0.6em;
+        height: 0.6em;
+        margin-left: 0.4em;
+        border-radius: 50%;
+        background-color: #777;
+      }
+
+      .control.close {
+        background-color: #e33;
+      }
+
+      .control.minimize {
+        background-color: #ee0;
+      }
+
+      .control.maximize {
+        background-color: #0b0;
+      }
+
+      .terminal-title {
+        float: left;
+        line-height: 1.5em;
+        color: #eee;
+      }
+
+      .text {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        border-right: 0.2em solid green;
+        animation:
+          typeAndDelete 4s steps(11) infinite,
+          blinkCursor 0.5s step-end infinite alternate;
+        margin-top: 2em;
+      }
+
+      #terminal-progress {
+        width: 100%;
+        height: 10px;
+        background: #222;
+        border: 1px solid #0f0;
+        margin-top: 1em;
+        border-radius: 3px;
+        overflow: hidden;
+      }
+
+      #terminal-progress-fill {
+        height: 100%;
+        width: 0%;
+        background: #0f0;
+        transition: width 0.2s linear;
+      }
     </style>
-</head>
+  </head>
 
-<body style="text-align: center; padding: 0; border: 0; margin: 0;">
-    <div id='loading-text' style="color: black; font-family: cursive; font-size: 48px; text-align: center; margin-top: 20px;">LOADING...</div>
-    <canvas id="unity-canvas" tabindex="-1" hidden></canvas>
-    <script src="Build/ultrakill.loader.js"></script>
+  <body style="text-align: center; padding: 0; border: 0; margin: 0;">
+    <!-- Terminal Loader (from SchoolBoy Runaway) -->
+    <div id="loading-text">
+      <div class="terminal-loader" id="terminal-loader">
+        <div class="terminal-header" id="terminal-header">
+          <div class="terminal-title">Status</div>
+          <div class="terminal-controls">
+            <div class="control close"></div>
+            <div class="control minimize"></div>
+            <div class="control maximize"></div>
+          </div>
+        </div>
+        <div class="text" id="terminal-text">Loading...</div>
+        <div id="terminal-progress">
+          <div id="terminal-progress-fill"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unity Game -->
+    <div id="unity-container">
+      <canvas id="unity-canvas" tabindex="-1"></canvas>
+    </div>
+
     <script>
-        var canvas = document.querySelector("#unity-canvas");
-        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-            // Mobile device style: fill the whole browser client area with the game canvas:
-            var meta = document.createElement('meta');
-            meta.name = 'viewport';
-            meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-            document.getElementsByTagName('head')[0].appendChild(meta);
-            canvas.style.width = "100%";
-            canvas.style.height = "100%";
-            canvas.style.position = "fixed";
-            document.body.style.textAlign = "left";
-        } else {
-            function resizeCanvas() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                canvas.style.width = window.innerWidth + "px";
-                canvas.style.height = window.innerHeight + "px";
-            }
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
+      // === Canvas sizing (from ULTRAKILL page) ===
+      var canvas = document.querySelector("#unity-canvas");
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas:
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        canvas.style.width = "100%";
+        canvas.style.height = "100%";
+        canvas.style.position = "fixed";
+        document.body.style.textAlign = "left";
+      } else {
+        function resizeCanvas() {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+          canvas.style.width = window.innerWidth + "px";
+          canvas.style.height = window.innerHeight + "px";
         }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+      }
 
-        function mergeFiles(fileParts) {
-            return new Promise((resolve, reject) => {
-                let buffers = [];
+      // === Terminal loader logic (from SchoolBoy Runaway, adapted to ULTRAKILL) ===
+      const terminalLoader = document.getElementById("terminal-loader");
+      const terminalHeader = document.getElementById("terminal-header");
+      const terminalText = document.getElementById("terminal-text");
+      const progressFill = document.getElementById("terminal-progress-fill");
+      const unityContainer = document.getElementById("unity-container");
 
-                function fetchPart(index) {
-                    if (index >= fileParts.length) {
-                        let mergedBlob = new Blob(buffers);
-                        let mergedFileUrl = URL.createObjectURL(mergedBlob);
-                        resolve(mergedFileUrl);
-                        return;
-                    }
-                    fetch(fileParts[index]).then((response) => response.arrayBuffer()).then((data) => {
-                        buffers.push(data);
-                        fetchPart(index + 1);
-                    }).catch(reject);
-                }
-                fetchPart(0);
-            });
-        }
+      // Approximate total size (bytes) – just for nicer percentage display
+      let totalBytes = 315673804.8;
+      let loadedBytes = 0;
 
-        function getParts(file, start, end) {
-            let parts = [];
-            for (let i = start; i <= end; i++) {
-                parts.push(file + ".part" + i);
-            }
-            return parts;
-        }
-        Promise.all([
-            mergeFiles(getParts("Build/ultrakill.data.unityweb", 1, 4)),
-            mergeFiles(getParts("Build/ultrakill.wasm.unityweb", 1, 2))
-        ]).then(([dataUrl, wasmurl]) => {
-            document.querySelector("#unity-canvas").hidden = false;
-            createUnityInstance(document.querySelector("#unity-canvas"), {
-                dataUrl: dataUrl,
-                frameworkUrl: "Build/ultrakill.framework.js.unityweb",
-                codeUrl: wasmurl,
-                streamingAssetsUrl: "StreamingAssets",
-                companyName: "Hakita and Cake Logic",
-                productName: "ULTRAKILL",
-                productVersion: "1.4",
-                // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
-                // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
-            }).then((e) => {
-                document.querySelector("#loading-text").remove();
-            });
+      // 🖱️ Smooth draggable terminal
+      (function makeDraggable(element, handle) {
+        let offsetX = 0,
+          offsetY = 0,
+          startX = 0,
+          startY = 0,
+          isDragging = false;
+
+        handle.addEventListener("mousedown", (e) => {
+          isDragging = true;
+          const rect = element.getBoundingClientRect();
+
+          // Remove transform to make absolute positioning accurate
+          element.style.transform = "none";
+
+          startX = e.clientX;
+          startY = e.clientY;
+          offsetX = rect.left;
+          offsetY = rect.top;
+
+          handle.style.cursor = "grabbing";
         });
-    </script>
-</body>
 
+        document.addEventListener("mousemove", (e) => {
+          if (!isDragging) return;
+
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+
+          element.style.left = offsetX + dx + "px";
+          element.style.top = offsetY + dy + "px";
+        });
+
+        document.addEventListener("mouseup", () => {
+          isDragging = false;
+          handle.style.cursor = "grab";
+        });
+      })(terminalLoader, terminalHeader);
+
+      // 🧮 File loading + progress logic
+      function formatSize(bytes) {
+        if (bytes > 1024 * 1024 * 1024)
+          return (bytes / (1024 * 1024 * 1024)).toFixed(2) + " GB";
+        if (bytes > 1024 * 1024)
+          return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+        if (bytes > 1024)
+          return (bytes / 1024).toFixed(2) + " KB";
+        return bytes + " B";
+      }
+
+      async function fetchWithProgress(url) {
+        const response = await fetch(url);
+        const reader = response.body.getReader();
+        let chunks = [];
+        let received = 0;
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          received += value.length;
+          loadedBytes += value.length;
+          chunks.push(value);
+          const doneText = formatSize(loadedBytes);
+          const totalText = formatSize(totalBytes);
+          const percent =
+            totalBytes > 0
+              ? ((loadedBytes / totalBytes) * 100).toFixed(1)
+              : "?";
+          terminalText.textContent = `Loading... ${doneText} / ${totalText} (${percent}%)`;
+          progressFill.style.width = percent + "%";
+        }
+        let fullBuffer = new Uint8Array(received);
+        let offset = 0;
+        for (let chunk of chunks) {
+          fullBuffer.set(chunk, offset);
+          offset += chunk.length;
+        }
+        return fullBuffer.buffer;
+      }
+
+      async function mergeFiles(parts) {
+        const buffers = await Promise.all(parts.map(fetchWithProgress));
+        return URL.createObjectURL(new Blob(buffers));
+      }
+
+      function getParts(file, count) {
+        let parts = [];
+        for (let i = 1; i <= count; i++) parts.push(file + ".part" + i);
+        return parts;
+      }
+
+      (async () => {
+        // Use ULTRAKILL's part files
+        const dataParts = getParts("Build/ultrakill.data.unityweb", 4);
+        const wasmParts = getParts("Build/ultrakill.wasm.unityweb", 2);
+        const [dataUrl, wasmUrl] = await Promise.all([
+          mergeFiles(dataParts),
+          mergeFiles(wasmParts),
+        ]);
+
+        var buildUrl = "Build";
+        var loaderUrl = buildUrl + "/ultrakill.loader.js";
+        var config = {
+          dataUrl: dataUrl,
+          frameworkUrl: buildUrl + "/ultrakill.framework.js.unityweb",
+          codeUrl: wasmUrl,
+          streamingAssetsUrl: "StreamingAssets",
+          companyName: "Hakita and Cake Logic",
+          productName: "ULTRAKILL",
+          productVersion: "1.4",
+        };
+
+        var script = document.createElement("script");
+        script.src = loaderUrl;
+        script.onload = () => {
+          createUnityInstance(document.querySelector("#unity-canvas"), config, (progress) => {
+            const percent = (progress * 100).toFixed(1);
+            terminalText.textContent = `Loading... (${percent}%)`;
+            progressFill.style.width = percent + "%";
+          })
+            .then(() => {
+              terminalLoader.remove();
+              unityContainer.style.display = "block";
+            })
+            .catch((message) => {
+              terminalText.textContent = "Error loading: " + message;
+            });
+        };
+        document.body.appendChild(script);
+      })();
+    </script>
+  </body>
 </html>
