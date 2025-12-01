@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <title>Happy Wheels JS</title>
+
+    <style>
+        body {
+            overflow: hidden;
+            background-color: #000;
+        }
+    </style>
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="assets-3yukq3hdo5me9z5pcv/fonts/ClarendonLTStd-Bold.css" media="all">
+    <link rel="stylesheet" href="assets-3yukq3hdo5me9z5pcv/fonts/HelveticaNeueLTStd-Roman.css" media="all">
+    <link rel="stylesheet" href="assets-3yukq3hdo5me9z5pcv/fonts/ClarendonLTStd.css" media="all">
+    <link rel="stylesheet" href="assets-3yukq3hdo5me9z5pcv/fonts/Bank-Gothic-Medium.css" media="all">
+    <link rel="stylesheet" href="assets-3yukq3hdo5me9z5pcv/fonts/HelveticaNeueLTStd-Bd.css" media="all">
+    <link rel="stylesheet" href="assets-3yukq3hdo5me9z5pcv/fonts/HelveticaNeueLTStd-Md.css" media="all">
+</head>
+<body oncontextmenu="return false;">
+    <div id="og-game-holder" style="background: rgb(61, 136, 199);">
+        <canvas width="1350" height="750" style="touch-action: none; position: absolute; top: 0; left: 0; width: 900px; height: 500px; cursor: inherit;"></canvas>
+    </div>
+
+    <script>
+        (function() {
+            function getTitleLabel() {
+                const labels = [
+                    "JS Edition",
+                    "HTML5 Edition",
+                    "Flashless Version",
+                    "RIP Flash Edition",
+                    "Flash Is Dead!",
+                    "Farewell Flash...",
+                    "Without that plugin",
+                    "Does Jim know I put this here?"
+                ];
+                return labels[Math.floor(Math.random() * labels.length)];
+            }
+
+            window["HW_SETTINGS"] = {
+                siteURL: document.location.protocol + "//" + document.location.hostname + "/",
+                pathPrefix: '',
+                titleLabel: getTitleLabel(),
+                titleLabelX: 645,
+                titleLabelY: 250,
+                titleLabelRotation: 0,
+                titleLabelSize: 20,
+                titleLabelColor: 0xfdfd65,
+                resolutionZoomIncreaseRatio: 0.5,
+                tesselation: "tess2"
+            };
+
+            function get_latest_hw_version() {
+                return fetch("happy-wheels-js/version.json")
+                    .then(response => response.json())
+                    .catch(err => { console.error(err); });
+            }
+
+            function loadDependency(name, hash) {
+                const d_el = document.createElement("script");
+                d_el.src = "js/" + name + "." + hash + ".js";
+                d_el.defer = true;
+                document.body.appendChild(d_el);
+            }
+
+            get_latest_hw_version().then(latest => {
+                if (latest) {
+                    loadDependency("dependencies", latest["dependencies"]);
+                    loadDependency("index", latest["index"]);
+                }
+            });
+        })();
+    </script>
+
+    <!-- Font cache divs to avoid FOUT -->
+    <div class="fontcache" style="position: fixed; margin-left: -100px; font-family: 'Clarendon LT Std Bold';">.</div>
+    <div class="fontcache" style="position: fixed; margin-left: -100px; font-family: 'HelveticaNeueLT Std';">.</div>
+    <div class="fontcache" style="position: fixed; margin-left: -100px; font-family: 'Clarendon LT Std';">.</div>
+    <div class="fontcache" style="position: fixed; margin-left: -100px; font-family: 'Bank Gothic';">.</div>
+    <div class="fontcache" style="position: fixed; margin-left: -100px; font-family: 'HelveticaNeueLT Std Bold';">.</div>
+    <div class="fontcache" style="position: fixed; margin-left: -100px; font-family: 'HelveticaNeueLT Std Med';">.</div>
+</body>
+</html>
