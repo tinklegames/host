@@ -1,1 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Play Nintendo DS Game</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #000;
+        }
+        #game-container {
+            width: 640px;
+            height: 480px;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
 
+<div id="game-container">
+    <div id="game"></div>
+</div>
+
+<script type="text/javascript">
+    EJS_player = '#game';
+    EJS_core = 'nds';  // Nintendo DS emulator
+    EJS_threads = true;
+
+    // DS BIOS from GitHub
+    EJS_biosUrl = 'https://raw.githubusercontent.com/tinklegames/host/main/nsmb/DS.zip';
+
+    // ROM from Google Drive (may not always work due to CORS)
+    EJS_gameUrl = 'https://drive.google.com/uc?export=download&id=1isGMYmk05BL2lXCXRvP_pxzhsS6kZvuX';
+</script>
+
+<script src="https://www.emulatorjs.com/loader.js"></script>
+
+</body>
+</html>
