@@ -2,20 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Play Nintendo DS Game</title>
+    <title>New Super Mario Bros DS</title>
     <style>
-        body {
+        html, body {
             margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            padding: 0;
+            width: 100%;
+            height: 100%;
             background: #000;
+            overflow: hidden;
         }
         #game-container {
-            width: 640px;
-            height: 480px;
-            max-width: 100%;
+            width: 100%;
+            height: 100%;
+        }
+        #game {
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
@@ -27,14 +30,10 @@
 
 <script type="text/javascript">
     EJS_player = '#game';
-    EJS_core = 'nds';  // Nintendo DS emulator
+    EJS_core = 'nds';
     EJS_threads = true;
-
-    // DS BIOS from GitHub
     EJS_biosUrl = 'https://raw.githubusercontent.com/tinklegames/host/main/nsmb/DS.zip';
-
-    // ROM from Google Drive (may not always work due to CORS)
-    EJS_gameUrl = 'https://drive.google.com/uc?export=download&id=1isGMYmk05BL2lXCXRvP_pxzhsS6kZvuX';
+    EJS_gameUrl = 'https://raw.githubusercontent.com/JavyQuavy/NewSuperMarioBros/main/New%20Super%20Mario%20Bros.%20(USA%2C%20Australia).nds';
 </script>
 
 <script src="https://www.emulatorjs.com/loader.js"></script>
