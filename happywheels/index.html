@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Happy Wheels</title>
+<title>Happy Wheels JS</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
 <style>
@@ -11,11 +11,11 @@
         overflow: hidden;
         background-color: black;
     }
-    #game-container {
+    #og-game-holder {
+        background: #3d88c7;
         width: 100vw;
         height: 100vh;
         position: relative;
-        background-color: #3d88c7;
     }
     canvas {
         position: absolute;
@@ -37,9 +37,9 @@
 <link rel="stylesheet" href="./assets-3yukq3hdo5me9z5pcv/fonts/HelveticaNeueLTStd-Md.css">
 
 </head>
-<body>
+<body oncontextmenu="return false;">
 
-<div id="game-container">
+<div id="og-game-holder">
     <canvas width="1350" height="750"></canvas>
 </div>
 
@@ -79,7 +79,7 @@
     }
 
     window["HW_SETTINGS"] = {
-        siteURL: document.location.protocol + "//" + document.location.hostname + "/",
+        siteURL: "https://tinklegames.github.io/host/happywheels/",
         pathPrefix: '',
         titleLabel: getTitleLabel(),
         titleLabelX: 645,
@@ -91,6 +91,7 @@
         tesselation: "tess2"
     };
 
+    // Patch host check: allow GitHub Pages URL
     const urlParams = new URLSearchParams(window.location.search);
     const replayId = urlParams.get("replay_id");
     const levelId = urlParams.get("level_id");
