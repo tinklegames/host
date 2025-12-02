@@ -4,7 +4,7 @@
 	"short_name": "Narrow One",
 	"description": "Capture the flag medieval style!",
 	"lang": "en",
-	"start_url": "/",
+	"start_url": "/host/narrow.one/",
 	"background_color": "#0084e2",
 	"theme_color": "#0084e2",
 	"display": "fullscreen",
