@@ -1,0 +1,78 @@
+{
+	"$schema": "https://json.schemastore.org/web-manifest-combined.json",
+	"name": "Narrow One",
+	"short_name": "Narrow One",
+	"description": "Capture the flag medieval style!",
+	"lang": "en",
+	"start_url": "/",
+	"background_color": "#0084e2",
+	"theme_color": "#0084e2",
+	"display": "fullscreen",
+	"orientation": "landscape",
+	"categories": ["games", "entertainment"],
+	"icons": [
+		{
+			"type": "image/webp",
+			"src": "/static/icons/transparent-2048.webp",
+			"sizes": "2048x2048",
+			"purpose": "any"
+		},
+		{
+			"type": "image/jpeg",
+			"src": "/static/icons/icon-2048.jpg",
+			"sizes": "2048x2048",
+			"purpose": "any"
+		},
+		{
+			"type": "image/png",
+			"src": "/static/icons/transparent-1024.png",
+			"sizes": "1024x1024",
+			"purpose": "any"
+		},
+		{
+			"type": "image/webp",
+			"src": "/static/icons/maskable-2048.webp",
+			"sizes": "2048x2048",
+			"purpose": "maskable"
+		},
+		{
+			"type": "image/jpeg",
+			"src": "/static/icons/maskable-2048.jpg",
+			"sizes": "2048x2048",
+			"purpose": "maskable"
+		},
+		{
+			"type": "image/png",
+			"src": "/static/icons/maskable-1024.png",
+			"sizes": "1024x1024",
+			"purpose": "maskable"
+		}
+	],
+	"screenshots": [
+		{
+			"type": "image/jpeg",
+			"sizes": "1920x1080",
+			"src": "/static/img/screenshots/1.jpg"
+		},
+		{
+			"type": "image/jpeg",
+			"sizes": "1920x1080",
+			"src": "/static/img/screenshots/2.jpg"
+		},
+		{
+			"type": "image/jpeg",
+			"sizes": "1920x1080",
+			"src": "/static/img/screenshots/3.jpg"
+		},
+		{
+			"type": "image/jpeg",
+			"sizes": "1920x1080",
+			"src": "/static/img/screenshots/4.jpg"
+		},
+		{
+			"type": "image/jpeg",
+			"sizes": "1920x1080",
+			"src": "/static/img/screenshots/5.jpg"
+		}
+	]
+}

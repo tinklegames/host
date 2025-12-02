@@ -1,0 +1,1 @@
+import"./module-workers-polyfill-5503f0ff-C8ZGsdlw.js";import"./subworkers-f28dd231-DEgT2DJG.js";const e=new URL(new URL("index-DtrOzXR8.js",import.meta.url).href,import.meta.url),r=new Worker(e.href,{type:"module"});export{r as worker};
