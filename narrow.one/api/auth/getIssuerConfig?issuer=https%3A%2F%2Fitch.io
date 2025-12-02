@@ -1,0 +1,1 @@
+{"clientId":"dee00231344a35be9f538d87042f8783","openIdConfig":{"authorization_endpoint":"https://itch.io/user/oauth","response_types_supported":["token"],"scopes_supported":["profile:me"],"userinfo_endpoint":"https://itch.io/api/1/key/me"}}
