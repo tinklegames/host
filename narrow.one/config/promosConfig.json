@@ -1,0 +1,812 @@
+{
+	"activePromos": [
+		{
+			"id": "happyHolidays",
+			"image": "happyHolidays.png",
+			"actionShopItem": "christmasClothingHat",
+			"seasonalRange": {
+				"startDay": 12,
+				"startMonth": 12,
+				"endDay": 31,
+				"endMonth": 12
+			}
+		},
+		{
+			"id": "narrowOneBirthday",
+			"image": "narrowOneBirthday.png",
+			"buttonText": "🎉 GET YOUR PARTY HAT 🎉 ",
+			"actionShopItem": "narrowOneBirthdayHat",
+			"maxViewCount": 5,
+			"seasonalRange": {
+				"startDay": 11,
+				"startMonth": 5,
+				"endDay": 11,
+				"endMonth": 5
+			}
+		},
+		{
+			"id": "pumpkinHelmet",
+			"image": "pumpkinHelmet.png",
+			"buttonText": "Let's get spooky 👻 ",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "pumpkinHelmet",
+			"seasonalRange": {
+				"startDay": 1,
+				"startMonth": 10,
+				"endDay": 1,
+				"endMonth": 11
+			}
+		},
+		{
+			"id": "hood",
+			"image": "hood.png",
+			"buttonText": "Claim this hood!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "hood"
+		},
+		{
+			"id": "chonmage",
+			"image": "chonmage.png",
+			"buttonText": "Unlock this haircut!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "chonmage"
+		},
+		{
+			"id": "peasantHatLong",
+			"image": "peasantHoodLong.png",
+			"buttonText": "Get the look",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "peasantManHatLong"
+		},
+		{
+			"id": "arabianKnightWristGuard",
+			"image": "arabianKnightWristGuard.png",
+			"buttonText": "Get the wrist guard!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "arabianKnightWrist"
+		},
+		{
+			"id": "saracenWarrior",
+			"image": "saracenWarrior.png",
+			"buttonText": "Claim this armor!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "saracenWarrior"
+		},
+		{
+			"id": "happyNewYear",
+			"image": "happyNewYear.png",
+			"buttonText": "Let's Party!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "happyNewYearChainHat",
+			"seasonalRange": {
+				"startDay": 1,
+				"startMonth": 1,
+				"endDay": 7,
+				"endMonth": 1
+			}
+		},
+		{
+			"id": "vikingHair",
+			"image": "vikingHair.png",
+			"buttonText": "Get the cut",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "vikingHair"
+		},
+		{
+			"id": "vikingShirt",
+			"image": "vikingsShirt.png",
+			"buttonText": "Unlock me!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "vikingArmor"
+		},
+		{
+			"id": "discord",
+			"image": "discord.png",
+			"buttonText": "Join our Discord",
+			"action": "openUrl",
+			"actionOpenUrl": "https://discord.gg/j8jnjWx9Uc",
+			"maxViewCount": -1
+		},
+		{
+			"id": "valentinesday",
+			"image": "valentinesday.png",
+			"buttonText": "Happy Valentines day!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "cupidoValentinesday",
+			"seasonalRange": {
+				"startDay": 14,
+				"startMonth": 2,
+				"endDay": 15,
+				"endMonth": 2
+			}
+		},
+		{
+			"id": "ancientEgyptGear",
+			"image": "ancientEgyptGear.png",
+			"buttonText": "Get Ancient Egyptian armor!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "ancientEgyptArmorBody"
+		},
+		{
+			"id": "brushTeeth",
+			"image": "brushTeeth.png",
+			"buttonText": "Grow some teeth",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "miscBigTeeth",
+			"maxViewCount": 5
+		},
+		{
+			"id": "stPatricksDay",
+			"image": "stpatricksday.png",
+			"buttonText": "Happy St Patrick's Day",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "StPatricksDayHat",
+			"maxViewCount": 5,
+			"seasonalRange": {
+				"startDay": 16,
+				"startMonth": 3,
+				"endDay": 18,
+				"endMonth": 3
+			}
+		},
+		{
+			"id": "ninjaMask",
+			"image": "ninjaMask.png",
+			"buttonText": "Unlock this mask!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "miscNinjaMask"
+		},
+		{
+			"id": "flowerWristGuard",
+			"image": "flowerWristGuard.png",
+			"buttonText": "I want this!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "flowerWristGuard"
+		},
+		{
+			"id": "flowerHat",
+			"image": "flowerHat.png",
+			"buttonText": "🌺 Get this item 🌺 ",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "flowerDressHat"
+		},
+		{
+			"id": "aprilFoolsbloodlustBarbarianHelmet",
+			"image": "aprilFoolsbloodlustBarbarianHelmet.png",
+			"buttonText": "FREE FEARLESS HELMET! 🎁 ",
+			"action": "openShopItem",
+			"actionShopItem": "aprilFoolsbloodlustBarbarianHelmetHat",
+			"maxViewCount": 5,
+			"seasonalRange": {
+				"startDay": 1,
+				"startMonth": 4,
+				"endDay": 1,
+				"endMonth": 4
+			}
+		},
+		{
+			"id": "strawhat",
+			"image": "strawHat.png",
+			"buttonText": "I WANT THE STRAWHAT!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "strawHat"
+		},
+		{
+			"id": "flowerdress",
+			"image": "flowerDress.png",
+			"buttonText": "Unlock the garment ",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "flowerDressBody"
+		},
+		{
+			"id": "miscEyePatch",
+			"image": "miscEyePatch.png",
+			"buttonText": "Get yer eyepatch matey!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "miscEyePatch"
+		},
+		{
+			"id": "miscVampireTeeth",
+			"image": "miscVampireTeeth.png",
+			"buttonText": "GROW VAMPIRE TEETH 🧛‍♂️  ",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "miscVampireTeeth"
+		},
+		{
+			"id": "miscTribalTattoo",
+			"image": "miscTribalTattoo.png",
+			"buttonText": "GIMME GIMME",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "miscTribalTattoo"
+		},
+		{
+			"id": "miscLipsColored",
+			"image": "miscLipsColored.png",
+			"buttonText": " Beauty +1 💋",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "miscLipsColored"
+		},
+		{
+			"id": "smallHat",
+			"image": "smallHat.png",
+			"buttonText": "GIVE ME THE COOL BEANIE",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "smallHat"
+		},
+		{
+			"id": "ancientEgyptHat",
+			"image": "ancientEgyptHat.png",
+			"buttonText": "Get a new hat!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "ancientEgyptHatHat"
+		},
+		{
+			"id": "settlersHat",
+			"image": "settlersHat.png",
+			"buttonText": "FANCY HAT NOW!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "settlersHat"
+		},
+		{
+			"id": "chainmailHeadpiece",
+			"image": "chainmailHeadpice.png",
+			"buttonText": "Protect my face",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "chainmailArmorHat"
+		},
+		{
+			"id": "chainmailArmorHands",
+			"image": "chainmailGloves.png",
+			"buttonText": "Protect these hands",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "chainmailArmorHands"
+		},
+		{
+			"id": "easterRabbitHat",
+			"image": "easterRabbitHat.png",
+			"buttonText": "PROTECT YOUR EGGS 🥚 ",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "easterRabbitHat",
+			"seasonalRange": {
+				"startDay": 15,
+				"startMonth": 4,
+				"endDay": 24,
+				"endMonth": 4
+			}
+		},
+		{
+			"id": "aztecMask",
+			"image": "aztecMask.png",
+			"buttonText": "Unlock now!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "aztecExecutionerMask"
+		},
+		{
+			"id": "aztecExecutionerLegs",
+			"image": "aztecExecutionerLegStrap.png",
+			"buttonText": "Can I have this?!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "aztecExecutionerLegs"
+		},
+		{
+			"id": "strawHatBlack",
+			"image": "strawHatBlack.png",
+			"buttonText": "Unlock the hat!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "strawHatBlack"
+		},
+		{
+			"id": "mediumBowIvyHandle",
+			"image": "mediumBowIvyHandle.png",
+			"buttonText": "🌺 Start growing 🌺",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "mediumBowIvyHandle"
+		},
+		{
+			"id": "ninjaHoodSimple",
+			"image": "ninjaHoodSimple.png",
+			"buttonText": "Get the ninja mask",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "ninjaHoodSimple"
+		},
+		{
+			"id": "wizardHat",
+			"image": "wizardHat.png",
+			"buttonText": "🔥 Get this hat 🔥",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "wizardHat"
+		},
+		{
+			"id": "medievalExecutioner",
+			"image": "medievalExecutioner.png",
+			"buttonText": "Unlock \"lumberjack\" hat 🪵🪓  ",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "medievalExecutioner"
+		},
+		{
+			"id": "greekOakWreathHat",
+			"image": "greekOakWreath.png",
+			"buttonText": "Give me the gold wreath!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "greekOakWreathHat"
+		},
+		{
+			"id": "zeus",
+			"image": "zeus.png",
+			"buttonText": "Unlock Zeus garment ",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "greekZeusBody"
+		},
+		{
+			"id": "christmasTreeHat",
+			"image": "christmasTreeHat.png",
+			"buttonText": "🎄IT'S PINE TIME🎄",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "christmasTreeHat",
+			"seasonalRange": {
+				"startDay": 1,
+				"startMonth": 12,
+				"endDay": 31,
+				"endMonth": 12
+			}
+		},
+		{
+			"id": "christmasSnowmanHat",
+			"image": "christmasSnowmanHat.png",
+			"buttonText": "BRRRRRRR 🥶 ",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "christmasSnowmanHat",
+			"seasonalRange": {
+				"startDay": 1,
+				"startMonth": 12,
+				"endDay": 31,
+				"endMonth": 12
+			}
+		},
+		{
+			"id": "mediumBowXmasHandle",
+			"image": "mediumBowXmasHandle.png",
+			"buttonText": "🎄 Go full xmas🎄  ",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "mediumBowXmasHandle",
+			"seasonalRange": {
+				"startDay": 1,
+				"startMonth": 12,
+				"endDay": 31,
+				"endMonth": 12
+			}
+		},
+		{
+			"id": "bladedHeavyScythe",
+			"image": "bladedHeavyScythe.png",
+			"buttonText": "Give me the Scythe!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "bladedHeavyScythe"
+		},
+		{
+			"id": "bluntLightFryingPan",
+			"image": "bluntLightFryingPan.png",
+			"buttonText": "Unlock the fryer ",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "bluntLightFryingPan"
+		},
+		{
+			"id": "bladedHeavyShovel",
+			"image": "bladedHeavyShovel.png",
+			"buttonText": "Start digging",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "bladedHeavyShovel"
+		},
+		{
+			"id": "mediumBowEasterEggsHandle",
+			"image": "mediumBowEasterEggsHandle.png",
+			"buttonText": "Eggsssssssssss! 🪺 ",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "mediumBowEasterEggsHandle",
+			"seasonalRange": {
+				"startDay": 15,
+				"startMonth": 4,
+				"endDay": 24,
+				"endMonth": 4
+			}
+		},
+		{
+			"id": "bluntLightOud",
+			"image": "bluntLightOud.png",
+			"buttonText": "Beat them with the Oud",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "bluntLightOud"
+		},
+		{
+			"id": "desertTurbanCoveringColor",
+			"image": "desertTurbanCoveringColor.png",
+			"buttonText": "Claim this hat",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "desertTurbanCoveringColor"
+		},
+		{
+			"id": "buckethat",
+			"image": "bucketHat.png",
+			"buttonText": "GIMME BUCKETHAT 🪣 ",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "bucketHat"
+		},
+		{
+			"id": "bladedLightKunai",
+			"image": "bladedLightKunai.png",
+			"buttonText": "unlock kunai",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "bladedLightKunai"
+		},
+		{
+			"id": "bladedHeavyButcherCleaver",
+			"image": "bladedHeavyButcherCleaver.png",
+			"buttonText": "Start chopping 🥩",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "bladedHeavyButcherCleaver"
+		},
+		{
+			"id": "gateGuard",
+			"image": "gateGuard.png",
+			"buttonText": "You shall not pass",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "gateGuardHelmet"
+		},
+		{
+			"id": "mediumBowGuardTip",
+			"image": "mediumBowGuardTip.png",
+			"buttonText": "unlock medium bow tip",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "mediumBowGuardTip"
+		},
+		{
+			"id": "baseSkinToneSkeleton",
+			"image": "baseSkinToneSkeleton.png",
+			"buttonText": "Let's get extra spooky 💀",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "baseSkinToneSkeleton",
+			"seasonalRange": {
+				"startDay": 1,
+				"startMonth": 10,
+				"endDay": 1,
+				"endMonth": 11
+			}
+		},
+		{
+			"id": "bluntLightBroom",
+			"image": "bluntLightBroom.png",
+			"buttonText": "Start cleaning 🧹",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "bluntLightBroom"
+		},
+		{
+			"id": "bluntHeavyWoodSaw",
+			"image": "bluntHeavyWoodSawPromo.png",
+			"buttonText": "Get the 🪚",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "bluntHeavyWoodSaw"
+		},
+		{
+			"id": "thanksGivingTurkey",
+			"image": "thanksGivingTurkeyPromo.png",
+			"buttonText": "It's 🦃 time",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "thanksGivingTurkey",
+			"seasonalRange": {
+				"startDay": 23,
+				"startMonth": 11,
+				"endDay": 28,
+				"endMonth": 11
+			}
+		},
+		{
+			"id": "candyCaneArrow",
+			"image": "candyCaneArrow.png",
+			"buttonText": "🍬🏹",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "candyCaneArrow",
+			"seasonalRange": {
+				"startDay": 1,
+				"startMonth": 12,
+				"endDay": 31,
+				"endMonth": 12
+			}
+		},
+		{
+			"id": "nutCracker",
+			"image": "nutCracker.png",
+			"buttonText": "🐿️🐿️🐿️",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "nutCracker",
+			"seasonalRange": {
+				"startDay": 1,
+				"startMonth": 12,
+				"endDay": 31,
+				"endMonth": 12
+			}
+		},
+		{
+			"id": "pokeHeavyBoatOar",
+			"image": "pokeHeavyBoatOar.png",
+			"buttonText": "Row row row",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "pokeHeavyBoatOar"
+		},
+		{
+			"id": "chineseNewYearSnakeHat",
+			"image": "chineseNewYearSnakeHat.png",
+			"buttonText": "💥 🐍 🐍 🐍  💥",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "chineseNewYearSnakeHat",
+			"seasonalRange": {
+				"startDay": 27,
+				"startMonth": 1,
+				"endDay": 5,
+				"endMonth": 2
+			}
+		},
+		{
+			"id": "carrotArrow",
+			"image": "carrotArrow.png",
+			"buttonText": "🥕 Bunny ammunition",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "carrotArrow",
+			"seasonalRange": {
+				"startDay": 15,
+				"startMonth": 4,
+				"endDay": 24,
+				"endMonth": 4
+			}
+		},
+		{
+			"id": "repeatingCrossbowSamuraiSimpleTip",
+			"image": "repeatingCrossbowSamuraiSimpleTip.png",
+			"buttonText": "Unlock free skin",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "repeatingCrossbowSamuraiSimpleTip"
+		},
+		{
+			"id": "largeBowSamuraiSimpleHandle",
+			"image": "largeBowSamuraiSimpleHandle.png",
+			"buttonText": "Unlock free skin",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "largeBowSamuraiSimpleHandle"
+		},
+		{
+			"id": "kitsuneMaskWhite",
+			"image": "kitsuneMaskWhite.png",
+			"buttonText": "UNLOCK UNLOCK!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "kitsuneMaskWhite"
+		},
+		{
+			"id": "lowerLegVikingTattoo3Half",
+			"image": "lowerLegVikingTattoo3Half.png",
+			"buttonText": "INK ME UP!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "lowerLegVikingTattoo3Half"
+		},
+		{
+			"id": "lowerArmVikingTattoo1Half",
+			"image": "lowerArmVikingTattoo1Half.png",
+			"buttonText": "INK UP",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "lowerArmVikingTattoo1Half"
+		},
+		{
+			"id": "torsoAncientEgyptTattoo1",
+			"image": "torsoAncientEgyptTattoo1.png",
+			"buttonText": "INK ME UP!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "torsoAncientEgyptTattoo1"
+		},
+		{
+			"id": "repeatingCrossbowAncientEgyptianSimpleTip",
+			"image": "repeatingCrossbowAncientEgyptianSimpleTip.png",
+			"buttonText": "🐍bowsssssssskin",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "repeatingCrossbowAncientEgyptianSimpleTip"
+		},
+		{
+			"id": "bluntLightAncientEgyptianAxe",
+			"image": "bluntLightAncientEgyptianAxe.png",
+			"buttonText": "It's hammer time! 🔨",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "bluntLightAncientEgyptianAxe"
+		},
+		{
+			"id": "miscKohlEyes",
+			"image": "miscKohlEyes.png",
+			"buttonText": "Darken those eye sockets",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "miscKohlEyes"
+		},
+		{
+			"id": "halloweenButcherCleaver",
+			"image": "halloweenButcherCleaver.png",
+			"buttonText": "Get this sharp look!🎃",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "halloweenButcherCleaver",
+			"seasonalRange": {
+				"startDay": 1,
+				"startMonth": 10,
+				"endDay": 31,
+				"endMonth": 10
+			}
+		},
+		{
+			"id": "santaTorso",
+			"image": "santaTorso.png",
+			"buttonText": "Unlock the belly",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "santaTorso",
+			"seasonalRange": {
+				"startDay": 1,
+				"startMonth": 12,
+				"endDay": 31,
+				"endMonth": 12
+			}
+		},
+		{
+			"id": "xmasPresentArrow",
+			"image": "xmasPresentArrow.png",
+			"buttonText": "Unlock the arrow",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "xmasPresentArrow",
+			"seasonalRange": {
+				"startDay": 1,
+				"startMonth": 12,
+				"endDay": 31,
+				"endMonth": 12
+			}
+		},
+		{
+			"id": "santaHat",
+			"image": "santaHat.png",
+			"buttonText": "NO BEARD? NO SANTA!",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "santaHat",
+			"seasonalRange": {
+				"startDay": 1,
+				"startMonth": 12,
+				"endDay": 31,
+				"endMonth": 12
+			}
+		},
+		{
+			"id": "bluntHeavyWoodenFlowerHammer",
+			"image": "bluntHeavyWoodenFlowerHammer.png",
+			"buttonText": "its hammer time",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "bluntHeavyWoodenFlowerHammer"
+		},
+		{
+			"id": "flowerSandal",
+			"image": "flowerSandal.png",
+			"buttonText": "Peace & Love archer",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "flowerSandal"
+		},
+		{
+			"id": "holiFestival",
+			"image": "holiFestival.png",
+			"buttonText": "Get Colored! 🎨",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "holiFestival",
+			"seasonalRange": {
+				"startDay": 12,
+				"startMonth": 3,
+				"endDay": 16,
+				"endMonth": 3
+			}
+		},
+		{
+			"id": "pelicanPartyPlus",
+			"image": "pelicanPartyPlus.png",
+			"buttonText": "BECOME A MEMBER",
+			"hasPeliPlusIcon": true,
+			"action": "showSubscribeModal",
+			"subscribeFlow": "immediate",
+			"maxViewCount": -1
+		},
+		{
+			"id": "tribeWarriorSimpleUpperArm",
+			"image": "tribeWarriorSimpleUpperArm.png",
+			"buttonText": "🌿 I need it  🌿 ",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "tribeWarriorSimpleUpperArm"
+		},
+		{
+			"id": "tribeWarriorSimpleLowerLeg",
+			"image": "tribeWarriorSimpleLowerLeg.png",
+			"buttonText": "🌿 I’ll have it 🌿 ",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "tribeWarriorSimpleLowerLeg"
+		},
+		{
+			"id": "tribeWarriorSimpleLowerArm",
+			"image": "tribeWarriorSimpleLowerArm.png",
+			"buttonText": "🌿 It’s mine  🌿 ",
+			"buttonIcon": "rewardedAdIcon.svg",
+			"action": "purchaseRewardedShopItem",
+			"actionShopItem": "tribeWarriorSimpleLowerArm"
+		}
+	]
+}

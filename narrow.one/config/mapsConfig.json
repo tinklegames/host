@@ -1,0 +1,262 @@
+{
+	"mainMenuMapHash": "",
+	"maps": [
+		{
+			"name": "Castles",
+			"assetName": "narrowCastles",
+			"hash": "fc5650887d31a5ae09c2c1979e302d4c2f917704198082e3072b10ea71e1c7c5",
+			"configHash": "6b4755f0cd539bdf4fcbd24304dd850616806dc0b709233d1f3d2fd1bcf24ed4",
+			"size": 2413872,
+			"thumbLayers": [100, 80, 70, 50, 30, -20, -30],
+			"alternativeMaps": ["narrowCastlesAlt"]
+		},
+		{
+			"name": "Forts",
+			"assetName": "narrowForts",
+			"hash": "bce3f8947b85bbda6bad601922f39d1517719d776c04183f25657d04bd20b1e7",
+			"configHash": "98f0970fd2a07c2a56991748959fa14aa83fc0707162cc38e857a0d421acd585",
+			"size": 1906760,
+			"thumbLayers": [100, 80, 20, 0, -50, -100],
+			"alternativeMaps": ["narrowFortsAlt"]
+		},
+		{
+			"name": "Alleys",
+			"assetName": "narrowAlleys",
+			"hash": "966f985a1d514a0e36a1618f28d1054377dd61b022d669216564c2cb88c0ff44",
+			"configHash": "0581eda0b1a2b5a3be0d2d1b651ddf346a635c61f3282536aabe9d8111e2640c",
+			"size": 2273616,
+			"thumbLayers": [100, 50, -20],
+			"alternativeMaps": ["narrowAlleysAlt"]
+		},
+		{
+			"name": "Fields",
+			"assetName": "narrowFields",
+			"hash": "68461b396af17778d70e236301695b488d478ba4a3ab0af6ddd6d970ba613102",
+			"configHash": "32d7954aeceba8578ec396beeab912550aea50568c5c61b5e8aac3ac30c27051",
+			"size": 2654856,
+			"thumbLayers": [100, 80, 50, 10],
+			"alternativeMaps": ["narrowFieldsAlt"]
+		},
+		{
+			"name": "Ruins",
+			"assetName": "narrowRuins",
+			"hash": "6538175648378a85be32c729caeaf928924bc003a4ec9bc801ee78c0950d0421",
+			"configHash": "7271fd783dda9e9b715491d9fc8e444bd81fc14f1e7ec1a9dd91906fc4d65a1c",
+			"size": 1545072,
+			"thumbLayers": [100, 65, 60, -10],
+			"alternativeMaps": ["narrowRuinsAlt"]
+		},
+		{
+			"name": "Arena",
+			"assetName": "narrowArena",
+			"hash": "0905a564fc980fb40e5b4af7a83176a67619d7829815dc7f916cc847f55dafd8",
+			"configHash": "c8373bc26b14fe2b83b876161ba72dbf9c9bfa682582ed19cd7a56af5b4d15df",
+			"size": 1805496,
+			"thumbLayers": [100, 80, 40],
+			"alternativeMaps": ["narrowArenaAlt"]
+		},
+		{
+			"name": "Towers",
+			"assetName": "narrowTowers",
+			"hash": "f222b1337b07e7f5998e12351958048f8eeb99274c969249f83d8d02ca9f5c6c",
+			"configHash": "7328ddd1d2d3cd534a7ea2705331a998c29420f4b92c69f37f94a74ec2e3e9a6",
+			"size": 1630216,
+			"thumbLayers": [100, 60, 40, 10, -10],
+			"alternativeMaps": ["narrowTowersAlt"]
+		},
+		{
+			"name": "Arch",
+			"assetName": "narrowArch",
+			"hash": "a144f319926352af5a63fea13ca27cd9bd2150d8c30ab7919b8b264e5ec45606",
+			"configHash": "2781f2e4f7b817e8fa6028e03fa77d8c031d215a0257c2acd08f03b4816ce94f",
+			"size": 3084448,
+			"thumbLayers": [80, 30, 30, -30, -100],
+			"alternativeMaps": ["narrowArchAlt"]
+		},
+		{
+			"name": "Halls",
+			"assetName": "narrowHalls",
+			"hash": "108d253da9e99fc8bd5282746762a094aed3f5c57312e89364b7a864d65757be",
+			"configHash": "4f88d90c84e35876e6526eda8fb672b7ea7de5f15bd6c4d7e6cb39bcb6d009a3",
+			"size": 1708464,
+			"thumbLayers": [100, 80, 22, 15, 7],
+			"alternativeMaps": ["narrowHallsAlt"]
+		},
+		{
+			"name": "Tombs",
+			"assetName": "narrowTombs",
+			"hash": "e6b31c37702c7e255580aae631d5cc9dd49598775845740e82fc148031080d43",
+			"configHash": "ea5b7b3c238e8387821780896bb5d21106209277407de90193900f3f00446f17",
+			"size": 1265112,
+			"thumbLayers": [100, 80, 60, 20, -100],
+			"alternativeMaps": ["narrowTombsAlt"]
+		},
+		{
+			"name": "Hills",
+			"assetName": "narrowHills",
+			"hash": "d7f4d2c47c8ed4816031980f0f82ad8bcb332a2fd0eac0f48ee71af8504961a3",
+			"configHash": "d14a90416f684fcf23e2df9c6a510349a1449ea97a5c422072333a001276e4e6",
+			"size": 2664952,
+			"thumbLayers": [100, 80, 30, 0, -40, -100],
+			"alternativeMaps": ["narrowHillsAlt"]
+		},
+		{
+			"name": "Jungle",
+			"assetName": "narrowJungle",
+			"hash": "e7cdf08cb4bb018c01e9f2fa6328e8a91b15559c319033933768d04002de767a",
+			"configHash": "e73c2afc47d34f09fc790aa0024d954614504cbef7295885435563ac02c4954b",
+			"size": 1801328,
+			"thumbLayers": [100, 70, 40, 20, -20, -100]
+		},
+		{
+			"name": "Wall",
+			"assetName": "narrowWall",
+			"hash": "0d3b1a8eed4e5856a59780ff694f7aec119a9fa3cddcad7c5d474ea96ef7784f",
+			"configHash": "762aaea3094fa007448c501c5546e64fe1d8a19f8c73cf15ea1abb7866747909",
+			"size": 3773432,
+			"thumbLayers": [100, 80, 50, 10, -20]
+		},
+		{
+			"name": "Temple",
+			"assetName": "narrowTemple",
+			"hash": "583cab7378eb2008de98720fcc678d8f196366abae26acad5b937e2722b1ad89",
+			"configHash": "40074091ac7bb124dd3fe8252b186e3465dc9cd3fe9b1ddcff562daf2bf3d77b",
+			"size": 4010848,
+			"thumbLayers": [100, 80, 50, 20]
+		},
+		{
+			"name": "Graveyard",
+			"assetName": "narrowGraveyard",
+			"hash": "8ba4dad3d170c79feab451c0afb34c1ee1577a037e1484d200d3b5acb72f3287",
+			"configHash": "95a6b2a2834e95fca66443d46dc666f107382c754676ffcef545bf204a2ceeef",
+			"size": 2164656,
+			"thumbLayers": [100, 80, 30, -100]
+		},
+		{
+			"name": "Desert",
+			"assetName": "narrowDesert",
+			"hash": "55e8ac85218cb7ea628861735a754c7ad556f92a46e66c4ea64aa725a90c0ffb",
+			"configHash": "46866c5e1ca3e87b4c9c3b0247c2687e38e07fa0c5a39181393073835ba815d2",
+			"size": 2713272,
+			"thumbLayers": [100, 70, 50, 40, 30, 0, -80]
+		},
+		{
+			"name": "Gatehouse",
+			"assetName": "narrowGatehouse",
+			"hash": "34d03e3bfb35da131a95f153132b79e01cbc48517f95198892c02d1142a6e1e2",
+			"configHash": "9ff712faed53799af9bd9739b56367a575e28f33d0385aeadcc3e1ca7490cabd",
+			"size": 2477508,
+			"thumbLayers": [100, 80, 60, 40, -10, -80],
+			"isNasset": true
+		},
+		{
+			"name": "Castles",
+			"assetName": "narrowCastlesAlt",
+			"hash": "c41fd6419fe9223c8674c80e67cd0bdc88564508bff87068b4f44d1fd6695481",
+			"configHash": "6b4755f0cd539bdf4fcbd24304dd850616806dc0b709233d1f3d2fd1bcf24ed4",
+			"size": 2441552,
+			"thumbLayers": [],
+			"hiddenInUi": true
+		},
+		{
+			"name": "Forts",
+			"assetName": "narrowFortsAlt",
+			"hash": "80110871b3ecf0c18189de6e6269c02280b3dfc58ecfa74de755ee9c881db06f",
+			"configHash": "98f0970fd2a07c2a56991748959fa14aa83fc0707162cc38e857a0d421acd585",
+			"size": 1993464,
+			"thumbLayers": [],
+			"hiddenInUi": true
+		},
+		{
+			"name": "Alleys",
+			"assetName": "narrowAlleysAlt",
+			"hash": "b9a50dc1dfb1e08b02b6bdf56f34be2ff706cfb1d8697fcfc9cc7517352a581a",
+			"configHash": "0581eda0b1a2b5a3be0d2d1b651ddf346a635c61f3282536aabe9d8111e2640c",
+			"size": 2550760,
+			"thumbLayers": [],
+			"hiddenInUi": true
+		},
+		{
+			"name": "Fields",
+			"assetName": "narrowFieldsAlt",
+			"hash": "25ec189e23bcd775108cf0dab336b6ffb84baaeeaebdaeea9b747083340e6152",
+			"configHash": "32d7954aeceba8578ec396beeab912550aea50568c5c61b5e8aac3ac30c27051",
+			"size": 2947328,
+			"thumbLayers": [],
+			"hiddenInUi": true
+		},
+		{
+			"name": "Ruins",
+			"assetName": "narrowRuinsAlt",
+			"hash": "7c774278f79896d0e8f0c061cfe8dbc49088ee9e512032d38cb149681d726310",
+			"configHash": "7271fd783dda9e9b715491d9fc8e444bd81fc14f1e7ec1a9dd91906fc4d65a1c",
+			"size": 1859712,
+			"thumbLayers": [],
+			"hiddenInUi": true
+		},
+		{
+			"name": "Arena",
+			"assetName": "narrowArenaAlt",
+			"hash": "da5fb59d9b2e46df6737ad210aefcd7b7c5814cf7fdcc042a2962f7f96242e56",
+			"configHash": "c1c7018dc50d37cbb2d0c15fbe2ac8bdf1e47d5a79e19fbd2170880eca9d938b",
+			"size": 1435888,
+			"thumbLayers": [],
+			"hiddenInUi": true
+		},
+		{
+			"name": "Towers",
+			"assetName": "narrowTowersAlt",
+			"hash": "eb566f2e342d8c3033b5feb0f4e56614f668e81fcc162d2c3341e9688afc93e3",
+			"configHash": "7328ddd1d2d3cd534a7ea2705331a998c29420f4b92c69f37f94a74ec2e3e9a6",
+			"size": 1683960,
+			"thumbLayers": [],
+			"hiddenInUi": true
+		},
+		{
+			"name": "Arch",
+			"assetName": "narrowArchAlt",
+			"hash": "b0da76f0c8fb7d377d95f13a1fb9982d67fd467f2d5f6b763bafac38e1579ae2",
+			"configHash": "2d1c530e95b5f118552db4182c1de46387ec4a115b35ce5adca33ee0b97e86fb",
+			"size": 3260520,
+			"thumbLayers": [],
+			"hiddenInUi": true
+		},
+		{
+			"name": "Halls",
+			"assetName": "narrowHallsAlt",
+			"hash": "b54b783143b56f936b26d5729e819e4493f937bdfe0f9ac1244b42762adfa055",
+			"configHash": "4f88d90c84e35876e6526eda8fb672b7ea7de5f15bd6c4d7e6cb39bcb6d009a3",
+			"size": 1862392,
+			"thumbLayers": [],
+			"hiddenInUi": true
+		},
+		{
+			"name": "Tombs",
+			"assetName": "narrowTombsAlt",
+			"hash": "e9d1189e0106a348a4104bdb005ea549b5a6ad6c39dfb9a9d5696ec4129badca",
+			"configHash": "7215acee68552dee0336348292102eb22a48bde61793d3c8f201205f41f45ad6",
+			"size": 1968032,
+			"thumbLayers": [],
+			"hiddenInUi": true
+		},
+		{
+			"name": "Hills",
+			"assetName": "narrowHillsAlt",
+			"hash": "1a7a9ef8102d130ee8f17bda15f96fcd5194888081661aa82c91fbc35a9f4eee",
+			"configHash": "3dde9893585952ff20cc59decf4423defcddc8a8cd711cd973caaedcbdeb0c5c",
+			"size": 4613248,
+			"thumbLayers": [],
+			"hiddenInUi": true
+		},
+		{
+			"name": "Tribe",
+			"assetName": "narrowTribe",
+			"hash": "ac62478ac40ad4fa60c516a1df431e7e88bfd89fe2944a248c6ab7684c824e16",
+			"configHash": "4d51dce74ddfeb7fa931de808b2f8f66f4bd4e199681bc2e44ec82495300d410",
+			"size": 3355358,
+			"thumbLayers": [30, 10, -5, -50],
+			"isNasset": true
+		}
+	],
+	"lastUpdatedTimestamp": 1760982126172
+}
