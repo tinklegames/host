@@ -1,0 +1,66 @@
+{
+	"$schema": "../schemas/mapConfig.v1.json",
+	"kingOfTheHillPosition": [0, 12, 0],
+	"globalMapVariables": {
+		"windSfxBoostHeight": 16,
+		"windSfxBoostVolume": 0.01,
+		"birdsSfxVolume": 0.001,
+		"windSfxVolume": 0.001,
+		"flyRoofHeight": 40
+	},
+	"randomMapVariableSets": [
+		{
+			"cloudsHeight": 51,
+			"skyHighColor": [0, 0.415, 0.96],
+			"skyMidColor": [0.807, 0.89, 0.933],
+			"skyLowColor": [0.807, 0.89, 0.933],
+			"skyPower": 0.6,
+			"fogAmount": 0.002,
+			"colorMultiplier": [0.78, 0.811, 0.941],
+			"colorMultiplierAdjust": 0.6000000000000002,
+			"colorAdder": [0.007, 0.011, 0.011],
+			"colorAdderAdjust": -0.009,
+			"saturation": 1.33,
+			"lightningEnabled": false
+		},
+		{
+			"name": "Sunny yellow wash day",
+			"cloudsHeight": 44,
+			"skyHighColor": [
+				0.10588235294117647, 0.396078431372549, 0.7725490196078432
+			],
+			"skyMidColor": [0.9176470588235294, 0.9176470588235294, 0.8],
+			"skyLowColor": [
+				0.7568627450980392, 0.8156862745098039, 0.8627450980392157
+			],
+			"skyPower": 1.300000000000001,
+			"fogAmount": 0.0025,
+			"colorMultiplier": [
+				0.9607843137254902, 0.8274509803921568, 0.5411764705882353
+			],
+			"colorMultiplierAdjust": 0.6,
+			"colorAdder": [0, 0, 0],
+			"colorAdderAdjust": -0.029999999999999888,
+			"saturation": 1.06
+		},
+		{
+			"name": "Sunny bright but starting to become night",
+			"cloudsHeight": 84.20000000000019,
+			"colorMultiplier": [
+				0.9490196078431372, 0.4196078431372549, 0.4470588235294118
+			],
+			"fogAmount": 0.003,
+			"saturation": 1.2300000000000009,
+			"skyHighColor": [
+				0.7058823529411765, 0.8313725490196079, 0.8941176470588236
+			],
+			"skyMidColor": [
+				0.9411764705882353, 0.9372549019607843, 0.7568627450980392
+			],
+			"skyLowColor": [
+				0.9411764705882353, 0.9372549019607843, 0.7568627450980392
+			],
+			"skyPower": 1.100000000000003
+		}
+	]
+}

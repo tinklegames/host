@@ -1,0 +1,151 @@
+{
+	"$schema": "../schemas/mapConfig.v1.json",
+	"kingOfTheHillPosition": [0, 1, 0],
+	"globalMapVariables": {
+		"floorDeathHeight": -4,
+		"birdsSfxVolume": 0.005,
+		"waterSfxHeight": -0.5,
+		"waterSfxVolume": 0.08,
+		"windSfxBoostHeight": 17,
+		"windSfxBoostVolume": 0.002,
+		"windSfxVolume": 0.0035,
+		"flySphereRadius": 120
+	},
+	"randomMapVariableSets": [
+		{
+			"probability": 3,
+			"name": "default",
+			"cloudsHeight": 2.5
+		},
+		{
+			"probability": 3,
+			"cloudsHeight": 21,
+			"name": "Sunny late night red sky",
+			"skyHighColor": [
+				0.8784313725490196, 0.10196078431372549, 0.10196078431372549
+			],
+			"skyMidColor": [
+				0.7568627450980392, 0.6509803921568628, 0.3607843137254902
+			],
+			"skyLowColor": [
+				0.7568627450980392, 0.6509803921568628, 0.3607843137254902
+			],
+			"skyPower": 0.4,
+			"fogAmount": 0.002,
+			"colorMultiplier": [
+				0.9254901960784314, 0.6392156862745098, 0.6352941176470588
+			],
+			"colorMultiplierAdjust": 0.37999999999999984,
+			"colorAdder": [0, 0, 0],
+			"colorAdderAdjust": -0.009999999999999997,
+			"saturation": 1.0999999999999999
+		},
+		{
+			"probability": 3,
+			"name": "Sunny blue soft colors",
+
+			"skyHighColor": [0.10196078431372549, 0.25098039215686274, 1],
+			"skyMidColor": [
+				0.7843137254901961, 0.807843137254902, 0.9176470588235294
+			],
+			"skyLowColor": [
+				0.8980392156862745, 0.9098039215686274, 0.9607843137254902
+			],
+			"skyPower": 0.5,
+			"fogAmount": 0.003,
+			"colorMultiplier": [0.8980392156862745, 0.9176470588235294, 1],
+			"colorMultiplierAdjust": 0.10999999999999985,
+			"colorAdder": [0, 0, 0],
+			"colorAdderAdjust": 5.898059818321144e-17,
+			"saturation": 1.24
+		},
+		{
+			"probability": 1,
+			"name": "Bad weather, no sun, cloudy",
+
+			"windSfxVolume": 0.004000000000000002,
+
+			"birdsSfxVolume": 0.0009999999999999996,
+
+			"rainSfxVolume": 0.029999999999999947,
+			"skyHighColor": [
+				0.8313725490196079, 0.8431372549019608, 0.8862745098039215
+			],
+			"skyMidColor": [
+				0.3686274509803922, 0.43137254901960786, 0.4235294117647059
+			],
+			"skyLowColor": [
+				0.3686274509803922, 0.43137254901960786, 0.4235294117647059
+			],
+			"skyPower": 1.6,
+			"fogAmount": 0.01,
+			"colorMultiplier": [
+				0.47843137254901963, 0.5058823529411764, 0.5647058823529412
+			],
+			"colorMultiplierAdjust": 0.15999999999999984,
+			"colorAdder": [0, 0, 0],
+			"colorAdderAdjust": -0.009999999999999983,
+			"saturation": 1.2
+		},
+		{
+			"name": "Pink SunRise",
+			"probability": 1,
+			"skyHighColor": [
+				0.5137254901960784, 0.09803921568627451, 0.5607843137254902
+			],
+			"skyMidColor": [1, 0.30980392156862746, 0.0784313725490196],
+			"skyLowColor": [1, 0.30980392156862746, 0.0784313725490196],
+			"skyPower": 1.0999999999999999,
+			"fogAmount": 0.004,
+			"colorMultiplier": [
+				0.5686274509803921, 0.28627450980392155, 0.25098039215686274
+			],
+			"colorMultiplierAdjust": 0.3,
+			"colorAdder": [0, 0, 0],
+			"colorAdderAdjust": -0.010000000000000004,
+			"saturation": 1.21
+		},
+		{
+			"name": "chill sun",
+			"probability": 3,
+			"cloudsHeight": 7,
+			"skyHighColor": [
+				0.0392156862745098,
+				0.5058823529411764,
+				1
+			],
+			"skyMidColor": [
+				0.807843137254902,
+				0.8901960784313725,
+				0.9333333333333333
+			],
+			"skyLowColor": [
+				1,
+				1,
+				1
+			],
+			"skyPower": 0.37,
+			"fogAmount": 0.0022,
+			"fogHeightAmount": 0,
+			"fogHeightOffset": 0,
+			"fogHeightDistFalloff": 0,
+			"fogHeightAmountMin": 0,
+			"fogHeightAmountMax": 1,
+			"colorMultiplier": [
+				0.7803921568627451,
+				0.8117647058823529,
+				0.9411764705882353
+			],
+			"colorMultiplierAdjust": 0.14,
+			"colorAdder": [
+				0.00784313725490196,
+				0.011764705882352941,
+				0.011764705882352941
+			],
+			"colorAdderAdjust": -0.01999999999999999,
+			"saturation": 1.3,
+			"lightningEnabled": false
+
+		}
+	]
+}

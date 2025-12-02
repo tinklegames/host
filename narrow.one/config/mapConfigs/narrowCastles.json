@@ -1,0 +1,98 @@
+{
+	"$schema": "../schemas/mapConfig.v1.json",
+	"kingOfTheHillPosition": [0, 4, 0],
+	"globalMapVariables": {
+		"windSfxBoostHeight": 14,
+		"windSfxBoostVolume": 0.005,
+		"windSfxVolume": 0.001,
+		"flyRoofHeight": 20,
+		"flySphereRadius": 63
+	},
+	"randomMapVariableSets": [
+		{
+			"probability": 2,
+			"name": "default"
+		},
+		{
+			"probability": 2,
+			"name": "Pink sky sunset",
+			"cloudsHeight": 26,
+			"skyHighColor": [
+				0.058823529411764705, 0.08235294117647059, 0.7411764705882353
+			],
+			"skyMidColor": [
+				0.9019607843137255, 0.3607843137254902, 0.5490196078431373
+			],
+			"skyLowColor": [
+				0.9490196078431372, 0.5725490196078431, 0.5333333333333333
+			],
+			"skyPower": 0.5999999999999989,
+			"fogAmount": 0.003,
+			"colorMultiplier": [
+				0.8745098039215686, 0.40784313725490196, 0.5215686274509804
+			],
+			"colorMultiplierAdjust": 0.07,
+			"colorAdder": [0, 0, 0],
+			"colorAdderAdjust": -0.010000000000000142,
+			"saturation": 1.2100000000000002
+		},
+		{
+			"probability": 1,
+			"name": "Rainy foggy day",
+			"windSfxVolume": 0.03,
+			"rainSfxVolume": 0.1,
+			"birdsSfxVolume": 0.0001,
+			"skyHighColor": [
+				0.403921568627451, 0.38823529411764707, 0.4549019607843137
+			],
+			"skyMidColor": [
+				0.796078431372549, 0.792156862745098, 0.8274509803921568
+			],
+			"skyLowColor": [
+				0.796078431372549, 0.792156862745098, 0.8274509803921568
+			],
+			"skyPower": 0.9,
+			"fogAmount": 0.005,
+			"fogHeightAmount": 0.06300000000000336,
+			"fogHeightOffset": 25.899999999999892,
+			"fogHeightDistFalloff": 0.0030000000000000174,
+			"fogHeightAmountMin": -3.469446951953614e-17,
+			"fogHeightAmountMax": 0.037999999999996224,
+			"colorMultiplier": [
+				0.3764705882352941, 0.3215686274509804, 0.3215686274509804
+			],
+			"colorMultiplierAdjust": -2.8102520310824275e-16,
+			"colorAdder": [
+				0.0784313725490196, 0.0784313725490196, 0.0784313725490196
+			],
+			"colorAdderAdjust": -0.08999999999999997,
+			"saturation": 0.8599999999999999,
+			"lightningEnabled": true
+		},
+		{
+			"probability": 2,
+			"name": "sunset blue yellow",
+			"cloudsHeight": 18,
+			"skyHighColor": [
+				0.10588235294117647, 0.4117647058823529, 0.7137254901960784
+			],
+			"skyMidColor": [
+				0.8392156862745098, 0.6941176470588235, 0.5607843137254902
+			],
+			"skyLowColor": [
+				0.996078431372549, 0.8980392156862745, 0.807843137254902
+			],
+			"skyPower": 0.599999999999999,
+			"fogAmount": 0.003,
+			"colorMultiplier": [
+				0.8156862745098039, 0.6392156862745098, 0.4627450980392157
+			],
+			"colorMultiplierAdjust": 0.45000000000000007,
+			"colorAdder": [
+				0.10196078431372549, 0.10196078431372549, 0.10196078431372549
+			],
+			"colorAdderAdjust": -0.12000000000000015,
+			"saturation": 1.1300000000000001
+		}
+	]
+}

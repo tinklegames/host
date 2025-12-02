@@ -1,0 +1,104 @@
+{
+	"$schema": "../schemas/mapConfig.v1.json",
+	"kingOfTheHillPosition": [0, -4, 0],
+	"globalMapVariables": {
+		"windSfxBoostHeight": 2,
+		"windSfxBoostVolume": 0.007,
+		"floorDeathHeight": -20.5,
+		"flySphereRadius": 68
+	},
+	"randomMapVariableSets": [
+		{
+			"name": "default",
+			"probability": 3
+		},
+		{
+			"name": "Sunrise",
+			"probability": 3,
+			"cloudsHeight": 12.099999999999998,
+			"skyHighColor": [
+				0.1607843137254902, 0.09019607843137255, 0.5098039215686274
+			],
+			"skyMidColor": [
+				0.8235294117647058, 0.4392156862745098, 0.4392156862745098
+			],
+			"skyLowColor": [
+				0.8235294117647058, 0.4392156862745098, 0.4392156862745098
+			],
+			"skyPower": 0.6,
+			"fogAmount": 0.007,
+			"fogHeightAmount": 0,
+			"fogHeightOffset": 0,
+			"fogHeightDistFalloff": 0,
+			"fogHeightAmountMin": 0,
+			"fogHeightAmountMax": 1,
+			"colorMultiplier": [
+				0.7058823529411765, 0.48627450980392156, 0.8745098039215686
+			],
+			"colorMultiplierAdjust": 0.4700000000000002,
+			"colorAdder": [
+				0.00784313725490196, 0.00392156862745098, 0.01568627450980392
+			],
+			"colorAdderAdjust": -0.04000000000000001,
+			"saturation": 1.2700000000000002,
+			"lightningEnabled": false
+		},
+		{
+			"name": "Rain day",
+			"probability": 1,
+			"windSfxVolume": 0.035,
+			"rainSfxVolume": 0.14,
+			"birdsSfxVolume": 0.0001,
+			"skyHighColor": [
+				0.2196078431372549, 0.2784313725490196, 0.44313725490196076
+			],
+			"skyMidColor": [
+				0.42745098039215684, 0.4823529411764706, 0.792156862745098
+			],
+			"skyLowColor": [
+				0.42745098039215684, 0.4823529411764706, 0.792156862745098
+			],
+			"skyPower": 0.8999999999999999,
+			"fogAmount": 0.023999999999999973,
+			"colorMultiplier": [
+				0.058823529411764705, 0.07058823529411765, 0.10196078431372549
+			],
+			"colorMultiplierAdjust": 0.14000000000000007,
+			"colorAdder": [
+				0.00784313725490196, 0.00784313725490196, 0.03529411764705882
+			],
+			"colorAdderAdjust": 0.020000000000000004,
+			"saturation": 1.2000000000000013,
+			"lightningEnabled": true
+		},
+		{
+			"name": "Peacefull soft colors daytime",
+			"probability": 3,
+			"cloudsHeight": 36.99999999999999,
+			"skyHighColor": [0, 0.41568627450980394, 0.9607843137254902],
+			"skyMidColor": [
+				0.807843137254902, 0.8901960784313725, 0.9333333333333333
+			],
+			"skyLowColor": [
+				0.807843137254902, 0.8901960784313725, 0.9333333333333333
+			],
+			"skyPower": 0.6,
+			"fogAmount": 0.002,
+			"fogHeightAmount": 0,
+			"fogHeightOffset": 0,
+			"fogHeightDistFalloff": 0,
+			"fogHeightAmountMin": 0,
+			"fogHeightAmountMax": 1,
+			"colorMultiplier": [
+				0.7803921568627451, 0.8117647058823529, 0.9411764705882353
+			],
+			"colorMultiplierAdjust": 0.4500000000000003,
+			"colorAdder": [
+				0.00784313725490196, 0.011764705882352941, 0.011764705882352941
+			],
+			"colorAdderAdjust": -0.00999999999999999,
+			"saturation": 1.2,
+			"lightningEnabled": false
+		}
+	]
+}
