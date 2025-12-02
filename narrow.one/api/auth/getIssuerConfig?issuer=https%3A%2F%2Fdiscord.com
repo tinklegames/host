@@ -1,0 +1,1 @@
+{"clientId":"1209846124878241873","openIdConfig":{"authorization_endpoint":"https://discord.com/oauth2/authorize","response_types_supported":["token"],"response_modes_supported":["token"],"scopes_supported":["identify","email"],"userinfo_endpoint":"https://discord.com/api/v10/users/@me"}}
