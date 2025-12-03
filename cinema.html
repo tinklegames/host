@@ -36,7 +36,7 @@
         --gap: 16px;
         --card-radius: var(--radius-lg);
     }
-
+    
     ::-webkit-scrollbar {
     width: 12px;
     height: 12px;
@@ -77,6 +77,40 @@
         --neon-magenta: #ff0090;
     }
 
+.theme-christmas {
+    --theme-name: 'Christmas Magic';
+
+    /* Backgrounds — deep evergreen / pine forest */
+    --bg-primary: #031d0b;     /* main bg — dark green */
+    --bg-surface: #062a12;     /* cards / panels */
+    --bg-light: #0c3a1a;       /* hover / lighter surface */
+
+    /* Christmas Accents */
+    --accent-main: #ff253a;        /* MAIN RED — bright candy-cane red */
+    --accent-secondary: #ffffff;   /* WHITE — snow white highlights */
+
+    /* Extra green accent if needed */
+    --neon-blue: #16c55f;          /* evergreen green glow */
+    --neon-magenta: #fff;       /* red glow */
+
+    /* Text */
+    --text-primary: #ffffff;       /* snow white text */
+    --text-secondary: #d6ffe1;     /* frosty pale green */
+    --text-muted: #8fb79d;         /* soft desaturated green */
+
+    /* Glow + buttons */
+    --button-shadow: 0 0 15px rgba(255, 37, 58, 0.6);  /* red glow */
+
+    /* Logo ring */
+    --ring-color: #ff253a;   /* red Christmas halo */
+
+    /* Optional Xmas text glow */
+    --text-glow: 
+        0 0 8px rgba(255,255,255,0.9),
+        0 0 16px rgba(255,37,58,0.5);
+}
+
+    
     .theme-midnight {
         --theme-name: 'Midnight Blue';
         --bg-primary: #0c1622;
@@ -519,9 +553,37 @@
     transform: translateY(0);
 }
 
+/* Falling Snow */
+#snow-container {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    z-index: 9999;
+}
+
+.snowflake {
+    position: absolute;
+    top: -10px;
+    color: white;
+    font-size: 0.8rem;
+    opacity: 0.9;
+    animation-name: fall;
+    animation-timing-function: linear;
+    user-select: none;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(110vh);
+        opacity: 0.3;
+    }
+}
+
     </style>
 </head>
 <body class="h-screen flex flex-col antialiased" id="appBody">
+    <div id="snow-container"></div>
     <header class="w-full flex justify-center py-2 bg-black/50 backdrop-blur-sm border-b border-white/10 shadow-lg fixed top-0 z-50">
         <nav class="flex space-x-4 sm:space-x-8 items-center h-10">
 
@@ -531,6 +593,12 @@
             <a href="javascript:switchPage('tv')" id="nav-tv" class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" aria-label="TV Shows">
                 <i data-lucide="monitor-dot" class="w-6 h-6 nav-link-icon"></i>
             </a>
+<a href="javascript:switchPage('christmas')" 
+   id="nav-christmas" 
+   class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" 
+   aria-label="Christmas Movies">
+    <i data-lucide="gift" class="w-6 h-6 nav-link-icon text-red-400"></i>
+</a>
             <a href="javascript:switchPage('settings')" id="nav-settings" class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" aria-label="Settings">
                 <i data-lucide="settings" class="w-6 h-6 nav-link-icon"></i>
             </a>
@@ -585,9 +653,6 @@
         Suggestions
     </button>
 </div>
-
-
-
 
         <div class="grid" id="movieGrid">
             <button class="tmdb-card" data-type="movie" data-id="278" data-genres="Drama,Crime" aria-label="The Shawshank Redemption"></button>
@@ -907,7 +972,53 @@
 
         </div>
     </div>
+<div id="christmas-page" class="content-page">
+    <h1 class="text-3xl font-bold mb-6 text-white text-center">
+        <i data-lucide="gift" class="w-6 h-6 inline-block mr-2 text-red-400"></i>
+        Christmas Movies
+    </h1>
 
+    <div class="flex flex-col md:flex-row gap-4 mb-8 max-w-4xl mx-auto w-full items-center">
+        <div class="relative w-full md:w-2/3">
+            <input type="text" id="christmasSearch" placeholder="Search Christmas movies..."
+                    oninput="filterContent('christmas')"
+                    class="w-full p-3 pl-10 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-accent-main outline-none">
+            <i data-lucide="search" class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+
+        <select id="christmasGenreFilter" onchange="filterContent('christmas')"
+                class="w-full md:w-1/3 p-3 rounded-xl bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-accent-main outline-none appearance-none cursor-pointer">
+        </select>
+    </div>
+
+    <!-- Christmas Movie Grid -->
+    <div class="grid" id="christmasGrid">
+        <button class="tmdb-card" data-type="movie" data-id="10719" data-genres="Family,Comedy" aria-label="Elf"></button>
+        <button class="tmdb-card" data-type="movie" data-id="771" data-genres="Comedy,Family" aria-label="Home Alone"></button>
+        <button class="tmdb-card" data-type="movie" data-id="772" data-genres="Comedy,Family" aria-label="Home Alone 2: Lost in New York"></button>
+        <button class="tmdb-card" data-type="movie" data-id="9714" data-genres="Comedy,Family" aria-label="Home Alone 3"></button>
+        <button class="tmdb-card" data-type="movie" data-id="12536" data-genres="Comedy,Family" aria-label="Home Alone 4"></button>
+        <button class="tmdb-card" data-type="movie" data-id="134375" data-genres="Comedy,Family" aria-label="Home Alone: The Holiday Heist"></button>
+        <button class="tmdb-card" data-type="movie" data-id="5255" data-genres="Family" aria-label="The Polar Express"></button>
+        <button class="tmdb-card" data-type="movie" data-id="9479" data-genres="Family,Animation" aria-label="The Nightmare Before Christmas"></button>
+        <button class="tmdb-card" data-type="movie" data-id="17979" data-genres="Family,Animation" aria-label="A Christmas Carol"></button>
+        <button class="tmdb-card" data-type="movie" data-id="8871" data-genres="Family,Comedy" aria-label="How the Grinch Stole Christmas"></button>
+        <button class="tmdb-card" data-type="movie" data-id="360920" data-genres="Family,Comedy,Animation" aria-label="The Grinch"></button>
+        <button class="tmdb-card" data-type="movie" data-id="845781" data-genres="Comedy" aria-label="Red One"></button>
+        <button class="tmdb-card" data-type="movie" data-id="927" data-genres="Comedy" aria-label="Gremlins"></button>
+        <button class="tmdb-card" data-type="movie" data-id="26809" data-genres="Animation,Family" aria-label="Prep & Landing"></button>
+        <button class="tmdb-card" data-type="movie" data-id="14059" data-genres="Family" aria-label="Snow Buddies"></button>
+        <button class="tmdb-card" data-type="movie" data-id="1218762" data-genres="Romance,Comedy" aria-label="Jingle Bell Heist"></button>
+        <button class="tmdb-card" data-type="movie" data-id="1430593" data-genres="Romance,Comedy" aria-label="Tinsel Town"></button>
+        <button class="tmdb-card" data-type="movie" data-id="1581" data-genres="Comedy,Romance" aria-label="The Holiday"></button>
+        <button class="tmdb-card" data-type="movie" data-id="1097870" data-genres="Comedy" aria-label="Dear Santa"></button>
+        <button class="tmdb-card" data-type="movie" data-id="1537084" data-genres="Family,Romance,Comedy" aria-label="Three Wisest Men"></button>
+        <button class="tmdb-card" data-type="movie" data-id="645757" data-genres="Animation,Comedy,Family" aria-label="That Christmas"></button>
+        <button class="tmdb-card" data-type="movie" data-id="549053" data-genres="Romance,Comedy" aria-label="Last Christmas"></button>
+        <button class="tmdb-card" data-type="movie" data-id="527435" data-genres="Family,Comedy" aria-label="The Christmas Chronicles"></button>
+        <button class="tmdb-card" data-type="movie" data-id="654028" data-genres="Family,Comedy" aria-label="The Christmas Chronicles: Part Two"></button>
+    </div>
+</div>
 
             <div id="settings-page" class="content-page">
                 <h1 class="text-3xl font-bold mb-6 text-white"><i data-lucide="settings" class="w-6 h-6 inline-block mr-2"></i> Appearance & Settings</h1>
@@ -921,6 +1032,34 @@
                             Cinematic Noir (Default)
                             <div class="h-4 rounded-sm mt-2" style="background-color: #0a0014; border: 1px solid #ff0090;"></div>
                         </button>
+                        <button class="theme-button w-full p-3 mb-3 rounded-lg border-2 border-transparent 
+                text-white font-bold relative overflow-hidden
+                bg-[#111a33] 
+                hover:border-[#ff2f4b] 
+                hover:shadow-[0_0_18px_#ff2f4b,0_0_32px_#00ff9d]
+                transition duration-300"
+        onclick="changeTheme('christmas')">
+
+    <!-- Twinkling lights -->
+    <div class="absolute inset-0 pointer-events-none flex justify-between px-2">
+        <div class="w-2 h-2 rounded-full bg-[#ff2f4b] animate-pulse"></div>
+        <div class="w-2 h-2 rounded-full bg-[#00ff9d] animate-ping"></div>
+        <div class="w-2 h-2 rounded-full bg-[#ff2f4b] animate-pulse"></div>
+        <div class="w-2 h-2 rounded-full bg-[#00ff9d] animate-ping"></div>
+        <div class="w-2 h-2 rounded-full bg-[#ff2f4b] animate-pulse"></div>
+    </div>
+
+    Christmas Magic
+
+    <!-- Theme Preview Bar -->
+    <div class="h-4 rounded-sm mt-3 shadow-inner"
+         style="
+            background: linear-gradient(90deg, #ff2f4b, #00ff9d);
+            border: 1px solid #ff2f4b;
+         ">
+    </div>
+</button>
+
                         <button class="theme-button w-full p-3 mb-3 rounded-lg border-2 border-transparent text-white bg-blue-900 hover:border-blue-400" onclick="changeTheme('midnight')">
                             Midnight Blue
                             <div class="h-4 rounded-sm mt-2" style="background-color: #0c1622; border: 1px solid #4686ff;"></div>
@@ -1019,10 +1158,27 @@
         let __TMDB_API_KEY = null;
         let __CURRENT_MODAL_CARD = null;
         const allCardElements = [];
-        const GENRES = {
-            'movie': ['All Genres', 'Action', 'Adventure', 'Animation', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Fantasy', 'History', 'Horror', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'War', 'Western'],
-            'tv': ['All Genres', 'Action', 'Adventure', 'Animation', 'Comedy', 'Crime', 'Drama', 'Family', 'Kids', 'Mystery', 'Sci-Fi', 'Western'],
-        };
+const GENRES = {
+    movie: [
+        'All Genres',
+        'Action', 'Adventure', 'Animation', 'Comedy', 'Crime',
+        'Documentary', 'Drama', 'Fantasy', 'History', 'Horror',
+        'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'War', 'Western'
+    ],
+    tv: [
+        'All Genres',
+        'Action', 'Adventure', 'Animation', 'Comedy', 'Crime',
+        'Drama', 'Family', 'Kids', 'Mystery', 'Sci-Fi', 'Western'
+    ],
+    christmas: [
+        'All Genres',
+        'Family',
+        'Comedy',
+        'Romance',
+        'Animation'
+    ]
+};
+
 
 
         async function loadApiKey() {
@@ -1207,7 +1363,7 @@ function setupAdBlockerObserver() {
             return base + size + (path.startsWith('/') ? path : '/' + path);
         }
 
-        const THEMES = ['spotify', 'light', '2022purple', 'cyberpunk', 'midnight', 'solarized', 'forest', 'crimson'];
+        const THEMES = ['spotify', 'light', '2022purple', 'cyberpunk', 'midnight', 'solarized', 'forest', 'crimson', 'christmas'];
 
         function changeTheme(themeName, save = true) {
             appBody.classList.remove(...THEMES.map(t => `theme-${t}`));
@@ -1302,15 +1458,18 @@ function setupAdBlockerObserver() {
                 history.pushState(null, '', url.toString());
             }
 
-            if (pageId === 'settings') {
-                changeTheme(localStorage.getItem('theme') || 'cyberpunk', false);
-            } else if (pageId === 'movies') {
-                populateGenreFilter('movie');
-                filterContent('movie');
-            } else if (pageId === 'tv') {
-                populateGenreFilter('tv');
-                filterContent('tv');
-            }
+    if (pageId === 'settings') {
+        changeTheme(localStorage.getItem('theme') || 'cyberpunk', false);
+    } else if (pageId === 'movies') {
+        populateGenreFilter('movie');
+        filterContent('movie');
+    } else if (pageId === 'tv') {
+        populateGenreFilter('tv');
+        filterContent('tv');
+    } else if (pageId === 'christmas') {
+        populateGenreFilter('christmas');
+        filterContent('christmas');
+    }
 
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
@@ -1760,6 +1919,7 @@ function setupAdBlockerObserver() {
             const allCards = Array.from(document.querySelectorAll('.tmdb-card'));
             populateGenreFilter('movie');
             populateGenreFilter('tv');
+            populateGenreFilter('christmas');
 
             (async function init(){
                 let apiKey;
@@ -1827,11 +1987,12 @@ document.getElementById("updateLog").addEventListener("click", hideUpdateLog);
 <div id="updateLog" class="update-log-backdrop">
     <div class="update-log-box" onclick="event.stopPropagation()">
         <span class="update-close-btn" onclick="hideUpdateLog()">✕</span>
-        <h2 class="text-2xl font-bold mb-4">Update Log V1.2</h2>
+        <h2 class="text-2xl font-bold mb-4">Christmas Update 🎄</h2>
 
         <ul class="list-disc pl-5 space-y-2 text-gray-300">
-            <li>Added Saint Seiya</li>
-            <li>Added Pocoyo</li>
+            <li>Falling Snowflakes</li>
+            <li>New Christmas Theme in Settings</li>
+            <li>Added Christmas Tab + Movies</li>
         </ul>
     </div>
 </div>
@@ -1859,6 +2020,31 @@ document.getElementById("modalBackdrop").addEventListener("click", (e) => {
         updateBtn.style.pointerEvents = "auto";
     }
 });
+</script>
+<script>
+function startSnow() {
+    const snowContainer = document.getElementById("snow-container");
+
+    setInterval(() => {
+        const flake = document.createElement("div");
+        flake.classList.add("snowflake");
+
+        flake.textContent = "❄";
+        flake.style.left = Math.random() * 100 + "vw";
+        flake.style.fontSize = (Math.random() * 10 + 10) + "px";
+        flake.style.opacity = Math.random();
+        flake.style.animationDuration = (Math.random() * 5 + 5) + "s";
+        flake.style.transform = `translateX(${Math.random() * 20 - 10}px)`;
+
+        snowContainer.appendChild(flake);
+
+        // remove when done falling
+        setTimeout(() => flake.remove(), 12000);
+    }, 150);
+}
+
+// Start the snowfall on page load
+startSnow();
 </script>
 
 </body>
