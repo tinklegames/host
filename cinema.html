@@ -1024,6 +1024,18 @@
     </div>
 </div>
 
+<div id="chad-page" class="content-page">
+    <h1 class="text-3xl font-bold mb-6 text-white text-center">
+        <i data-lucide="crown" class="w-6 h-6 inline-block mr-2 text-yellow-400"></i>
+        Special
+    </h1>
+
+    <div class="grid" id="chadGrid">
+        <button class="tmdb-card" data-type="tv" data-id="42444"></button>
+    </div>
+</div>
+
+
             <div id="settings-page" class="content-page">
                 <h1 class="text-3xl font-bold mb-6 text-white"><i data-lucide="settings" class="w-6 h-6 inline-block mr-2"></i> Appearance & Settings</h1>
 
@@ -1176,10 +1188,14 @@ const GENRES = {
     ],
     christmas: [
         'All Genres',
+        'Holiday',
         'Family',
         'Comedy',
         'Romance',
         'Animation'
+    ],
+    chad: [
+        '😩'
     ]
 };
 
@@ -1473,6 +1489,9 @@ function setupAdBlockerObserver() {
     } else if (pageId === 'christmas') {
         populateGenreFilter('christmas');
         filterContent('christmas');
+    } else if (pageId === 'chad') {
+        populateGenreFilter('chad');
+        filterContent('chad');
     }
 
             if (typeof lucide !== 'undefined') {
@@ -1897,6 +1916,43 @@ function setupAdBlockerObserver() {
             if (ev.key === 'Escape' && modalBackdrop.style.display === 'flex' && document.getElementById('popupOverlay').style.display !== 'flex') closeModal();
             if (ev.key === 'Escape' && document.getElementById('popupOverlay').style.display === 'flex') closePopup();
         });
+        
+// --- Secret CHAD page combo (press C + H + A + D at the same time) ---
+const SECRET_COMBO_KEYS = new Set(['c', 'h', 'a', 'd']);
+const currentlyPressedKeys = new Set();
+
+window.addEventListener('keydown', (ev) => {
+    const key = ev.key.toLowerCase();
+
+    // Don't trigger while typing in inputs / textareas
+    const active = document.activeElement;
+    if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) {
+        return;
+    }
+
+    // Ignore modifier-only keys
+    if (['shift', 'control', 'alt', 'meta'].includes(key)) return;
+
+    currentlyPressedKeys.add(key);
+
+    // Check if ALL combo keys are held down
+    let allDown = true;
+    SECRET_COMBO_KEYS.forEach(k => {
+        if (!currentlyPressedKeys.has(k)) allDown = false;
+    });
+
+    if (allDown) {
+        ev.preventDefault();
+        currentlyPressedKeys.clear(); // reset so it doesn't spam
+        switchPage('chad');
+    }
+});
+
+window.addEventListener('keyup', (ev) => {
+    const key = ev.key.toLowerCase();
+    currentlyPressedKeys.delete(key);
+});
+
 
         fullscreenBtn.addEventListener('click', async () => {
             if (!document.fullscreenElement) {
