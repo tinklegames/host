@@ -197,6 +197,72 @@
         }
       }
     </style>
+    <script>
+// 1) Fake Turnstile so any calls in the bundle don't explode
+window.cf__reactTurnstileOnLoad = function () {
+  console.log("cf__reactTurnstileOnLoad stub called");
+};
+
+window.turnstile = window.turnstile || {
+  render: function () {
+    console.log("turnstile.render() stub");
+    return "stub-widget-id";
+  },
+  reset: function () {
+    console.log("turnstile.reset() stub");
+  },
+  remove: function () {
+    console.log("turnstile.remove() stub");
+  },
+  getResponse: function () {
+    return "";
+  }
+};
+
+// 2) Block Cloudflare Turnstile scripts from ever loading
+(function () {
+  const originalCreate = document.createElement;
+  document.createElement = function (tagName) {
+    const el = originalCreate.call(document, tagName);
+    if (tagName.toLowerCase() === "script") {
+      const origSetAttribute = el.setAttribute;
+      el.setAttribute = function (name, value) {
+        if (
+          name === "src" &&
+          typeof value === "string" &&
+          (value.includes("challenges.cloudflare.com") ||
+           value.includes("cdn-cgi") ||
+           value.includes("turnstile"))
+        ) {
+          console.warn("Blocked Cloudflare script:", value);
+          return;
+        }
+        return origSetAttribute.call(this, name, value);
+      };
+
+      Object.defineProperty(el, "src", {
+        get() {
+          return el.getAttribute("src");
+        },
+        set(value) {
+          if (
+            typeof value === "string" &&
+            (value.includes("challenges.cloudflare.com") ||
+             value.includes("cdn-cgi") ||
+             value.includes("turnstile"))
+          ) {
+            console.warn("Blocked Cloudflare script:", value);
+            return;
+          }
+          el.setAttribute("src", value);
+        }
+      });
+    }
+    return el;
+  };
+})();
+</script>
+
     <script type="module" crossorigin src="assets/index-a8595b49.js"></script>
     <link rel="stylesheet" href="assets/index.old-8901d377.css">
   </head>
