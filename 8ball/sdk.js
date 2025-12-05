@@ -5066,7 +5066,7 @@
 					c = r(n(767));
 				t.default = class {
 					constructor() {
-						this.initState = i.INIT_STATE.UNINITIALIZED, this._ad = new a.default, this._banner = new s.default, this._user = new o.default, this.gameLink = "https://tinklegames.github.io/host/bstars/game/your-game-will-appear-here", this.mainLogger = new c.default("none"), this.gameLogger = new c.default("game"), this.showInviteButton = (e, t) => (0, u.callbackWrapper)(async () => {
+						this.initState = i.INIT_STATE.UNINITIALIZED, this._ad = new a.default, this._banner = new s.default, this._user = new o.default, this.gameLink = "https://tinklegames.github.io/host/8ball/game/your-game-will-appear-here", this.mainLogger = new c.default("none"), this.gameLogger = new c.default("game"), this.showInviteButton = (e, t) => (0, u.callbackWrapper)(async () => {
 							this.gameLogger.log("Show invite button (local)");
 							const t = (0, l.generateInviteLink)(e, this.gameLink);
 							return this.gameLogger.log(`Invite button link ${t}`), t
@@ -5082,7 +5082,7 @@
 					addInitCallback(e) {
 						let t = !0;
 						"false" === (0, u.getQueryStringValue)("user_account_available") && (t = !1), e({
-							gameLink: "https://tinklegames.github.io/host/bstars/game/yourFabulousGameHere",
+							gameLink: "https://tinklegames.github.io/host/8ball/game/yourFabulousGameHere",
 							rafvertizingUrl: "demo",
 							useTestAds: !1,
 							systemInfo: {
