@@ -5066,7 +5066,7 @@
 					c = r(n(767));
 				t.default = class {
 					constructor() {
-						this.initState = i.INIT_STATE.UNINITIALIZED, this._ad = new a.default, this._banner = new s.default, this._user = new o.default, this.gameLink = "https://www.crazygames.com/game/your-game-will-appear-here", this.mainLogger = new c.default("none"), this.gameLogger = new c.default("game"), this.showInviteButton = (e, t) => (0, u.callbackWrapper)(async () => {
+						this.initState = i.INIT_STATE.UNINITIALIZED, this._ad = new a.default, this._banner = new s.default, this._user = new o.default, this.gameLink = "https://tinklegames.github.io/host/bstars/game/your-game-will-appear-here", this.mainLogger = new c.default("none"), this.gameLogger = new c.default("game"), this.showInviteButton = (e, t) => (0, u.callbackWrapper)(async () => {
 							this.gameLogger.log("Show invite button (local)");
 							const t = (0, l.generateInviteLink)(e, this.gameLink);
 							return this.gameLogger.log(`Invite button link ${t}`), t
@@ -5082,7 +5082,7 @@
 					addInitCallback(e) {
 						let t = !0;
 						"false" === (0, u.getQueryStringValue)("user_account_available") && (t = !1), e({
-							gameLink: "https://www.crazygames.com/game/yourFabulousGameHere",
+							gameLink: "https://tinklegames.github.io/host/bstars/game/yourFabulousGameHere",
 							rafvertizingUrl: "demo",
 							useTestAds: !1,
 							systemInfo: {
@@ -5400,17 +5400,17 @@
 						const e = ["localhost", "127.0.0.1", "preview.construct.net"].includes(window.location.hostname) || "true" === (0, o.getQueryStringValue)("useLocalSdk");
 						return e && await (0, h.wait)(500), e
 					}
-					async isCrazyGames() {
-						window.addEventListener("message", e => this.crazyGamesGfCheckListener(e), !1);
-						const e = {
-							type: "checkCrazyGamesGF"
-						};
-						window.postMessage(e, "*"), window.parent.postMessage(e, "*"), window.parent.parent.postMessage(e, "*"), window.parent.parent.parent.postMessage(e, "*");
-						const t = new Promise(e => {
-							this.crazyGamesCheckResolver = e
-						});
-						return await Promise.race([t, (0, h.wait)(3e3)]), window.removeEventListener("message", this.crazyGamesGfCheckListener), this.isOnCrazyGames
-					}
+async isCrazyGames() {
+  try {
+    const host = window.location.hostname;
+    this.isOnCrazyGames = (host === "tinklegames.github.io");
+    return this.isOnCrazyGames;
+  } catch (e) {
+    console.error("SDK failed to detect host", e);
+    this.isOnCrazyGames = false;
+    return false;
+  }
+}
 					crazyGamesGfCheckListener(e) {
 						"crazyGamesGFConfirmation" === e.data.type && (this.isOnCrazyGames = !0, this.crazyGamesCheckResolver())
 					}
