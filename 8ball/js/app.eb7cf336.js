@@ -91710,17 +91710,45 @@ function () {
     this.crazyGames.user.removeAuthListener(listener);
   };
 
-  _proto.getItem = function getItem(item) {
+_proto.getItem = function getItem(item) {
+  // If CrazyGames data API is available, use it
+  if (this.crazyGames && this.crazyGames.data && typeof this.crazyGames.data.getItem === 'function') {
     return this.crazyGames.data.getItem(item);
-  };
+  }
 
-  _proto.setItem = function setItem(item, value) {
+  // Fallback: use localStorage or nothing
+  try {
+    return window.localStorage ? window.localStorage.getItem(item) : null;
+  } catch (e) {
+    return null;
+  }
+};
+
+_proto.setItem = function setItem(item, value) {
+  if (this.crazyGames && this.crazyGames.data && typeof this.crazyGames.data.setItem === 'function') {
     this.crazyGames.data.setItem(item, value);
-  };
+    return;
+  }
 
-  _proto.removeItem = function removeItem(item) {
+  try {
+    if (window.localStorage) {
+      window.localStorage.setItem(item, value);
+    }
+  } catch (e) {}
+};
+
+_proto.removeItem = function removeItem(item) {
+  if (this.crazyGames && this.crazyGames.data && typeof this.crazyGames.data.removeItem === 'function') {
     this.crazyGames.data.removeItem(item);
-  };
+    return;
+  }
+
+  try {
+    if (window.localStorage) {
+      window.localStorage.removeItem(item);
+    }
+  } catch (e) {}
+};
 
   _proto.clearData = function clearData() {
     this.crazyGames.data.clear();
