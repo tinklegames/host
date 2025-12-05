@@ -14,7 +14,23 @@
     let crazyGamesHouseAdCheck = null;
 </script>
 <script src="sdk.js"></script>
+<script>
+    const originalFetch = window.fetch;
 
+    window.fetch = function(resource, options) {
+        if (typeof resource === "string" && resource.includes("shellshock/data/housePromo.json")) {
+            console.log("Redirecting housePromo.json → your custom JSON");
+            resource = "https://tinklegames.github.io/host/shellshock/data/housePromo.json";
+        }
+
+        if (typeof resource === "string" && resource.includes("/unblocked/json/proxy-list.json")) {
+            console.log("Redirecting proxy-list.json → your custom JSON");
+            resource = "https://tinklegames.github.io/host/shellshock/unblocked/json/proxy-list.json";
+        }
+
+        return originalFetch(resource, options);
+    };
+</script>
 <!-- title, seo meta and favicons -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
