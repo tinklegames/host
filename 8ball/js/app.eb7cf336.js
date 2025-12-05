@@ -91749,72 +91749,135 @@ _proto.removeItem = function removeItem(item) {
     }
   } catch (e) {}
 };
-
   _proto.clearData = function clearData() {
-    this.crazyGames.data.clear();
+    // Prefer CrazyGames data API, fallback to localStorage
+    if (this.crazyGames && this.crazyGames.data && typeof this.crazyGames.data.clear === "function") {
+      this.crazyGames.data.clear();
+    } else {
+      try {
+        if (window.localStorage) window.localStorage.clear();
+      } catch (e) {}
+    }
   };
 
   _proto.requestAd = function requestAd(type, callbacks) {
-    this.crazyGames.ad.requestAd(type, callbacks);
+    if (this.crazyGames && this.crazyGames.ad && typeof this.crazyGames.ad.requestAd === "function") {
+      this.crazyGames.ad.requestAd(type, callbacks);
+    } else {
+      console.warn("CrazyGames.ad.requestAd not available, skipping ad request:", type);
+      if (callbacks && typeof callbacks.onError === "function") {
+        callbacks.onError("CrazyGames ads not available on this host");
+      }
+    }
   };
 
   _proto.generateInviteCode = function generateInviteCode() {
     var roomId = this.randomString(10);
-    this.crazyGames.game.inviteLink({
-      roomId: roomId
-    });
-    this.crazyGames.game.showInviteButton({
-      roomId: roomId
-    });
+
+    if (this.crazyGames && this.crazyGames.game) {
+      if (typeof this.crazyGames.game.inviteLink === "function") {
+        this.crazyGames.game.inviteLink({ roomId: roomId });
+      }
+      if (typeof this.crazyGames.game.showInviteButton === "function") {
+        this.crazyGames.game.showInviteButton({ roomId: roomId });
+      }
+    } else {
+      console.warn("CrazyGames.game inviteLink/showInviteButton not available");
+    }
+
     return roomId;
   };
 
   _proto.showInviteButton = function showInviteButton(roomId) {
-    this.crazyGames.game.showInviteButton({
-      roomId: roomId
-    });
+    if (this.crazyGames && this.crazyGames.game && typeof this.crazyGames.game.showInviteButton === "function") {
+      this.crazyGames.game.showInviteButton({ roomId: roomId });
+    } else {
+      console.warn("CrazyGames.game.showInviteButton not available");
+    }
     return roomId;
   };
 
   _proto.hideInviteButton = function hideInviteButton() {
-    this.crazyGames.game.hideInviteButton();
+    if (this.crazyGames && this.crazyGames.game && typeof this.crazyGames.game.hideInviteButton === "function") {
+      this.crazyGames.game.hideInviteButton();
+    } else {
+      console.warn("CrazyGames.game.hideInviteButton not available");
+    }
   };
 
   _proto.retrieveInviteCode = function retrieveInviteCode() {
-    return this.crazyGames.game.getInviteParam('roomId');
+    if (this.crazyGames && this.crazyGames.game && typeof this.crazyGames.game.getInviteParam === "function") {
+      return this.crazyGames.game.getInviteParam("roomId");
+    } else {
+      console.warn("CrazyGames.game.getInviteParam not available");
+      return null;
+    }
   };
 
   _proto.requestResponsiveBanner = function requestResponsiveBanner(elementID) {
-    this.crazyGames.banner.requestResponsiveBanner(elementID);
+    if (this.crazyGames && this.crazyGames.banner && typeof this.crazyGames.banner.requestResponsiveBanner === "function") {
+      this.crazyGames.banner.requestResponsiveBanner(elementID);
+    } else {
+      console.warn("CrazyGames.banner.requestResponsiveBanner not available");
+    }
   };
 
   _proto.clearAllBanners = function clearAllBanners() {
-    this.crazyGames.banner.clearAllBanners();
+    if (this.crazyGames && this.crazyGames.banner && typeof this.crazyGames.banner.clearAllBanners === "function") {
+      this.crazyGames.banner.clearAllBanners();
+    } else {
+      console.warn("CrazyGames.banner.clearAllBanners not available");
+    }
   };
 
   _proto.gameplayStop = function gameplayStop() {
-    this.crazyGames.game.gameplayStop();
+    if (this.crazyGames && this.crazyGames.game && typeof this.crazyGames.game.gameplayStop === "function") {
+      this.crazyGames.game.gameplayStop();
+    } else {
+      console.warn("CrazyGames.game.gameplayStop not available");
+    }
   };
 
   _proto.gameplayStart = function gameplayStart() {
-    this.crazyGames.game.hideInviteButton();
-    this.crazyGames.game.gameplayStart();
+    if (this.crazyGames && this.crazyGames.game) {
+      if (typeof this.crazyGames.game.hideInviteButton === "function") {
+        this.crazyGames.game.hideInviteButton();
+      }
+      if (typeof this.crazyGames.game.gameplayStart === "function") {
+        this.crazyGames.game.gameplayStart();
+      }
+    } else {
+      console.warn("CrazyGames.game.gameplayStart not available");
+    }
   };
 
   _proto.loadingStart = function loadingStart() {
-    this.crazyGames.game.loadingStart();
+    if (this.crazyGames && this.crazyGames.game && typeof this.crazyGames.game.loadingStart === "function") {
+      this.crazyGames.game.loadingStart();
+    } else {
+      console.warn("CrazyGames.game.loadingStart not available, skipping.");
+    }
   };
 
   _proto.loadingStop = function loadingStop() {
-    this.crazyGames.game.loadingStop();
+    if (this.crazyGames && this.crazyGames.game && typeof this.crazyGames.game.loadingStop === "function") {
+      this.crazyGames.game.loadingStop();
+    } else {
+      console.warn("CrazyGames.game.loadingStop not available, skipping.");
+    }
   };
 
   _proto.happyTime = function happyTime() {
-    this.crazyGames.game.happytime();
-  } // ************
+    if (this.crazyGames && this.crazyGames.game && typeof this.crazyGames.game.happytime === "function") {
+      this.crazyGames.game.happytime();
+    } else {
+      console.warn("CrazyGames.game.happytime not available");
+    }
+  };
+  // ************
   // *** IAPS ***
   // ************
-  ;
+
 
   _proto.getXsollaUserToken = function getXsollaUserToken() {
     return tslib_1.__awaiter(this, void 0, void 0,
