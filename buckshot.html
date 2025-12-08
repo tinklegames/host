@@ -9,129 +9,571 @@
     <link rel="stylesheet" href="style.css">
     <link id="-gd-engine-icon" rel="icon" type="image/png" href="buckshot-roulette.icon.png" />
     <link rel="apple-touch-icon" href="buckshot-roulette.apple-touch-icon.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
 
     <style>
-        @keyframes blinkCursor {
-            50% {
-                border-right-color: transparent;
-            }
-        }
-
-        @keyframes typeAndDelete {
-            0%, 10% {
-                width: 0;
-            }
-
-            45%, 55% {
-                width: 6.2em;
-            }
-
-            90%, 100% {
-                width: 0;
-            }
-        }
-
-        .terminal-loader {
-            border: 0.1em solid #333;
-            background-color: #1a1a1a;
-            color: #0f0;
-            font-family: "Courier New", Courier, monospace;
-            font-size: 1em;
-            padding: 1.5em 1em;
-            width: 12em;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            border-radius: 4px;
-            position: relative;
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            height: 100%;
             overflow: hidden;
-            box-sizing: border-box;
-            margin: 50px auto;
-            text-align: left;
         }
 
-        .terminal-header {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1.5em;
-            background-color: #333;
-            border-top-left-radius: 4px;
-            border-top-right-radius: 4px;
-            padding: 0 0.4em;
-            box-sizing: border-box;
+        #canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            background: #000;
         }
 
-        .terminal-controls {
-            float: right;
+        /* --- Tinkle-style loader overlay --- */
+        #loader-overlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 24px;
+            pointer-events: none;
+            z-index: 2000;
         }
 
-        .control {
-            display: inline-block;
-            width: 0.6em;
-            height: 0.6em;
-            margin-left: 0.4em;
-            border-radius: 50%;
-            background-color: #777;
+        .loader-panel {
+            pointer-events: auto;
+            width: min(640px, 100%);
+            max-height: 60vh;
+            background: radial-gradient(circle at top left, #414750 0, #1a1b20 55%, #111319 100%);
+            border-radius: 16px;
+            border: 1px solid rgba(211, 165, 16, 0.6);
+            box-shadow:
+                0 0 20px rgba(0, 0, 0, 0.8),
+                0 0 32px rgba(211, 165, 16, 0.35);
+            padding: 14px 16px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.6s ease, transform 0.6s ease;
         }
 
-        .control.close {
-            background-color: #e33;
+        #loader-overlay.loader-hidden .loader-panel {
+            opacity: 0;
+            transform: translateY(18px);
         }
 
-        .control.minimize {
-            background-color: #ee0;
+        .loader-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        .control.maximize {
-            background-color: #0b0;
-        }
-
-        .terminal-title {
-            float: left;
-            line-height: 1.5em;
-            color: #eee;
-        }
-
-        .text {
-            display: inline-block;
+        .loader-title {
+            font-family: "Orbitron", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 15px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #d3a410, #b7870f, #ffe4a1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 6px rgba(211, 165, 16, 0.45));
             white-space: nowrap;
+        }
+
+        .loader-status {
+            font-size: 12px;
+            color: #f2f2f2;
+            opacity: 0.9;
+            flex: 1;
+            text-align: right;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .loader-log {
+            background: rgba(0, 0, 0, 0.55);
+            border-radius: 10px;
+            padding: 8px 10px;
+            font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 11px;
+            color: #e4e4e4;
+            line-height: 1.35;
+            overflow-y: auto;
+            max-height: 26vh;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+        }
+
+        .loader-log::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .loader-log::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .loader-log::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
+        }
+
+        .loader-log-line-system {
+            color: #9cc9ff;
+        }
+
+        .loader-log-line-ok {
+            color: #8ee38e;
+        }
+
+        .loader-log-line-warn {
+            color: #ffd27f;
+        }
+
+        .loader-progress-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        #unity-loading-bar {
+            position: relative;
+            width: 100%;
+            height: 10px;
+            background: #262831;
+            border-radius: 999px;
             overflow: hidden;
-            border-right: 0.2em solid green;
-            animation:
-                typeAndDelete 4s steps(11) infinite,
-                blinkCursor 0.5s step-end infinite alternate;
-            margin-top: 1.5em;
+            box-shadow:
+                inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+                0 0 18px rgba(211, 165, 16, 0.35);
+        }
+
+        #unity-progress-bar-full {
+            width: 0%;
+            height: 100%;
+            background-image: linear-gradient(90deg, #6e5210, #d3a410, #ffe4a1);
+            box-shadow: 0 0 16px rgba(255, 228, 161, 0.75);
+            border-radius: inherit;
+            transition: width 0.1s ease-out;
+        }
+
+        .loader-progress-text {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 12px;
+            color: #f5f5f5;
+            opacity: 0.9;
+        }
+
+        #loader-percent {
+            font-weight: 600;
+        }
+
+        #loader-detail {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        /* --- Intro screen --- */
+        #intro-screen {
+            position: fixed;
+            inset: 0;
+            background-color: #414141;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.7s ease, visibility 0.7s ease;
+        }
+
+        #intro-screen.hidden-intro {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        #intro-logo-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        #intro-title {
+            font-family: "Orbitron", system-ui, -apple-system, BlinkMacSystemFont,
+                sans-serif;
+            font-size: 42px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #d3a410, #b7870f, #ffe4a1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 8px rgba(211, 165, 16, 0.4));
+            opacity: 0;
+            animation: titleFade 1s ease forwards 0.4s;
+            text-align: center;
+        }
+
+        @keyframes titleFade {
+            from {
+                opacity: 0;
+                transform: translateY(-12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%,
+            100% {
+                translate: 0px 36px;
+            }
+
+            50% {
+                translate: 0px 46px;
+            }
+        }
+
+        @keyframes bounce2 {
+            0%,
+            100% {
+                translate: 0px 46px;
+            }
+
+            50% {
+                translate: 0px 56px;
+            }
+        }
+
+        @keyframes umbral {
+            0% {
+                stop-color: #d3a5102e;
+            }
+
+            50% {
+                stop-color: rgba(211, 165, 16, 0.519);
+            }
+
+            100% {
+                stop-color: #d3a5102e;
+            }
+        }
+
+        @keyframes particles {
+            0%,
+            100% {
+                translate: 0px 16px;
+            }
+
+            50% {
+                translate: 0px 6px;
+            }
+        }
+
+        #particles {
+            animation: particles 4s ease-in-out infinite;
+        }
+
+        #animatedStop {
+            animation: umbral 4s infinite;
+        }
+
+        #bounce {
+            animation: bounce 4s ease-in-out infinite;
+            translate: 0px 36px;
+        }
+
+        #bounce2 {
+            animation: bounce2 4s ease-in-out infinite;
+            translate: 0px 46px;
+            animation-delay: 0.5s;
         }
     </style>
 </head>
 
 <body>
+    <!-- Godot engine (from CDN base) -->
     <script src="main.js"></script>
 
-    <!-- New Terminal Loader -->
-    <div id="loading-text">
-        <div class="terminal-loader">
-            <div class="terminal-header">
-                <div class="terminal-title">Status</div>
-                <div class="terminal-controls">
-                    <div class="control close"></div>
-                    <div class="control minimize"></div>
-                    <div class="control maximize"></div>
-                </div>
-            </div>
-            <div class="text">Loading...</div>
+    <!-- Intro screen -->
+    <div id="intro-screen">
+        <div id="intro-logo-wrapper">
+            <div id="intro-title">Tinkle Games</div>
+
+            <!-- SVG logo -->
+            <svg xmlns="http://www.w3.org/2000/svg" height="200" width="200">
+                <g style="order: -1;">
+                    <polygon transform="rotate(45 100 100)" stroke-width="1" stroke="#d3a410" fill="none"
+                        points="70,70 148,50 130,130 50,150" id="bounce"></polygon>
+                    <polygon transform="rotate(45 100 100)" stroke-width="1" stroke="#d3a410" fill="none"
+                        points="70,70 148,50 130,130 50,150" id="bounce2"></polygon>
+                    <polygon transform="rotate(45 100 100)" stroke-width="2" stroke="" fill="#414750"
+                        points="70,70 150,50 130,130 50,150"></polygon>
+                    <polygon stroke-width="2" stroke="" fill="url(#gradiente)"
+                        points="100,70 150,100 100,130 50,100"></polygon>
+                    <defs>
+                        <linearGradient y2="100%" x2="10%" y1="0%" x1="0%" id="gradiente">
+                            <stop style="stop-color: #1e2026;stop-opacity:1" offset="20%"></stop>
+                            <stop style="stop-color:#414750;stop-opacity:1" offset="60%"></stop>
+                        </linearGradient>
+                    </defs>
+                    <polygon transform="translate(20, 31)" stroke-width="2" stroke="" fill="#b7870f"
+                        points="80,50 80,75 80,99 40,75"></polygon>
+                    <polygon transform="translate(20, 31)" stroke-width="2" stroke="" fill="url(#gradiente2)"
+                        points="40,-40 80,-40 80,99 40,75"></polygon>
+                    <defs>
+                        <linearGradient y2="100%" x2="0%" y1="-17%" x1="10%" id="gradiente2">
+                            <stop style="stop-color: #d3a51000;stop-opacity:1" offset="20%"></stop>
+                            <stop style="stop-color:#d3a51054;stop-opacity:1" offset="100%" id="animatedStop"></stop>
+                        </linearGradient>
+                    </defs>
+                    <polygon transform="rotate(180 100 100) translate(20, 20)" stroke-width="2" stroke="" fill="#d3a410"
+                        points="80,50 80,75 80,99 40,75"></polygon>
+                    <polygon transform="rotate(0 100 100) translate(60, 20)" stroke-width="2" stroke=""
+                        fill="url(#gradiente3)" points="40,-40 80,-40 80,85 40,110.2"></polygon>
+                    <defs>
+                        <linearGradient y2="100%" x2="10%" y1="0%" x1="0%" id="gradiente3">
+                            <stop style="stop-color: #d3a51000;stop-opacity:1" offset="20%"></stop>
+                            <stop style="stop-color:#d3a51054;stop-opacity:1" offset="100%"></stop>
+                        </linearGradient>
+                    </defs>
+                    <polygon transform="rotate(45 100 100) translate(80, 95)" stroke-width="2" stroke="" fill="#ffe4a1"
+                        points="5,0 5,5 0,5 0,0" id="particles"></polygon>
+                    <polygon transform="rotate(45 100 100) translate(80, 55)" stroke-width="2" stroke="" fill="#ccb069"
+                        points="6,0 6,6 0,6 0,0" id="particles"></polygon>
+                    <polygon transform="rotate(45 100 100) translate(70, 80)" stroke-width="2" stroke="" fill="#fff"
+                        points="2,0 2,2 0,2 0,0" id="particles"></polygon>
+                    <polygon stroke-width="2" stroke="" fill="#292d34" points="29.5,99.8 100,142 100,172 29.5,130">
+                    </polygon>
+                    <polygon transform="translate(50, 92)" stroke-width="2" stroke="" fill="#1f2127"
+                        points="50,50 120.5,8 120.5,35 50,80"></polygon>
+                </g>
+            </svg>
         </div>
     </div>
 
+    <!-- Tinkle Loader Overlay -->
+    <div id="loader-overlay">
+        <div class="loader-panel">
+            <div class="loader-header">
+                <div class="loader-title">TINKLE LOADER</div>
+                <div class="loader-status" id="loader-status">Booting pipeline…</div>
+            </div>
+            <div class="loader-log" id="loader-log">
+                <!-- log lines injected by JS -->
+            </div>
+            <div class="loader-progress-wrapper">
+                <div id="unity-loading-bar">
+                    <div id="unity-progress-bar-full"></div>
+                </div>
+                <div class="loader-progress-text">
+                    <span id="loader-percent">0%</span>
+                    <span id="loader-detail">Waiting for downloads…</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tinkle loader helper -->
+    <script>
+        window.TINKLE_LOADER = (function () {
+            const logQueue = [];
+            let elementsReady = false;
+            let loaderLog, loaderStatus, loaderPercent, loaderDetail;
+
+            function initElements() {
+                loaderLog = document.getElementById("loader-log");
+                loaderStatus = document.getElementById("loader-status");
+                loaderPercent = document.getElementById("loader-percent");
+                loaderDetail = document.getElementById("loader-detail");
+
+                elementsReady = !!loaderLog;
+                if (elementsReady && logQueue.length) {
+                    logQueue.forEach(item => addLog(item.message, item.kind));
+                    logQueue.length = 0;
+                }
+            }
+
+            function addLog(message, kind = "system") {
+                if (!elementsReady) {
+                    logQueue.push({ message, kind });
+                    return;
+                }
+                if (!loaderLog) return;
+
+                const line = document.createElement("div");
+                const time = new Date().toLocaleTimeString("en-US", {
+                    hour12: false,
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit"
+                });
+
+                let cssClass = "loader-log-line-system";
+                if (kind === "ok") cssClass = "loader-log-line-ok";
+                else if (kind === "warn") cssClass = "loader-log-line-warn";
+
+                line.className = cssClass;
+                line.textContent = `[${time}] ${message}`;
+                loaderLog.appendChild(line);
+                loaderLog.scrollTop = loaderLog.scrollHeight;
+            }
+
+            function setStatus(text) {
+                if (!elementsReady) {
+                    logQueue.push({ message: text, kind: "system" });
+                }
+                if (loaderStatus) loaderStatus.textContent = text;
+            }
+
+            function setProgress(p, detail) {
+                if (loaderPercent) {
+                    loaderPercent.textContent = Math.round(p * 100) + "%";
+                }
+                if (loaderDetail && detail) {
+                    loaderDetail.textContent = detail;
+                }
+            }
+
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", initElements);
+            } else {
+                initElements();
+            }
+
+            addLog("Tinkle loader initialized.", "system");
+
+            return {
+                addLog,
+                setStatus,
+                setProgress
+            };
+        })();
+    </script>
+
+    <!-- Network tap for .pck parts -->
+    <script>
+        (function () {
+            const PART_MARKER = "buckshot-roulette.pck.part";
+
+            function filenameFromUrl(url) {
+                try {
+                    const u = new URL(url, window.location.href);
+                    return u.pathname.split("/").pop();
+                } catch {
+                    return url.split("/").pop();
+                }
+            }
+
+            // Patch fetch
+            if (window.fetch) {
+                const origFetch = window.fetch;
+                window.fetch = function (input, init) {
+                    let url = (typeof input === "string") ? input : (input && input.url);
+                    const isPart = url && url.indexOf(PART_MARKER) !== -1;
+
+                    if (isPart) {
+                        const name = filenameFromUrl(url);
+                        window.TINKLE_LOADER.addLog("Requesting " + name + "…", "system");
+                        window.TINKLE_LOADER.setStatus("Downloading " + name + "…");
+                    }
+
+                    return origFetch(input, init).then(resp => {
+                        if (isPart) {
+                            const name = filenameFromUrl(url);
+                            const len = resp.headers && resp.headers.get("content-length");
+                            if (len) {
+                                const mb = (parseInt(len, 10) / (1024 * 1024)).toFixed(2);
+                                window.TINKLE_LOADER.addLog(
+                                    "Downloaded " + name + " (" + mb + " MB).",
+                                    "ok"
+                                );
+                            } else {
+                                window.TINKLE_LOADER.addLog(
+                                    "Downloaded " + name + " (size unknown).",
+                                    "ok"
+                                );
+                            }
+                        }
+                        return resp;
+                    });
+                };
+            }
+
+            // Patch XHR (some Godot builds use it instead)
+            if (window.XMLHttpRequest) {
+                const OriginalXHR = window.XMLHttpRequest;
+
+                function PatchedXHR() {
+                    const xhr = new OriginalXHR();
+                    let trackedUrl = null;
+
+                    const origOpen = xhr.open;
+                    xhr.open = function (method, url, async, user, password) {
+                        trackedUrl = url;
+                        if (url && url.indexOf(PART_MARKER) !== -1) {
+                            const name = filenameFromUrl(url);
+                            window.TINKLE_LOADER.addLog("Requesting " + name + "…", "system");
+                            window.TINKLE_LOADER.setStatus("Downloading " + name + "…");
+                        }
+                        return origOpen.call(xhr, method, url, async, user, password);
+                    };
+
+                    xhr.addEventListener("load", function () {
+                        if (trackedUrl && trackedUrl.indexOf(PART_MARKER) !== -1) {
+                            const name = filenameFromUrl(trackedUrl);
+                            let mb = null;
+                            try {
+                                // response may be ArrayBuffer / text etc
+                                const len = xhr.response ? xhr.response.byteLength : 0;
+                                if (len) {
+                                    mb = (len / (1024 * 1024)).toFixed(2);
+                                }
+                            } catch (e) { }
+
+                            if (mb) {
+                                window.TINKLE_LOADER.addLog(
+                                    "Downloaded " + name + " (" + mb + " MB).",
+                                    "ok"
+                                );
+                            } else {
+                                window.TINKLE_LOADER.addLog(
+                                    "Downloaded " + name + " (size unknown).",
+                                    "ok"
+                                );
+                            }
+                        }
+                    });
+
+                    return xhr;
+                }
+
+                PatchedXHR.prototype = OriginalXHR.prototype;
+                window.XMLHttpRequest = PatchedXHR;
+            }
+
+            window.TINKLE_LOADER.addLog("Network tap enabled for buckshot-roulette.pck.part* files.", "system");
+        })();
+    </script>
+
+    <!-- Game canvas + status -->
     <canvas id="canvas">Your browser does not support the canvas tag.</canvas>
     <noscript>Your browser does not support JavaScript.</noscript>
 
     <div id="status">
-        <img id="status-splash" class="show-image--true fullsize--true use-filter--true" src="buckshot-roulette.png" alt="">
+        <img id="status-splash" class="show-image--true fullsize--true use-filter--true"
+             src="buckshot-roulette.png" alt="">
         <progress id="status-progress"></progress>
         <div id="status-notice"></div>
     </div>
 
+    <!-- Godot game scripts -->
     <script src="buckshot-roulette.js"></script>
     <script>
         const GODOT_CONFIG = {
@@ -151,13 +593,41 @@
         const engine = new Engine(GODOT_CONFIG);
 
         function run() {
-            const loadingText = document.getElementById('loading-text');
             const statusOverlay = document.getElementById('status');
             const statusProgress = document.getElementById('status-progress');
             const statusNotice = document.getElementById('status-notice');
-            loadingText.remove();
+
+            const overlay = document.getElementById('loader-overlay');
+            const progressBarFull = document.getElementById('unity-progress-bar-full');
+
             let initializing = true;
             let statusMode = '';
+
+            // Compute total size for MB display
+            const fileSizes = GODOT_CONFIG.fileSizes || {};
+            const totalBytesConfig = Object.values(fileSizes).reduce((a, b) => a + b, 0);
+            const totalMBConfig = totalBytesConfig > 0
+                ? (totalBytesConfig / (1024 * 1024)).toFixed(2)
+                : null;
+
+            window.TINKLE_LOADER.setStatus("Initializing Buckshot Roulette…");
+            window.TINKLE_LOADER.addLog("Booting Godot Web engine…", "system");
+            if (totalMBConfig) {
+                window.TINKLE_LOADER.addLog(
+                    "Expected download size: " + totalMBConfig + " MB (wasm + pck).",
+                    "system"
+                );
+                if (fileSizes["buckshot-roulette.wasm"] && fileSizes["buckshot-roulette.pck"]) {
+                    window.TINKLE_LOADER.addLog(
+                        "Files: buckshot-roulette.wasm (" +
+                        (fileSizes["buckshot-roulette.wasm"] / (1024 * 1024)).toFixed(2) +
+                        " MB), buckshot-roulette.pck (" +
+                        (fileSizes["buckshot-roulette.pck"] / (1024 * 1024)).toFixed(2) +
+                        " MB).",
+                        "system"
+                    );
+                }
+            }
 
             function setStatusMode(mode) {
                 if (statusMode === mode || !initializing) return;
@@ -183,25 +653,40 @@
 
             function displayFailureNotice(err) {
                 console.error(err);
+                let msg;
                 if (err instanceof Error) {
-                    setStatusNotice(err.message);
+                    msg = err.message;
                 } else if (typeof err === 'string') {
-                    setStatusNotice(err);
+                    msg = err;
                 } else {
-                    setStatusNotice('An unknown error occurred.');
+                    msg = 'An unknown error occurred.';
                 }
+                setStatusNotice(msg);
                 setStatusMode('notice');
                 initializing = false;
+
+                window.TINKLE_LOADER.setStatus("Error starting game.");
+                window.TINKLE_LOADER.addLog("Godot startup error: " + msg, "warn");
             }
 
             const missing = Engine.getMissingFeatures({ threads: GODOT_THREADS_ENABLED });
             if (missing.length !== 0) {
-                if (GODOT_CONFIG['serviceWorker'] && GODOT_CONFIG['ensureCrossOriginIsolationHeaders'] && 'serviceWorker' in navigator) {
+                const missingMsg =
+                    'Error\nThe following features required to run Godot projects on the Web are missing:\n' +
+                    missing.join('\n');
+                window.TINKLE_LOADER.addLog("Missing browser features: " + missing.join(', '), "warn");
+
+                if (GODOT_CONFIG['serviceWorker'] &&
+                    GODOT_CONFIG['ensureCrossOriginIsolationHeaders'] &&
+                    'serviceWorker' in navigator) {
+
                     let serviceWorkerRegistrationPromise;
                     try {
                         serviceWorkerRegistrationPromise = navigator.serviceWorker.getRegistration();
                     } catch (err) {
-                        serviceWorkerRegistrationPromise = Promise.reject(new Error('Service worker registration failed.'));
+                        serviceWorkerRegistrationPromise = Promise.reject(
+                            new Error('Service worker registration failed.')
+                        );
                     }
 
                     Promise.race([
@@ -215,27 +700,99 @@
                     ]).then(() => window.location.reload())
                         .catch((err) => console.error('Error while registering service worker:', err));
                 } else {
-                    const missingMsg = 'Error\nThe following features required to run Godot projects on the Web are missing:\n';
-                    displayFailureNotice(missingMsg + missing.join('\n'));
+                    displayFailureNotice(missingMsg);
                 }
             } else {
                 setStatusMode('progress');
+                window.TINKLE_LOADER.addLog("Starting Godot game download…", "system");
+
+                let lastLoggedStep = -1;
+
                 engine.startGame({
-                    'onProgress': function (current, total) {
-                        if (current > 0 && total > 0) {
+                    onProgress: function (current, total) {
+                        // Always show *something* in Tinkle loader, even if total == 0
+                        console.log("Godot onProgress", current, total);
+                        window.TINKLE_LOADER.addLog(
+                            "onProgress: current=" + current + ", total=" + total,
+                            "system"
+                        );
+
+                        let p = 0;
+                        let loadedMB = "0.00";
+                        let totalMB = totalMBConfig || "??.??";
+
+                        if (total > 0 && current >= 0) {
+                            p = current / total;
+                            loadedMB = (current / (1024 * 1024)).toFixed(2);
+                            totalMB = (total / (1024 * 1024)).toFixed(2);
+
                             statusProgress.value = current;
                             statusProgress.max = total;
                         } else {
+                            // Streaming / unknown total – keep indeterminate <progress>
                             statusProgress.removeAttribute('value');
                             statusProgress.removeAttribute('max');
+                        }
+
+                        if (progressBarFull) {
+                            progressBarFull.style.width = (p * 100) + "%";
+                        }
+
+                        let phase;
+                        if (p === 0 && total === 0) {
+                            phase = "Connecting to content server…";
+                        } else if (p < 0.25) phase = "Downloading engine files…";
+                        else if (p < 0.5) phase = "Loading game content…";
+                        else if (p < 0.75) phase = "Initializing game world…";
+                        else if (p < 0.95) phase = "Preparing final assets…";
+                        else phase = "Almost ready…";
+
+                        const detail = total > 0
+                            ? `${phase} ${loadedMB} / ${totalMB} MB`
+                            : `${phase} Streaming data…`;
+
+                        window.TINKLE_LOADER.setProgress(p, detail);
+
+                        const step = Math.floor(p * 10); // 0–10
+                        if (step > lastLoggedStep && total > 0) {
+                            lastLoggedStep = step;
+                            window.TINKLE_LOADER.addLog(
+                                `Progress: ${Math.round(p * 100)}% (${loadedMB} / ${totalMB} MB).`,
+                                "system"
+                            );
                         }
                     },
                 }).then(() => {
                     setStatusMode('hidden');
+
+                    window.TINKLE_LOADER.setStatus("Ready!");
+                    window.TINKLE_LOADER.setProgress(1, "Game loaded.");
+                    window.TINKLE_LOADER.addLog(
+                        "Godot game started successfully. Handing off to player.",
+                        "ok"
+                    );
+
+                    if (overlay) {
+                        overlay.classList.add("loader-hidden");
+                        setTimeout(() => overlay.remove(), 800);
+                    }
                 }, displayFailureNotice);
             }
         };
         window.godotRunStart = run;
     </script>
+
+    <!-- Intro fade-out -->
+    <script>
+        window.addEventListener("load", () => {
+            const intro = document.getElementById("intro-screen");
+            if (!intro) return;
+            setTimeout(() => {
+                intro.classList.add("hidden-intro");
+                setTimeout(() => intro.remove(), 800);
+            }, 2500);
+        });
+    </script>
 </body>
+
 </html>
