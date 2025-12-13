@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tinkle Music Search Player</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Match main codes.html theme -->
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+
+        /* Floating music button (bottom-left) */
+        .music-fab {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            /* bottom-left */
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 1px solid rgba(129, 140, 248, 0.9);
+            background: radial-gradient(circle at 30% 0, #6366f1, #020617);
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e5e7eb;
+            cursor: pointer;
+            z-index: 99998;
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast), background 0.2s ease;
+        }
+
+        .music-fab:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 22px 60px rgba(15, 23, 42, 1);
+        }
+
+        .music-fab-icon {
+            width: 26px;
+            height: 26px;
+            fill: currentColor;
+        }
+
+        .music-panel {
+            position: fixed;
+            bottom: 90px;
+            left: 20px;
+            width: 410px;
+            max-width: 92vw;
+            z-index: 99997;
+            display: none;
+        }
+
+        .music-panel.open {
+            display: block;
+        }
+
+        .music-panel-inner {
+            border-radius: var(--radius-lg);
+            background: var(--panel-soft);
+            border: 1px solid var(--border-soft);
+            box-shadow: var(--shadow-soft);
+            padding: 14px 16px 16px;
+            color: var(--text-soft);
+            backdrop-filter: blur(12px);
+        }
+
+        .music-search-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .music-search-input {
+            flex: 1;
+            border-radius: 999px;
+            border: 1px solid var(--border-soft);
+            background: rgba(15, 23, 42, 0.95);
+            color: var(--text);
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .music-search-input::placeholder {
+            color: rgba(148, 163, 184, 0.9);
+        }
+
+        .music-search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.8);
+        }
+
+        .music-search-btn {
+            border-radius: 999px;
+            border: none;
+            padding: 8px 14px;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            background: linear-gradient(120deg, var(--accent), var(--accent-2));
+            color: #f9fafb;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .music-search-btn:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        .music-search-note {
+            font-size: 0.75rem;
+            color: rgba(148, 163, 184, 0.95);
+            margin-bottom: 6px;
+        }
+
+        .music-results {
+            max-height: 160px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(30, 64, 175, 0.7);
+            background: rgba(15, 23, 42, 0.97);
+        }
+
+        .music-results-empty {
+            margin-bottom: 10px;
+            font-size: 0.8rem;
+            color: rgba(148, 163, 184, 0.95);
+        }
+
+        .music-result-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 9px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            transition: background 0.15s ease;
+        }
+
+        .music-result-item:hover {
+            background: rgba(30, 64, 175, 0.8);
+        }
+
+        .music-result-cover {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .music-result-text {
+            overflow: hidden;
+        }
+
+        .music-result-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--text);
+        }
+
+        .music-result-artist {
+            font-size: 0.75rem;
+            color: rgba(148, 163, 184, 0.95);
+        }
+
+        .player {
+            background: rgba(15, 23, 42, 0.98);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            border: 1px solid rgba(30, 64, 175, 0.9);
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.9);
+        }
+
+        .player__top {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .player-cover {
+            width: 110px;
+            height: 110px;
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+            flex-shrink: 0;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+        }
+
+        .player-cover__item {
+            width: 100%;
+            height: 100%;
+            background-position: center;
+            background-size: cover;
+        }
+
+        .player-controls {
+            flex: 1;
+            padding-left: 12px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+        }
+
+        .player-controls__item {
+            display: inline-flex;
+            font-size: 22px;
+            padding: 4px;
+            margin-bottom: 0;
+            color: #64748b;
+            cursor: pointer;
+            width: 38px;
+            height: 38px;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .player-controls__item:hover {
+            color: #a5b4fc;
+            transform: translateY(-1px);
+        }
+
+        .player-controls__item.-xl {
+            font-size: 60px;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .player-controls__item.is-disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .player-controls__item .icon {
+            width: 1em;
+            height: 1em;
+        }
+
+        .progress {
+            width: 100%;
+            user-select: none;
+            margin-top: 8px;
+        }
+
+        .progress__top {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .progress__duration,
+        .progress__time {
+            color: #9ca3af;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .progress__bar {
+            height: 6px;
+            width: 100%;
+            cursor: pointer;
+            background-color: #020617;
+            display: inline-block;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress__current {
+            height: inherit;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-3));
+            border-radius: inherit;
+        }
+
+        .album-info {
+            color: var(--text);
+            flex: 1;
+            padding-right: 40px;
+        }
+
+        .album-info__name {
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .album-info__track {
+            font-size: 0.8rem;
+            opacity: 0.85;
+        }
+
+        .music-empty-player {
+            font-size: 0.85rem;
+            color: var(--text-soft);
+            padding-top: 8px;
+        }
+
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            stroke-width: 0;
+            stroke: currentColor;
+            fill: currentColor;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Hidden YouTube player (background) -->
+    <div id="yt-player-container" style="position:fixed; bottom:-9999px; left:-9999px; width:0; height:0; overflow:hidden;">
+        <div id="yt-bg-player"></div>
+    </div>
+
+    <!-- Floating music player root -->
+    <div id="music-player-root">
+        <!-- FAB -->
+        <button class="music-fab" id="musicFab" aria-label="Open music player">
+            <svg viewBox="0 0 24 24" class="music-fab-icon">
+                <path d="M9 18V5.5a1 1 0 0 1 .74-.97l8-2.25A1 1 0 0 1 19 3.25V15
+               a2.75 2.75 0 1 1-1.5-2.44V7.4l-6 1.68V17
+               a2.75 2.75 0 1 1-1.5-2.44z" />
+            </svg>
+        </button>
+
+        <!-- Panel -->
+        <div class="music-panel" id="musicPanel">
+            <div class="music-panel-inner">
+                <div id="music-app" v-cloak>
+                    <!-- Search -->
+                    <div class="music-search-row">
+                        <input type="text" v-model="searchQuery" @keyup.enter="searchVideos" class="music-search-input" placeholder="Search YouTube for a song..." />
+                        <button class="music-search-btn" @click="searchVideos" :disabled="isSearching">
+                            <span v-if="!isSearching">Search</span>
+                            <span v-else>...</span>
+                        </button>
+                    </div>
+                    <div class="music-search-note">
+                        Uses YouTube search and plays the selected video hidden in the background.
+                    </div>
+
+                    <!-- Results -->
+                    <div class="music-results" v-if="searchResults.length">
+                        <div class="music-result-item" v-for="(item, idx) in searchResults" :key="item.id.videoId" @click="selectVideo(item, idx)">
+                            <img :src="item.snippet.thumbnails.default.url" class="music-result-cover">
+                            <div class="music-result-text">
+                                <div class="music-result-name">{{ item.snippet.title }}</div>
+                                <div class="music-result-artist">{{ item.snippet.channelTitle }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="music-results-empty" v-else>
+                        Type a song name or artist and press Enter.
+                    </div>
+
+                    <!-- Player -->
+                    <div class="player" v-if="currentVideo">
+                        <div class="player__top">
+                            <div class="player-cover">
+                                <div class="player-cover__item" :style="{ backgroundImage: 'url(' + currentVideo.thumb + ')' }"></div>
+                            </div>
+                            <div class="player-controls">
+                                <!-- Prev -->
+                                <div class="player-controls__item" @click="prevResult" :class="{ 'is-disabled': !hasPrev }" title="Previous result">
+                                    <svg class="icon">
+                                        <use xlink:href="#icon-prev"></use>
+                                    </svg>
+                                </div>
+
+                                <!-- Play / Pause -->
+                                <div class="player-controls__item -xl js-play" @click="togglePlay" :class="{ 'is-disabled': !playerReady }" title="Play / Pause">
+                                    <svg class="icon">
+                                        <use xlink:href="#icon-pause" v-if="isPlaying"></use>
+                                        <use xlink:href="#icon-play" v-else></use>
+                                    </svg>
+                                </div>
+
+                                <!-- Next -->
+                                <div class="player-controls__item" @click="nextResult" :class="{ 'is-disabled': !hasNext }" title="Next result">
+                                    <svg class="icon">
+                                        <use xlink:href="#icon-next"></use>
+                                    </svg>
+                                </div>
+
+                                <!-- Link -->
+                                <a class="player-controls__item" :href="'https://www.youtube.com/watch?v=' + currentVideo.videoId" target="_blank" title="Open on YouTube">
+                                    <svg class="icon">
+                                        <use xlink:href="#icon-link"></use>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="progress" ref="progress">
+                            <div class="progress__top">
+                                <div class="album-info">
+                                    <div class="album-info__name">{{ currentVideo.channelTitle }}</div>
+                                    <div class="album-info__track">{{ currentVideo.title }}</div>
+                                </div>
+                                <div class="progress__duration">{{ duration }}</div>
+                            </div>
+                            <div class="progress__bar" @click="clickProgress">
+                                <div class="progress__current" :style="{ width: barWidth }"></div>
+                            </div>
+                            <div class="progress__time">{{ currentTime }}</div>
+                        </div>
+                    </div>
+
+                    <div v-else class="music-empty-player">
+                        Pick a video from the results to start playing.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Icons -->
+        <svg xmlns="http://www.w3.org/2000/svg" hidden xmlns:xlink="http://www.w3.org/1999/xlink">
+            <defs>
+                <symbol id="icon-pause" viewBox="0 0 32 32">
+                    <path d="M16 0.32c-8.64 0-15.68 7.04-15.68 15.68s7.04 15.68 15.68 15.68 15.68-7.04 15.68-15.68S24.64.32 16 .32zm0 28.9c-7.3 0-13.2-5.9-13.2-13.2S8.7 2.8 16 2.8s13.2 5.9 13.2 13.2S23.3 29.2 16 29.2z" />
+                    <path d="M12.2 22.3c-.9 0-1.6-.7-1.6-1.6v-9.5c0-.9.7-1.6 1.6-1.6s1.6.7 1.6 1.6v9.5c0 .9-.7 1.6-1.6 1.6zM19.8 22.3c-.9 0-1.6-.7-1.6-1.6v-9.5c0-.9.7-1.6 1.6-1.6s1.6.7 1.6 1.6v9.5c0 .9-.7 1.6-1.6 1.6z" />
+                </symbol>
+
+                <symbol id="icon-play" viewBox="0 0 32 32">
+                    <path d="M21.2 15.2l-7.6-5.1c-.7-.4-1.5 0-1.5.8v10.2c0 .8.9 1.2 1.5.8l7.6-5.1c.6-.4.6-1.3 0-1.7z" />
+                    <path d="M16 .3C7.4.3.3 7.4.3 16S7.4 31.7 16 31.7 31.7 24.6 31.7 16 24.6.3 16 .3zm0 28.9C8.7 29.2 2.8 23.3 2.8 16 2.8 8.7 8.7 2.8 16 2.8S29.2 8.7 29.2 16 23.3 29.2 16 29.2z" />
+                </symbol>
+
+                <symbol id="icon-link" viewBox="0 0 32 32">
+                    <path d="M18.4 9.6a1.5 1.5 0 0 1 2.1 0l2.9 2.9a4.5 4.5 0 0 1 0 6.4l-4 4a4.5 4.5 0 0 1-6.4 0 1.5 1.5 0 1 1 2.1-2.1l4-4a1.5 1.5 0 0 0 0-2.1l-2.9-2.9a1.5 1.5 0 0 1 0-2.1z" />
+                    <path d="M13.6 22.4a1.5 1.5 0 0 1-2.1 0l-2.9-2.9a4.5 4.5 0 0 1 0-6.4l4-4a4.5 4.5 0 0 1 6.4 0 1.5 1.5 0 1 1-2.1 2.1l-4 4a1.5 1.5 0 0 0 0 2.1l2.9 2.9a1.5 1.5 0 0 1 0 2.1z" />
+                </symbol>
+
+                <symbol id="icon-next" viewBox="0 0 32 32">
+                    <title>next</title>
+                    <path d="M2.304 18.304h14.688l-4.608 4.576c-0.864 0.864-0.864 2.336 0 3.232 0.864 0.864 2.336 0.864 3.232 0l8.448-8.48c0.864-0.864 0.864-2.336 0-3.232l-8.448-8.448c-0.448-0.448-1.056-0.672-1.632-0.672s-1.184 0.224-1.632 0.672c-0.864 0.864-0.864 2.336 0 3.232l4.64 4.576H2.304C1.056 13.76 0 14.752 0 16.032s1.024 2.272 2.304 2.272z"></path>
+                    <path d="M29.696 26.752c1.248 0 2.304-1.024 2.304-2.304V7.52c0-1.248-1.024-2.304-2.304-2.304s-2.304 1.024-2.304 2.304v16.928c0.064 1.28 1.056 2.304 2.304 2.304z"></path>
+                </symbol>
+
+                <symbol id="icon-prev" viewBox="0 0 32 32">
+                    <title>prev</title>
+                    <path d="M29.696 13.696h-14.688l4.576-4.576c0.864-0.864 0.864-2.336 0-3.232-0.864-0.864-2.336-0.864-3.232 0l-8.448 8.48c-0.864 0.864-0.864 2.336 0 3.232l8.448 8.448c0.448 0.448 1.056 0.672 1.632 0.672s1.184-0.224 1.632-0.672c0.864-0.864 0.864-2.336 0-3.232l-4.608-4.576h14.688c1.248 0 2.304-1.024 2.304-2.304s-1.024-2.24-2.304-2.24z"></path>
+                    <path d="M2.304 5.248C1.056 5.248 0 6.272 0 7.552V24.48c0 1.248 1.024 2.304 2.304 2.304s2.304-1.024 2.304-2.304V7.552C4.544 6.272 3.552 5.248 2.304 5.248z"></path>
+                </symbol>
+            </defs>
+        </svg>
+    </div>
+
+    <!-- YouTube iframe API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        var ytPlayer = null;
+
+        function onYouTubeIframeAPIReady() {
+            console.log('[YT] iframe API ready');
+            ytPlayer = new YT.Player('yt-bg-player', {
+                height: '0',
+                width: '0',
+                videoId: '',
+                playerVars: {
+                    autoplay: 0,
+                    controls: 0,
+                    rel: 0,
+                    modestbranding: 1,
+                    playsinline: 1
+                },
+                events: {
+                    onReady: function(event) {
+                        console.log('[YT] player ready');
+                        if (window.__musicApp__) {
+                            window.__musicApp__.setPlayerInstance(event.target);
+                        }
+                    },
+                    onStateChange: function(event) {
+                        console.log('[YT] state change:', event.data);
+                        if (window.__musicApp__) {
+                            window.__musicApp__.handlePlayerStateChange(event.data);
+                        }
+                    },
+                    onError: function(event) {
+                        console.log('[YT] player error:', event.data);
+                        if (window.__musicApp__) {
+                            window.__musicApp__.handlePlayerError(event.data);
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+
+    <!-- Panel toggle -->
+    <script>
+        (function() {
+            var fab = document.getElementById('musicFab');
+            var panel = document.getElementById('musicPanel');
+
+            if (!fab || !panel) return;
+
+            fab.addEventListener('click', function(e) {
+                e.stopPropagation();
+                panel.classList.toggle('open');
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!panel.contains(e.target) && !fab.contains(e.target)) {
+                    panel.classList.remove('open');
+                }
+            });
+        })();
+    </script>
+
+    <!-- Vue + search/player logic -->
+    <script src="https://unpkg.com/vue@2.7.14/dist/vue.min.js"></script>
+    <script>
+        const YT_API_KEY = 'AIzaSyAMskYTvmUICHOmvb2cWB3UFuZqp4H0cnA'; // <-- put your real key here
+
+        new Vue({
+            el: '#music-app',
+            data: function() {
+                return {
+                    searchQuery: '',
+                    isSearching: false,
+                    searchResults: [],
+                    currentVideo: null,
+                    currentIndex: null,
+                    player: null,
+                    playerReady: false,
+                    isPlaying: false,
+                    barWidth: '0%',
+                    currentTime: '00:00',
+                    duration: '00:00',
+                    progressInterval: null,
+                    pendingPlay: false
+                };
+            },
+            computed: {
+                hasPrev() {
+                    return this.currentIndex !== null && this.currentIndex > 0;
+                },
+                hasNext() {
+                    return this.currentIndex !== null && this.currentIndex < this.searchResults.length - 1;
+                }
+            },
+            methods: {
+                searchVideos: function() {
+                    const q = this.searchQuery.trim();
+                    if (!q || !YT_API_KEY) {
+                        if (!YT_API_KEY) {
+                            alert('YouTube API key missing in YT_API_KEY.');
+                        }
+                        return;
+                    }
+                    this.isSearching = true;
+                    this.searchResults = [];
+                    this.currentIndex = null;
+                    this.currentVideo = null;
+                    this.barWidth = '0%';
+                    this.currentTime = '00:00';
+                    this.duration = '00:00';
+
+                    const url =
+                        'https://www.googleapis.com/youtube/v3/search' +
+                        '?part=snippet&type=video&maxResults=10' +
+                        '&q=' + encodeURIComponent(q) +
+                        '&key=' + encodeURIComponent(YT_API_KEY);
+
+                    fetch(url)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.error) {
+                                console.error('YouTube API error:', data.error);
+                                alert('YouTube API error: ' + (data.error.message || 'Check console'));
+                                return;
+                            }
+                            this.searchResults = data.items || [];
+                        })
+                        .catch(err => {
+                            console.error('Network / fetch error:', err);
+                            alert('Network error calling YouTube. Check console.');
+                        })
+                        .finally(() => {
+                            this.isSearching = false;
+                        });
+                },
+
+                selectVideo: function(item, idx) {
+                    const videoId = item.id.videoId;
+                    const sn = item.snippet;
+
+                    this.currentIndex = idx;
+                    this.currentVideo = {
+                        videoId: videoId,
+                        title: sn.title,
+                        channelTitle: sn.channelTitle,
+                        thumb: sn.thumbnails && (sn.thumbnails.high || sn.thumbnails.default).url
+                    };
+
+                    console.log('[APP] selected video:', videoId);
+
+                    // Just cue the video; user hits Play to start
+                    if (this.playerReady && this.player) {
+                        this.loadVideo(true);
+                    }
+                },
+
+                prevResult: function() {
+                    if (!this.hasPrev) return;
+                    const newIndex = this.currentIndex - 1;
+                    const item = this.searchResults[newIndex];
+                    this.selectVideo(item, newIndex);
+                    if (this.playerReady && this.player) {
+                        this.loadVideo(true);
+                    }
+                },
+
+                nextResult: function() {
+                    if (!this.hasNext) return;
+                    const newIndex = this.currentIndex + 1;
+                    const item = this.searchResults[newIndex];
+                    this.selectVideo(item, newIndex);
+                    if (this.playerReady && this.player) {
+                        this.loadVideo(true);
+                    }
+                },
+
+                setPlayerInstance: function(player) {
+                    console.log('[APP] setPlayerInstance called, player =', player);
+                    this.player = player;
+                    this.playerReady = true;
+
+                    if (this.currentVideo) {
+                        // If user had already picked something, cue it
+                        this.loadVideo(this.pendingPlay);
+                    }
+
+                    if (this.pendingPlay) {
+                        // We queued a play from togglePlay before ready
+                        this.pendingPlay = false;
+                    }
+                },
+
+
+                handlePlayerStateChange: function(state) {
+                    console.log('[APP] handlePlayerStateChange:', state);
+                    if (!this.player) return;
+                    if (state === YT.PlayerState.PLAYING) {
+                        this.isPlaying = true;
+                        this.startProgressTimer();
+                    } else if (state === YT.PlayerState.PAUSED || state === YT.PlayerState.BUFFERING) {
+                        this.isPlaying = false;
+                        this.stopProgressTimer(false);
+                    } else if (state === YT.PlayerState.ENDED) {
+                        this.isPlaying = false;
+                        this.stopProgressTimer(true);
+                    }
+                },
+
+                handlePlayerError: function(code) {
+                    console.error('[APP] YouTube error code:', code);
+                },
+
+                loadVideo: function(autoplay) {
+                    if (!this.player || !this.currentVideo) return;
+
+                    console.log('[APP] loadVideo', this.currentVideo.videoId, 'autoplay:', autoplay);
+                    console.log('[APP] player object:', this.player);
+                    console.log('[APP] has cueVideoById?', typeof this.player.cueVideoById);
+
+                    try {
+                        if (typeof this.player.cueVideoById === 'function') {
+                            if (autoplay) {
+                                this.player.loadVideoById(this.currentVideo.videoId);
+                            } else {
+                                this.player.cueVideoById(this.currentVideo.videoId);
+                            }
+                        } else if (typeof this.player.loadVideoById === 'function') {
+                            this.player.loadVideoById(this.currentVideo.videoId);
+                        } else {
+                            console.warn('[APP] player has no cueVideoById or loadVideoById – sandbox may be breaking the API');
+                            return;
+                        }
+
+                        if (typeof this.player.unMute === 'function') {
+                            this.player.unMute();
+                        }
+                        if (typeof this.player.setVolume === 'function') {
+                            this.player.setVolume(100);
+                        }
+
+                        if (autoplay && typeof this.player.playVideo === 'function') {
+                            this.player.playVideo();
+                        }
+                    } catch (e) {
+                        console.error('[APP] error in loadVideo:', e);
+                    }
+                },
+
+                togglePlay: function() {
+                    // If Vue knows about a selected video but no player ready,
+                    // try to attach to the global ytPlayer and remember we want to play.
+                    if (!this.playerReady && this.currentVideo && window.ytPlayer) {
+                        console.log('[APP] togglePlay: player not ready, attaching ytPlayer and queueing play');
+                        this.setPlayerInstance(window.ytPlayer);
+                        this.pendingPlay = true;
+                        return;
+                    }
+
+                    if (!this.playerReady || !this.player || !this.currentVideo) {
+                        console.log('[APP] togglePlay blocked – playerReady:', this.playerReady, 'currentVideo:', !!this.currentVideo);
+                        return;
+                    }
+
+                    let state = null;
+                    if (typeof this.player.getPlayerState === 'function') {
+                        state = this.player.getPlayerState();
+                    } else {
+                        console.warn('[APP] getPlayerState is not a function – forcing playVideo()');
+                    }
+
+                    console.log('[APP] togglePlay, current state:', state);
+
+                    if (state == null) {
+                        if (typeof this.player.playVideo === 'function') {
+                            this.player.playVideo();
+                        }
+                        return;
+                    }
+
+                    if (state === YT.PlayerState.PLAYING) {
+                        if (typeof this.player.pauseVideo === 'function') {
+                            this.player.pauseVideo();
+                        }
+                    } else {
+                        if (typeof this.player.playVideo === 'function') {
+                            this.player.playVideo();
+                        }
+                    }
+                },
+
+
+                startProgressTimer: function() {
+                    if (this.progressInterval) clearInterval(this.progressInterval);
+                    this.progressInterval = setInterval(this.updateTime, 250);
+                },
+                stopProgressTimer: function(resetBar) {
+                    if (this.progressInterval) {
+                        clearInterval(this.progressInterval);
+                        this.progressInterval = null;
+                    }
+                    if (resetBar) {
+                        this.barWidth = '0%';
+                        this.currentTime = '00:00';
+                    }
+                },
+                updateTime: function() {
+                    if (!this.player || typeof this.player.getDuration !== 'function') return;
+                    const dur = this.player.getDuration();
+                    const cur = this.player.getCurrentTime();
+                    if (!dur || isNaN(dur)) return;
+
+                    let width = (100 * cur) / dur;
+                    if (width > 100) width = 100;
+                    if (width < 0) width = 0;
+                    this.barWidth = width + '%';
+
+                    const fmt = t => {
+                        let m = Math.floor(t / 60);
+                        let s = Math.floor(t - m * 60);
+                        if (m < 10) m = '0' + m;
+                        if (s < 10) s = '0' + s;
+                        return m + ':' + s;
+                    };
+
+                    this.duration = fmt(dur);
+                    this.currentTime = fmt(cur);
+                },
+                clickProgress: function(e) {
+                    if (!this.player || typeof this.player.getDuration !== 'function' || typeof this.player.seekTo !== 'function') {
+                        console.warn('[APP] seekTo / getDuration not available – sandboxed?');
+                        return;
+                    }
+
+                    const rect = this.$refs.progress.getBoundingClientRect();
+                    const position = e.clientX - rect.left;
+                    let percentage = (100 * position) / rect.width;
+                    if (percentage > 100) percentage = 100;
+                    if (percentage < 0) percentage = 0;
+
+                    const dur = this.player.getDuration() || 0;
+                    const targetTime = (dur * percentage) / 100;
+                    this.player.seekTo(targetTime, true);
+                    this.barWidth = percentage + '%';
+                }
+            },
+            mounted: function() {
+                window.__musicApp__ = this;
+                console.log('[APP] Vue mounted');
+                if (window.ytPlayer) {
+                    console.log('[APP] ytPlayer already exists, setting instance');
+                    this.setPlayerInstance(window.ytPlayer);
+                }
+            },
+            beforeDestroy: function() {
+                window.__musicApp__ = null;
+                this.stopProgressTimer(false);
+            }
+        });
+    </script>
+
+</body>
+
+</html>
