@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="en" http-equiv="Content-Language"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Tinkle Party Cinema</title>
-<meta content="Tinkle Party Cinema" name="title"/>
-<meta content="Watch Shows and Movies at any time, free." name="description"/>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
-<link href="favicon.png" rel="icon" type="image/png"/>
-<style>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Language" content="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tinkle Party Cinema</title>
+    <meta name="title" content="Tinkle Party Cinema">
+    <meta name="description" content="Watch Shows and Movies at any time, free.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <style>
     :root {
         --theme-name: 'Cinematic Noir';
         --bg-primary: #0a0014;
@@ -580,601 +580,597 @@
     }
 }
 
-    /* --- Mobile mode (auto) --- */
-.nav-label{display:none;}
-@media (max-width: 820px){
-    body{ overflow:auto; }
-    #app-container{ padding-top:0; padding-bottom:76px; }
-    header{ top:auto; bottom:0; }
-    header nav{ width:100%; justify-content:space-around; gap:0 !important; }
-    .nav-link{ display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 12px !important; }
-    .nav-link-icon{ width:24px; height:24px; }
-    .nav-label{ display:block; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-muted); }
-    .nav-link:hover .nav-label, .nav-link.active .nav-label{ color:var(--accent-main); text-shadow: 0 0 10px rgba(255,255,255,0.15); }
-
-    .content-page{ padding:16px; }
-    .home-page{ min-height: calc(100vh - 76px); }
-
-    .logo-container{ transform: translateY(0); padding: 24px 0; }
-    .glowing-ring{ width: 340px; height: 200px; border-width: 14px; }
-    .logo-word{ font-size: 3.2rem; line-height: 0.9; }
-    .logo-word.-mb-16{ margin-bottom: -2.6rem !important; }
-    .logo-word.mt-8{ margin-top: 1.2rem !important; }
-
-    /* Search/filters stack nicely */
-    .suggestions-btn{ width:100%; }
-    #movies-page .max-w-4xl, #tv-page .max-w-4xl{ padding-left: 0; padding-right: 0; }
-
-    /* Fullscreen-ish player on phones */
-    .modal-backdrop{ padding: 0; }
-    .modal{ width: 100vw; height: 100vh; border-radius: 0; }
-    .modal-header{ top: 10px; left: 10px; right: 10px; }
-    .modal-title{ max-width: 55vw; }
-
-    /* Season/Episode controls above the bottom nav */
-    .se-ctrls{ left: 10px; right: 10px; bottom: 86px; width: auto; justify-content: space-between; }
-    .se-ctrls select{ flex:1; min-width: 0; }
-}
-
-/* Force mobile mode when JS adds .is-mobile */
-body.is-mobile{ overflow:auto; }
-body.is-mobile #app-container{ padding-top:0; padding-bottom:76px; }
-body.is-mobile header{ top:auto; bottom:0; }
-body.is-mobile header nav{ width:100%; justify-content:space-around; gap:0 !important; }
-body.is-mobile .nav-link{ display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 12px !important; }
-body.is-mobile .nav-label{ display:block; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-muted); }
-body.is-mobile .nav-link:hover .nav-label, body.is-mobile .nav-link.active .nav-label{ color:var(--accent-main); }
-body.is-mobile .content-page{ padding:16px; }
-body.is-mobile .home-page{ min-height: calc(100vh - 76px); }
-body.is-mobile .modal-backdrop{ padding:0; }
-body.is-mobile .modal{ width:100vw; height:100vh; border-radius:0; }
-body.is-mobile .se-ctrls{ left:10px; right:10px; bottom:86px; width:auto; justify-content:space-between; }
-body.is-mobile .se-ctrls select{ flex:1; min-width:0; }
-
-    
-
-/* Mobile crash fix additions */
-.load-more-wrap .btn-glow{padding:12px 14px;}
-</style>
+    </style>
 </head>
 <body class="h-screen flex flex-col antialiased" id="appBody">
-<script>
-  // Global, lightweight mobile detection (used to avoid heavy effects on phones)
-  (function(){
-    const ua = navigator.userAgent || '';
-    const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
-    const small = window.matchMedia && window.matchMedia('(max-width: 820px)').matches;
-    const touch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-    window.__IS_MOBILE = !!(small || (coarse && touch) || /Android|iPhone|iPad|iPod/i.test(ua));
-  })();
-</script>
-<div id="snow-container"></div>
-<header class="w-full flex justify-center py-2 bg-black/50 backdrop-blur-sm border-b border-white/10 shadow-lg fixed top-0 z-50">
-<nav class="flex space-x-4 sm:space-x-8 items-center h-10">
-<a aria-label="Movies" class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" href="javascript:switchPage('movies')" id="nav-movies">
-<i class="w-6 h-6 nav-link-icon" data-lucide="clapperboard"></i>
-<span class="nav-label">Movies</span>
+    <div id="snow-container"></div>
+    <header class="w-full flex justify-center py-2 bg-black/50 backdrop-blur-sm border-b border-white/10 shadow-lg fixed top-0 z-50">
+        <nav class="flex space-x-4 sm:space-x-8 items-center h-10">
+
+            <a href="javascript:switchPage('movies')" id="nav-movies" class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" aria-label="Movies">
+                <i data-lucide="clapperboard" class="w-6 h-6 nav-link-icon"></i>
+            </a>
+            <a href="javascript:switchPage('tv')" id="nav-tv" class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" aria-label="TV Shows">
+                <i data-lucide="monitor-dot" class="w-6 h-6 nav-link-icon"></i>
+            </a>
+<a href="javascript:switchPage('christmas')" 
+   id="nav-christmas" 
+   class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" 
+   aria-label="Christmas Movies">
+    <i data-lucide="gift" class="w-6 h-6 nav-link-icon text-red-400"></i>
 </a>
-<a aria-label="TV Shows" class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" href="javascript:switchPage('tv')" id="nav-tv">
-<i class="w-6 h-6 nav-link-icon" data-lucide="monitor-dot"></i>
-<span class="nav-label">TV</span>
-</a>
-<a aria-label="Christmas Movies" class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" href="javascript:switchPage('christmas')" id="nav-christmas">
-<i class="w-6 h-6 nav-link-icon text-red-400" data-lucide="gift"></i>
-<span class="nav-label">Xmas</span>
-</a>
-<a aria-label="Settings" class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" href="javascript:switchPage('settings')" id="nav-settings">
-<i class="w-6 h-6 nav-link-icon" data-lucide="settings"></i>
-<span class="nav-label">Settings</span>
-</a>
-</nav>
-</header>
-<div id="app-container">
-<main id="content-viewport">
-<div class="content-page active home-page flex items-center justify-center relative" id="home-page">
-<div class="logo-container">
-<div class="glowing-ring"></div>
-<div class="flex flex-col items-center">
-<h1 class="logo-word kaidens-text -mb-16 sm:-mb-24 scale-105">tinkle</h1>
-<h2 class="logo-word cinema-text mt-8 sm:mt-12">cinema</h2>
-</div>
-<p class="text-xl text-gray-400 mt-12 z-10 font-bold tracking-widest"> </p>
-</div>
-</div>
-<div class="content-page" id="credits-page">
-<h1 class="text-3xl font-bold mb-6 text-white"><i class="w-6 h-6 inline-block mr-2" data-lucide="users"></i> Credits</h1>
-<div class="max-w-4xl text-gray-400">
-<p class="mb-4">made by zaddy</p>
-<h3 class="text-xl font-semibold text-white mt-4 mb-2">Design &amp; Tech</h3>
-<ul class="list-disc list-inside ml-4">
-<li>still zaddy</li>
-</ul>
-</div>
-</div>
-<div class="content-page" id="movies-page">
-<h1 class="text-3xl font-bold mb-6 text-white text-center">
-<i class="w-6 h-6 inline-block mr-2 text-red-500" data-lucide="clapperboard"></i>
+            <a href="javascript:switchPage('settings')" id="nav-settings" class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" aria-label="Settings">
+                <i data-lucide="settings" class="w-6 h-6 nav-link-icon"></i>
+            </a>
+        </nav>
+    </header>
+    <div id="app-container">
+        <main id="content-viewport">
+
+            <div id="home-page" class="content-page active home-page flex items-center justify-center relative">
+                <div class="logo-container">
+                    <div class="glowing-ring"></div>
+
+                    <div class="flex flex-col items-center">
+                        <h1 class="logo-word kaidens-text -mb-16 sm:-mb-24 scale-105">tinkle</h1>
+                        <h2 class="logo-word cinema-text mt-8 sm:mt-12">cinema</h2>
+                    </div>
+                    <p class="text-xl text-gray-400 mt-12 z-10 font-bold tracking-widest"> </p>
+                </div>
+            </div>
+
+             <div id="credits-page" class="content-page">
+                <h1 class="text-3xl font-bold mb-6 text-white"><i data-lucide="users" class="w-6 h-6 inline-block mr-2"></i> Credits</h1>
+                <div class="max-w-4xl text-gray-400">
+                    <p class="mb-4">made by zaddy</p>
+                    <h3 class="text-xl font-semibold text-white mt-4 mb-2">Design & Tech</h3>
+                    <ul class="list-disc list-inside ml-4">
+                        <li>still zaddy</li>
+                    </ul>
+                </div>
+            </div>
+
+
+<div id="movies-page" class="content-page">
+        <h1 class="text-3xl font-bold mb-6 text-white text-center">
+            <i data-lucide="clapperboard" class="w-6 h-6 inline-block mr-2 text-red-500"></i>
             Movies
         </h1>
-<div class="flex flex-col md:flex-row gap-4 mb-8 max-w-4xl mx-auto w-full items-center">
-<div class="relative w-full md:w-2/3">
-<input class="w-full p-3 pl-10 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-accent-main outline-none" id="movieSearch" oninput="filterContent('movie')" placeholder="Search movies by title..." type="text"/>
-<i class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" data-lucide="search"></i>
-</div>
-<select class="w-full md:w-1/3 p-3 rounded-xl bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-accent-main outline-none appearance-none cursor-pointer" id="movieGenreFilter" onchange="filterContent('movie')">
-</select>
-<button class="suggestions-btn" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRXqdxNmkb1wNbh3i1eJOY3PK-hGQqLwqcrDIU32hHif63_Q/viewform?usp=publish-editor', '_blank')">
+        <div class="flex flex-col md:flex-row gap-4 mb-8 max-w-4xl mx-auto w-full items-center">
+    <div class="relative w-full md:w-2/3">
+        <input type="text" id="movieSearch" placeholder="Search movies by title..."
+                oninput="filterContent('movie')"
+                class="w-full p-3 pl-10 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-accent-main outline-none">
+        <i data-lucide="search" class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+    </div>
+
+    <select id="movieGenreFilter" onchange="filterContent('movie')"
+            class="w-full md:w-1/3 p-3 rounded-xl bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-accent-main outline-none appearance-none cursor-pointer">
+    </select>
+
+    <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRXqdxNmkb1wNbh3i1eJOY3PK-hGQqLwqcrDIU32hHif63_Q/viewform?usp=publish-editor', '_blank')"
+            class="suggestions-btn">
         Suggestions
     </button>
 </div>
-<div class="grid" id="movieGrid">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-</div>
-<!-- tv -->
-<div class="content-page" id="tv-page">
-<h1 class="text-3xl font-bold mb-6 text-white text-center">
-<i class="w-6 h-6 inline-block mr-2 text-cyan-400" data-lucide="monitor-dot"></i>
+        <div class="grid" id="movieGrid">
+            <button class="tmdb-card" data-type="movie" data-id="278" data-genres="Drama,Crime" aria-label="The Shawshank Redemption"></button>
+            <button class="tmdb-card" data-type="movie" data-id="238" data-genres="Crime,Drama" aria-label="The Godfather"></button>
+            <button class="tmdb-card" data-type="movie" data-id="240" data-genres="Crime,Drama" aria-label="The Godfather Part II"></button>
+            <button class="tmdb-card" data-type="movie" data-id="680" data-genres="Crime,Drama" aria-label="Pulp Fiction"></button>
+            <button class="tmdb-card" data-type="movie" data-id="550" data-genres="Drama,Thriller" aria-label="Fight Club"></button>
+            <button class="tmdb-card" data-type="movie" data-id="807" data-genres="Crime,Mystery,Thriller" aria-label="Se7en"></button>
+            <button class="tmdb-card" data-type="movie" data-id="1124" data-genres="Drama,Mystery,Thriller" aria-label="The Prestige"></button>
+            <button class="tmdb-card" data-type="movie" data-id="27205" data-genres="Action,Sci-Fi,Thriller" aria-label="Inception"></button>
+            <button class="tmdb-card" data-type="movie" data-id="157336" data-genres="Sci-Fi,Adventure,Drama" aria-label="Interstellar"></button>
+            <button class="tmdb-card" data-type="movie" data-id="872585" data-genres="Drama,History" aria-label="Oppenheimer"></button>
+            <button class="tmdb-card" data-type="movie" data-id="603" data-genres="Action,Sci-Fi" aria-label="The Matrix"></button>
+            <button class="tmdb-card" data-type="movie" data-id="37165" data-genres="Drama,Sci-Fi" aria-label="The Truman Show"></button>
+            <button class="tmdb-card" data-type="movie" data-id="13" data-genres="Drama,Romance" aria-label="Forrest Gump"></button>
+            <button class="tmdb-card" data-type="movie" data-id="98" data-genres="Action,Adventure,Drama" aria-label="Gladiator"></button>
+            <button class="tmdb-card" data-type="movie" data-id="597" data-genres="Drama,Romance,History" aria-label="Titanic"></button>
+            <button class="tmdb-card" data-type="movie" data-id="424" data-genres="Drama,History,War" aria-label="Schindler's List"></button>
+            <button class="tmdb-card" data-type="movie" data-id="497" data-genres="Drama,Fantasy" aria-label="The Green Mile"></button>
+            <button class="tmdb-card" data-type="movie" data-id="857" data-genres="War,Drama" aria-label="Saving Private Ryan"></button>
+            <button class="tmdb-card" data-type="movie" data-id="244786" data-genres="Drama" aria-label="Whiplash"></button>
+            <button class="tmdb-card" data-type="movie" data-id="496243" data-genres="Drama,Thriller" aria-label="Parasite"></button>
+            <button class="tmdb-card" data-type="movie" data-id="313369" data-genres="Drama,Romance,Music" aria-label="La La Land"></button>
+            <button class="tmdb-card" data-type="movie" data-id="37799" data-genres="Drama,History" aria-label="The Social Network"></button>
+            <button class="tmdb-card" data-type="movie" data-id="398978" data-genres="Crime,Drama,History" aria-label="The Irishman"></button>
+            <button class="tmdb-card" data-type="movie" data-id="389" data-genres="Drama" aria-label="12 Angry Men"></button>
+            <button class="tmdb-card" data-type="movie" data-id="329" data-genres="Sci-Fi,Adventure" aria-label="Jurassic Park"></button>
+            <button class="tmdb-card" data-type="movie" data-id="330" data-genres="Sci-Fi,Adventure,Action" aria-label="The Lost World: Jurassic Park"></button>
+            <button class="tmdb-card" data-type="movie" data-id="331" data-genres="Sci-Fi,Adventure,Action,Thriller" aria-label="Jurassic Park III"></button>
+            <button class="tmdb-card" data-type="movie" data-id="135397" data-genres="Sci-Fi,Adventure,Action,Thriller" aria-label="Jurassic World"></button>
+            <button class="tmdb-card" data-type="movie" data-id="351286" data-genres="Sci-Fi,Adventure,Action,Thriller" aria-label="Jurassic World: Fallen Kingdom"></button>
+            <button class="tmdb-card" data-type="movie" data-id="507086" data-genres="Sci-Fi,Adventure,Action" aria-label="Jurassic World Dominion"></button>
+            <button class="tmdb-card" data-type="movie" data-id="1234821" data-genres="Sci-Fi,Adventure,Action" aria-label="Jurassic World Rebirth"></button>
+            <button class="tmdb-card" data-type="movie" data-id="120" data-genres="Adventure,Fantasy,Action" aria-label="The Lord of the Rings: The Fellowship of the Ring"></button>
+            <button class="tmdb-card" data-type="movie" data-id="121" data-genres="Adventure,Fantasy,Action" aria-label="The Lord of the Rings: The Two Towers"></button>
+            <button class="tmdb-card" data-type="movie" data-id="122" data-genres="Adventure,Fantasy,Action" aria-label="The Lord of the Rings: The Return of the King"></button>
+            <button class="tmdb-card" data-type="movie" data-id="671" data-genres="Fantasy,Adventure,Family" aria-label="Harry Potter and the Sorcerer's Stone"></button>
+            <button class="tmdb-card" data-type="movie" data-id="672" data-genres="Fantasy,Adventure,Family" aria-label="Harry Potter and the Chamber of Secrets"></button>
+            <button class="tmdb-card" data-type="movie" data-id="673" data-genres="Fantasy,Adventure,Family" aria-label="Harry Potter and the Prisoner of Azkaban"></button>
+            <button class="tmdb-card" data-type="movie" data-id="674" data-genres="Fantasy,Adventure,Family" aria-label="Harry Potter and the Goblet of Fire"></button>
+            <button class="tmdb-card" data-type="movie" data-id="675" data-genres="Fantasy,Adventure,Family" aria-label="Harry Potter and the Order of the Phoenix"></button>
+            <button class="tmdb-card" data-type="movie" data-id="767" data-genres="Fantasy,Adventure,Family" aria-label="Harry Potter and the Half-Blood Prince"></button>
+            <button class="tmdb-card" data-type="movie" data-id="12444" data-genres="Fantasy,Adventure,Family" aria-label="Harry Potter and the Deathly Hallows: Part 1"></button>
+            <button class="tmdb-card" data-type="movie" data-id="12445" data-genres="Fantasy,Adventure,Family" aria-label="Harry Potter and the Deathly Hallows: Part 2"></button>
+            <button class="tmdb-card" data-type="movie" data-id="19995" data-genres="Sci-Fi,Action,Adventure" aria-label="Avatar"></button>
+            <button class="tmdb-card" data-type="movie" data-id="76600" data-genres="Sci-Fi,Adventure,Fantasy" aria-label="Avatar: The Way of Water"></button>
+            <button class="tmdb-card" data-type="movie" data-id="438631" data-genres="Sci-Fi,Adventure,Drama" aria-label="Dune"></button>
+            <button class="tmdb-card" data-type="movie" data-id="693134" data-genres="Sci-Fi,Adventure,Action" aria-label="Dune: Part Two"></button>
+            <button class="tmdb-card" data-type="movie" data-id="140607" data-genres="Sci-Fi,Action,Adventure" aria-label="Star Wars: The Force Awakens"></button>
+            <button class="tmdb-card" data-type="movie" data-id="181808" data-genres="Sci-Fi,Action,Adventure" aria-label="Star Wars: The Last Jedi"></button>
+            <button class="tmdb-card" data-type="movie" data-id="181812" data-genres="Sci-Fi,Action,Adventure" aria-label="Star Wars: The Rise of Skywalker"></button>
+            <button class="tmdb-card" data-type="movie" data-id="1891" data-genres="Sci-Fi,Adventure,Action" aria-label="The Empire Strikes Back"></button>
+            <button class="tmdb-card" data-type="movie" data-id="105" data-genres="Adventure,Comedy,Sci-Fi" aria-label="Back to the Future"></button>
+            <button class="tmdb-card" data-type="movie" data-id="335984" data-genres="Sci-Fi,Thriller,Drama" aria-label="Blade Runner 2049"></button>
+            <button class="tmdb-card" data-type="movie" data-id="76341" data-genres="Action,Sci-Fi,Adventure" aria-label="Mad Max: Fury Road"></button>
+            <button class="tmdb-card" data-type="movie" data-id="39254" data-genres="Action,Sci-Fi,Drama" aria-label="Real Steel"></button>
+            <button class="tmdb-card" data-type="movie" data-id="667538" data-genres="Sci-Fi,Action,Adventure" aria-label="Transformers: Rise of the Beasts"></button>
+            <button class="tmdb-card" data-type="movie" data-id="848326" data-genres="Sci-Fi,Action" aria-label="Rebel Moon"></button>
+            <button class="tmdb-card" data-type="movie" data-id="617126" data-genres="Science,Adventure" aria-label="The Fantastic 4: First Steps"></button>
+            <button class="tmdb-card" data-type="movie" data-id="10196" data-genres="Action,Fantasy" aria-label="The Last Airbender"></button>
+            <button class="tmdb-card" data-type="movie" data-id="1771" data-genres="Action,Adventure,Sci-Fi" aria-label="Captain America: The First Avenger"></button>
+            <button class="tmdb-card" data-type="movie" data-id="24428" data-genres="Action,Sci-Fi,Adventure" aria-label="The Avengers"></button>
+            <button class="tmdb-card" data-type="movie" data-id="99861" data-genres="Action,Sci-Fi,Adventure" aria-label="Avengers: Age of Ultron"></button>
+            <button class="tmdb-card" data-type="movie" data-id="118340" data-genres="Sci-Fi,Action,Adventure" aria-label="Guardians of the Galaxy"></button>
+            <button class="tmdb-card" data-type="movie" data-id="283995" data-genres="Sci-Fi,Action,Adventure" aria-label="Guardians of the Galaxy Vol. 2"></button>
+            <button class="tmdb-card" data-type="movie" data-id="284052" data-genres="Fantasy,Action,Adventure" aria-label="Doctor Strange"></button>
+            <button class="tmdb-card" data-type="movie" data-id="559" data-genres="Action,Adventure,Sci-Fi" aria-label="Spider-Man 3"></button>
+            <button class="tmdb-card" data-type="movie" data-id="315635" data-genres="Action,Sci-Fi,Adventure" aria-label="Spider-Man: Homecoming"></button>
+            <button class="tmdb-card" data-type="movie" data-id="429617" data-genres="Action,Sci-Fi,Adventure" aria-label="Spider-Man: Far From Home"></button>
+            <button class="tmdb-card" data-type="movie" data-id="497698" data-genres="Action,Sci-Fi,Thriller" aria-label="Black Widow"></button>
+            <button class="tmdb-card" data-type="movie" data-id="299536" data-genres="Action,Sci-Fi,Adventure" aria-label="Avengers: Infinity War"></button>
+            <button class="tmdb-card" data-type="movie" data-id="299534" data-genres="Action,Sci-Fi,Adventure" aria-label="Avengers: Endgame"></button>
+            <button class="tmdb-card" data-type="movie" data-id="634649" data-genres="Action,Sci-Fi,Adventure" aria-label="Spider-Man: No Way Home"></button>
+            <button class="tmdb-card" data-type="movie" data-id="505642" data-genres="Action,Adventure,Sci-Fi" aria-label="Black Panther: Wakanda Forever"></button>
+            <button class="tmdb-card" data-type="movie" data-id="453395" data-genres="Fantasy,Action,Adventure" aria-label="Doctor Strange in the Multiverse of Madness"></button>
+            <button class="tmdb-card" data-type="movie" data-id="155" data-genres="Action,Crime,Drama" aria-label="The Dark Knight"></button>
+            <button class="tmdb-card" data-type="movie" data-id="49026" data-genres="Action,Thriller,Crime" aria-label="The Dark Knight Rises"></button>
+            <button class="tmdb-card" data-type="movie" data-id="475557" data-genres="Crime,Drama,Thriller" aria-label="Joker (2019)"></button>
+            <button class="tmdb-card" data-type="movie" data-id="889737" data-genres="Crime,Drama,Thriller" aria-label="Joker: Folie à Deux"></button>
+            <button class="tmdb-card" data-type="movie" data-id="1061474" data-genres="Science,Fiction,Adventure,Action" aria-label="Superman"></button>
+            <button class="tmdb-card" data-type="movie" data-id="207703" data-genres="Crime,Comedy,Action" aria-label="Kingsman: The Secret Service"></button>
+            <button class="tmdb-card" data-type="movie" data-id="603692" data-genres="Action,Thriller,Crime" aria-label="John Wick: Chapter 4"></button>
+            <button class="tmdb-card" data-type="movie" data-id="615457" data-genres="Action,Thriller" aria-label="Nobody"></button>
+            <button class="tmdb-card" data-type="movie" data-id="1007734" data-genres="Action,Thriller" aria-label="Nobody 2"></button>
+            <button class="tmdb-card" data-type="movie" data-id="545609" data-genres="Action,Thriller" aria-label="Extraction"></button>
+            <button class="tmdb-card" data-type="movie" data-id="575264" data-genres="Action,Thriller,Adventure" aria-label="Mission Impossible: Dead Reckoning"></button>
+            <button class="tmdb-card" data-type="movie" data-id="361743" data-genres="Action,Drama" aria-label="Top Gun: Maverick"></button>
+            <button class="tmdb-card" data-type="movie" data-id="1271" data-genres="Action,War" aria-label="300"></button>
+            <button class="tmdb-card" data-type="movie" data-id="677179" data-genres="Drama,Action" aria-label="Creed III"></button>
+            <button class="tmdb-card" data-type="movie" data-id="949" data-genres="Crime,Drama,Action" aria-label="Heat"></button>
+            <button class="tmdb-card" data-type="movie" data-id="24" data-genres="Action,Crime,Thriller" aria-label="Kill Bill: Vol. 1"></button>
+            <button class="tmdb-card" data-type="movie" data-id="500" data-genres="Crime,Thriller" aria-label="Reservoir Dogs"></button>
+            <button class="tmdb-card" data-type="movie" data-id="274" data-genres="Drama,Crime,Thriller" aria-label="The Silence of the Lambs"></button>
+            <button class="tmdb-card" data-type="movie" data-id="1359" data-genres="Thriller,Drama,Crime" aria-label="American Psycho"></button>
+            <button class="tmdb-card" data-type="movie" data-id="670" data-genres="Action,Drama,Mystery" aria-label="Oldboy (2003)"></button>
+            <button class="tmdb-card" data-type="movie" data-id="6977" data-genres="Crime,Drama,Thriller" aria-label="No Country for Old Men"></button>
+            <button class="tmdb-card" data-type="movie" data-id="385687" data-genres="Action,Thriller,Crime" aria-label="Fast & Furious"></button>
+            <button class="tmdb-card" data-type="movie" data-id="168259" data-genres="Action,Thriller" aria-label="Furious 7"></button>
+            <button class="tmdb-card" data-type="movie" data-id="346364" data-genres="Horror,Thriller" aria-label="It"></button>
+            <button class="tmdb-card" data-type="movie" data-id="474350" data-genres="Horror,Thriller" aria-label="It Chapter Two"></button>
+            <button class="tmdb-card" data-type="movie" data-id="646385" data-genres="Horror,Mystery,Thriller" aria-label="Scream"></button>
+            <button class="tmdb-card" data-type="movie" data-id="756999" data-genres="Horror,Thriller" aria-label="The Black Phone"></button>
+            <button class="tmdb-card" data-type="movie" data-id="1197137" data-genres="Horror,Thriller" aria-label="The Black Phone 2"></button>
+            <button class="tmdb-card" data-type="movie" data-id="536554" data-genres="Horror,Thriller" aria-label="M3GAN"></button>
+            <button class="tmdb-card" data-type="movie" data-id="1071585" data-genres="Horror,Thriller" aria-label="M3GAN 2.0"></button>
+            <button class="tmdb-card" data-type="movie" data-id="507089" data-genres="Horror,Thriller" aria-label="Five Night's at Freddy's"></button>
+            <button class="tmdb-card" data-type="movie" data-id="23827" data-genres="Horror,Mystery" aria-label="Paranormal Activity"></button>
+            <button class="tmdb-card" data-type="movie" data-id="1078605" data-genres="Horror,Mystery" aria-label="Weapons"></button>
+            <button class="tmdb-card" data-type="movie" data-id="345940" data-genres="Sci-Fi,Action,Horror" aria-label="The Meg"></button>
+            <button class="tmdb-card" data-type="movie" data-id="615656" data-genres="Sci-Fi,Action,Horror" aria-label="Meg 2: The Trench"></button>
+            <button class="tmdb-card" data-type="movie" data-id="9532" data-genres="Horror,Thriller,Supernatural" aria-label="Final Destination"></button>
+            <button class="tmdb-card" data-type="movie" data-id="9358" data-genres="Horror,Thriller,Supernatural" aria-label="Final Destination 2"></button>
+            <button class="tmdb-card" data-type="movie" data-id="9286" data-genres="Horror,Thriller,Supernatural" aria-label="Final Destination 3"></button>
+            <button class="tmdb-card" data-type="movie" data-id="19912" data-genres="Horror,Thriller,Supernatural" aria-label="The Final Destination"></button>
+            <button class="tmdb-card" data-type="movie" data-id="55779" data-genres="Horror,Thriller,Supernatural" aria-label="Final Destination 5"></button>
+            <button class="tmdb-card" data-type="movie" data-id="574475" data-genres="Horror,Thriller,Supernatural" aria-label="Final Destination Bloodlines"></button>
+            <button class="tmdb-card" data-type="movie" data-id="948" data-genres="Horror,Slasher" aria-label="Halloween (1978)"></button>
+            <button class="tmdb-card" data-type="movie" data-id="11281" data-genres="Horror,Slasher" aria-label="Halloween II (1981)"></button>
+            <button class="tmdb-card" data-type="movie" data-id="10676" data-genres="Horror,Science Fiction" aria-label="Halloween III: Season of the Witch (1982)"></button>
+            <button class="tmdb-card" data-type="movie" data-id="11357" data-genres="Horror,Slasher" aria-label="Halloween 4: The Return of Michael Myers (1988)"></button>
+            <button class="tmdb-card" data-type="movie" data-id="11361" data-genres="Horror,Slasher" aria-label="Halloween 5: The Revenge of Michael Myers (1989)"></button>
+            <button class="tmdb-card" data-type="movie" data-id="10987" data-genres="Horror,Thriller" aria-label="Halloween: The Curse of Michael Myers (1995)"></button>
+            <button class="tmdb-card" data-type="movie" data-id="11675" data-genres="Horror,Thriller" aria-label="Halloween H20: 20 Years Later (1998)"></button>
+            <button class="tmdb-card" data-type="movie" data-id="11442" data-genres="Horror,Slasher" aria-label="Halloween: Resurrection (2002)"></button>
+            <button class="tmdb-card" data-type="movie" data-id="2082" data-genres="Horror,Slasher" aria-label="Halloween (2007) — Rob Zombie"></button>
+            <button class="tmdb-card" data-type="movie" data-id="24150" data-genres="Horror,Slasher" aria-label="Halloween II (2009) — Rob Zombie"></button>
+            <button class="tmdb-card" data-type="movie" data-id="424139" data-genres="Horror,Thriller" aria-label="Halloween (2018)"></button>
+            <button class="tmdb-card" data-type="movie" data-id="610253" data-genres="Horror,Slasher" aria-label="Halloween Kills (2021)"></button>
+            <button class="tmdb-card" data-type="movie" data-id="616820" data-genres="Horror,Thriller" aria-label="Halloween Ends (2022)"></button>
+            <button class="tmdb-card" data-type="movie" data-id="8467" data-genres="Comedy" aria-label="Dumb and Dumber"></button>
+            <button class="tmdb-card" data-type="movie" data-id="100042" data-genres="Comedy" aria-label="Dumb and Dumber To"></button>
+            <button class="tmdb-card" data-type="movie" data-id="4247" data-genres="Comedy" aria-label="Scary Movie"></button>
+            <button class="tmdb-card" data-type="movie" data-id="4248" data-genres="Comedy" aria-label="Scary Movie 2"></button>
+            <button class="tmdb-card" data-type="movie" data-id="4256" data-genres="Comedy" aria-label="Scary Movie 3"></button>
+            <button class="tmdb-card" data-type="movie" data-id="4257" data-genres="Comedy" aria-label="Scary Movie 4"></button>
+            <button class="tmdb-card" data-type="movie" data-id="4258" data-genres="Comedy" aria-label="Scary Movie 5"></button>
+            <button class="tmdb-card" data-type="movie" data-id="18785" data-genres="Comedy" aria-label="The Hangover"></button>
+            <button class="tmdb-card" data-type="movie" data-id="228967" data-genres="Comedy, Action" aria-label="The Interview"></button>
+            <button class="tmdb-card" data-type="movie" data-id="288171" data-genres="Comedy" aria-label="Blue Mountain State: The Rise of Thadland"></button>
+            <button class="tmdb-card" data-type="movie" data-id="38365" data-genres="Comedy,Family" aria-label="Grown Ups"></button>
+            <button class="tmdb-card" data-type="movie" data-id="109418" data-genres="Comedy,Family" aria-label="Grown Ups 2"></button>
+            <button class="tmdb-card" data-type="movie" data-id="33217" data-genres="Comedy,Family" aria-label="Diary of a Wimpy Kid (2010)"></button>
+            <button class="tmdb-card" data-type="movie" data-id="60307" data-genres="Comedy,Family" aria-label="Diary of a Wimpy Kid: Rodrick Rules (2011)"></button>
+            <button class="tmdb-card" data-type="movie" data-id="82650" data-genres="Comedy,Family" aria-label="Diary of a Wimpy Kid: Dog Days (2012)"></button>
+            <button class="tmdb-card" data-type="movie" data-id="417830" data-genres="Comedy,Family,Teen" aria-label="Diary of a Wimpy Kid: The Long Haul (2017)"></button>
+            <button class="tmdb-card" data-type="movie" data-id="774741" data-genres="Animation,Comedy,Family" aria-label="Diary of a Wimpy Kid (2021) — animated"></button>
+            <button class="tmdb-card" data-type="movie" data-id="897192" data-genres="Animation,Comedy,Family" aria-label="Diary of a Wimpy Kid: Rodrick Rules (2022) — animated"></button>
+            <button class="tmdb-card" data-type="movie" data-id="1123093" data-genres="Animation,Comedy,Family" aria-label="Diary of a Wimpy Kid Christmas: Cabin Fever (2023)"></button>
+            <button class="tmdb-card" data-type="movie" data-id="76492" data-genres="Animation,Comedy,Family,Fantasy" aria-label="Hotel Transylvania"></button>
+            <button class="tmdb-card" data-type="movie" data-id="159824" data-genres="Animation,Comedy,Family,Fantasy" aria-label="Hotel Transylvania 2"></button>
+            <button class="tmdb-card" data-type="movie" data-id="400155" data-genres="Animation,Comedy,Family,Fantasy" aria-label="Hotel Transylvania 3"></button>
+            <button class="tmdb-card" data-type="movie" data-id="585083" data-genres="Animation,Comedy,Family,Fantasy" aria-label="Hotel Transylvania: Transformania"></button>
+            <button class="tmdb-card" data-type="movie" data-id="9502" data-genres="Animation,Family,Comedy,Action,Adventure" aria-label="Kung Fu Panda"></button>
+            <button class="tmdb-card" data-type="movie" data-id="49444" data-genres="Animation,Family,Comedy,Action,Adventure" aria-label="Kung Fu Panda 2"></button>
+            <button class="tmdb-card" data-type="movie" data-id="140300" data-genres="Animation,Family,Comedy,Action,Adventure" aria-label="Kung Fu Panda 3"></button>
+            <button class="tmdb-card" data-type="movie" data-id="1011985" data-genres="Animation,Family,Comedy,Action,Adventure" aria-label="Kung Fu Panda 4"></button>
+            <button class="tmdb-card" data-type="movie" data-id="11836" data-genres="Family,Comedy,Adventure,Animation" aria-label="The Spongebob Squarepants Movie"></button>
+            <button class="tmdb-card" data-type="movie" data-id="228165" data-genres="Family,Comedy,Adventure,Animation" aria-label="The SpongeBob Movie: Sponge Out of Water"></button>
+            <button class="tmdb-card" data-type="movie" data-id="1104845" data-genres="Animation,Comedy" aria-label="Plankton: The Movie"></button>
+            <button class="tmdb-card" data-type="movie" data-id="12" data-genres="Animation,Family,Comedy" aria-label="Finding Nemo"></button>
+            <button class="tmdb-card" data-type="movie" data-id="127380" data-genres="Animation,Family,Comedy" aria-label="Finding Dory"></button>
+            <button class="tmdb-card" data-type="movie" data-id="629542" data-genres="Family,Comedy,Crime,Action,Adventure,Animation" aria-label="The Bad Guys"></button>
+            <button class="tmdb-card" data-type="movie" data-id="1175942" data-genres="Family,Comedy,Crime,Action,Adventure,Animation" aria-label="The Bad Guys 2"></button>
+            <button class="tmdb-card" data-type="movie" data-id="502356" data-genres="Animation,Adventure,Comedy" aria-label="The Super Mario Bros Movie"></button>
+            <button class="tmdb-card" data-type="movie" data-id="150540" data-genres="Animation,Comedy,Family" aria-label="Inside Out"></button>
+            <button class="tmdb-card" data-type="movie" data-id="277834" data-genres="Animation,Adventure,Family" aria-label="Moana"></button>
+            <button class="tmdb-card" data-type="movie" data-id="1241982" data-genres="Animation,Adventure,Family" aria-label="Moana 2"></button>
+            <button class="tmdb-card" data-type="movie" data-id="354912" data-genres="Animation,Family,Fantasy" aria-label="Coco"></button>
+            <button class="tmdb-card" data-type="movie" data-id="269149" data-genres="Animation,Comedy,Family" aria-label="Zootopia"></button>
+            <button class="tmdb-card" data-type="movie" data-id="328111" data-genres="Animation,Comedy,Family" aria-label="The Secret Life of Pets"></button>
+            <button class="tmdb-card" data-type="movie" data-id="137106" data-genres="Animation,Adventure,Comedy" aria-label="The Lego Movie"></button>
+            <button class="tmdb-card" data-type="movie" data-id="1022787" data-genres="Family,Comedy,Adventure,Animation,Science" aria-label="Elio"></button>
+            <button class="tmdb-card" data-type="movie" data-id="227973" data-genres="Animation,Family" aria-label="The Peanuts Movie"></button>
+            <button class="tmdb-card" data-type="movie" data-id="268531" data-genres="Animation,Comedy,Family" aria-label="Captain Underpants: The First Epic Movie"></button>
+            <button class="tmdb-card" data-type="movie" data-id="14836" data-genres="Animation,Fantasy,Thriller" aria-label="Coraline"></button>
+            <button class="tmdb-card" data-type="movie" data-id="129" data-genres="Animation,Fantasy,Adventure" aria-label="Spirited Away"></button>
+            <button class="tmdb-card" data-type="movie" data-id="378064" data-genres="Drama,Animation,Romance" aria-label="A Silent Voice"></button>
+            <button class="tmdb-card" data-type="movie" data-id="116149" data-genres="Family,Comedy,Adventure" aria-label="Paddington"></button>
+            <button class="tmdb-card" data-type="movie" data-id="346648" data-genres="Family,Comedy,Adventure" aria-label="Paddington 2"></button>
+            <button class="tmdb-card" data-type="movie" data-id="516729" data-genres="Family,Comedy,Adventure" aria-label="Paddington in Peru"></button>
+            <button class="tmdb-card" data-type="movie" data-id="77174" data-genres="Family,Adventure,Comedy" aria-label="ParaNorman"></button>
+            <button class="tmdb-card" data-type="movie" data-id="346698" data-genres="Comedy,Adventure,Fantasy" aria-label="Barbie"></button>
+            <button class="tmdb-card" data-type="movie" data-id="310" data-genres="Comedy,Fantasy" aria-label="Bruce Almighty"></button>
+            <button class="tmdb-card" data-type="movie" data-id="3049" data-genres="Comedy,Crime" aria-label="Ace Ventura: Pet Detective"></button>
+            <button class="tmdb-card" data-type="movie" data-id="12133" data-genres="Comedy" aria-label="Step Brothers"></button>
+            <button class="tmdb-card" data-type="movie" data-id="8363" data-genres="Comedy" aria-label="Superbad"></button>
+            <button class="tmdb-card" data-type="movie" data-id="120467" data-genres="Comedy,Drama" aria-label="The Grand Budapest Hotel"></button>
+            <button class="tmdb-card" data-type="movie" data-id="194" data-genres="Comedy,Romance" aria-label="Amélie"></button>
+            <button class="tmdb-card" data-type="movie" data-id="515001" data-genres="Comedy,War,Drama" aria-label="JoJo Rabbit"></button>
+            <button class="tmdb-card" data-type="movie" data-id="14574" data-genres="War,Drama" aria-label="The Boy in the Striped Pajamas"></button>
+            <button class="tmdb-card" data-type="movie" data-id="324786" data-genres="Drama,War" aria-label="Hacksaw Ridge"></button>
+            <button class="tmdb-card" data-type="movie" data-id="598" data-genres="Crime,Drama" aria-label="City of God"></button>
+            <button class="tmdb-card" data-type="movie" data-id="1417" data-genres="Fantasy,Drama,War" aria-label="Pan's Labyrinth"></button>
+            <button class="tmdb-card" data-type="movie" data-id="619264" data-genres="Drama,Science,Thriller" aria-label="The Platform"></button>
+            <button class="tmdb-card" data-type="movie" data-id="1125510" data-genres="Drama,Science,Thriller" aria-label="The Platform 2"></button>
+            <button class="tmdb-card" data-type="movie" data-id="950387" data-genres="Family,Fantasy,Comedy,Adventure" aria-label="The Minecraft Movie"></button>
+            <button class="tmdb-card" data-type="movie" data-id="10588" data-genres="Family,Comedy,Adventure,Fantasy" aria-label="The Cat in the Hat"></button>
+            <button class="tmdb-card" data-type="movie" data-id="803796" data-genres="Fantasy,Music,Comedy,Animation" aria-label="KPop Demon Hunters"></button>
+            <button class="tmdb-card" data-type="movie" data-id="533533" data-genres="Sci-Fi,Adventure,Action" aria-label="TRON: Ares"></button>
+            <button class="tmdb-card" data-type="movie" data-id="1228246" data-genres="Horror,Thriller" aria-label="Five Nights at Freddy's 2"></button>
+
+        </div>
+    </div>
+
+    <!-- tv -->
+    <div id="tv-page" class="content-page">
+        <h1 class="text-3xl font-bold mb-6 text-white text-center">
+            <i data-lucide="monitor-dot" class="w-6 h-6 inline-block mr-2 text-cyan-400"></i>
             TV Shows
         </h1>
-<div class="flex flex-col md:flex-row gap-4 mb-8 max-w-4xl mx-auto w-full">
-<div class="relative w-full md:w-2/3">
-<input class="w-full p-3 pl-10 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-accent-main outline-none" id="tvSearch" oninput="filterContent('tv')" placeholder="Search TV shows by title..." type="text"/>
-<i class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" data-lucide="search"></i>
-</div>
-<select class="w-full md:w-1/3 p-3 rounded-xl bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-accent-main outline-none appearance-none cursor-pointer" id="tvGenreFilter" onchange="filterContent('tv')">
-</select>
-</div>
-<div class="grid" id="tvGrid">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-</div>
-<div class="content-page" id="christmas-page">
-<h1 class="text-3xl font-bold mb-6 text-white text-center">
-<i class="w-6 h-6 inline-block mr-2 text-red-400" data-lucide="gift"></i>
+        <div class="flex flex-col md:flex-row gap-4 mb-8 max-w-4xl mx-auto w-full">
+            <div class="relative w-full md:w-2/3">
+                <input type="text" id="tvSearch" placeholder="Search TV shows by title..."
+                        oninput="filterContent('tv')"
+                        class="w-full p-3 pl-10 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-accent-main outline-none">
+                <i data-lucide="search" class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <select id="tvGenreFilter" onchange="filterContent('tv')"
+                    class="w-full md:w-1/3 p-3 rounded-xl bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-accent-main outline-none appearance-none cursor-pointer">
+            </select>
+        </div>
+
+
+        <div class="grid" id="tvGrid">
+            <button class="tmdb-card" data-type="tv" data-id="37680" data-genres="Comedy,Drama" aria-label="Suits"></button>
+            <button class="tmdb-card" data-type="tv" data-id="1399" data-genres="Fantasy,Drama,Action" aria-label="Game of Thrones"></button>
+            <button class="tmdb-card" data-type="tv" data-id="100088" data-genres="Drama,Action,Horror" aria-label="The Last of Us"></button>
+            <button class="tmdb-card" data-type="tv" data-id="1402" data-genres="Drama,Horror,Action" aria-label="The Walking Dead"></button>
+            <button class="tmdb-card" data-type="tv" data-id="66732" data-genres="Mystery,Drama,Sci-Fi" aria-label="Stranger Things"></button>
+            <button class="tmdb-card" data-type="tv" data-id="87108" data-genres="Drama,History" aria-label="Chernobyl"></button>
+            <button class="tmdb-card" data-type="tv" data-id="87739" data-genres="Drama" aria-label="The Queen's Gambit"></button>
+            <button class="tmdb-card" data-type="tv" data-id="65494" data-genres="Drama,History" aria-label="The Crown"></button>
+            <button class="tmdb-card" data-type="tv" data-id="1396" data-genres="Crime,Drama,Thriller" aria-label="Breaking Bad"></button>
+            <button class="tmdb-card" data-type="tv" data-id="60059" data-genres="Crime,Drama" aria-label="Better Call Saul"></button>
+            <button class="tmdb-card" data-type="tv" data-id="1398" data-genres="Crime,Drama" aria-label="The Sopranos"></button>
+            <button class="tmdb-card" data-type="tv" data-id="1438" data-genres="Crime,Drama,Thriller" aria-label="The Wire"></button>
+            <button class="tmdb-card" data-type="tv" data-id="1405" data-genres="Crime,Drama,Thriller" aria-label="Dexter"></button>
+            <button class="tmdb-card" data-type="tv" data-id="131927" data-genres="Crime,Drama,Mystery" aria-label="Dexter: New Blood"></button>
+            <button class="tmdb-card" data-type="tv" data-id="219937" data-genres="Crime,Drama" aria-label="Dexter: Original Sin"></button>
+            <button class="tmdb-card" data-type="tv" data-id="259909" data-genres="Crime,Drama" aria-label="Dexter: Resurrection"></button>
+            <button class="tmdb-card" data-type="tv" data-id="46648" data-genres="Crime,Drama,Mystery" aria-label="True Detective"></button>
+            <button class="tmdb-card" data-type="tv" data-id="60622" data-genres="Crime,Drama,Comedy" aria-label="Fargo"></button>
+            <button class="tmdb-card" data-type="tv" data-id="60574" data-genres="Crime,Drama,Action" aria-label="Peaky Blinders"></button>
+            <button class="tmdb-card" data-type="tv" data-id="63351" data-genres="Crime,Drama,History" aria-label="Narcos"></button>
+            <button class="tmdb-card" data-type="tv" data-id="71694" data-genres="Crime,Drama" aria-label="Snowfall"></button>
+            <button class="tmdb-card" data-type="tv" data-id="1409" data-genres="Crime,Drama,Thriller" aria-label="Sons of Anarchy"></button>
+            <button class="tmdb-card" data-type="tv" data-id="71446" data-genres="Crime,Action,Drama" aria-label="Money Heist"></button>
+            <button class="tmdb-card" data-type="tv" data-id="42009" data-genres="Sci-Fi,Drama" aria-label="Black Mirror"></button>
+            <button class="tmdb-card" data-type="tv" data-id="106379" data-genres="Sci-Fi,Action,Adventure" aria-label="Fallout"></button>
+            <button class="tmdb-card" data-type="tv" data-id="4087" data-genres="Mystery,Sci-Fi,Drama" aria-label="The X-Files"></button>
+            <button class="tmdb-card" data-type="tv" data-id="1920" data-genres="Drama,Mystery,Thriller" aria-label="Twin Peaks"></button>
+            <button class="tmdb-card" data-type="tv" data-id="4607" data-genres="Adventure,Fantasy,Drama" aria-label="Lost"></button>
+            <button class="tmdb-card" data-type="tv" data-id="93405" data-genres="Action,Drama,Thriller" aria-label="Squid Game"></button>
+            <button class="tmdb-card" data-type="tv" data-id="110316" data-genres="Mystery,Sci-Fi,Action" aria-label="Alice in Borderland"></button>
+            <button class="tmdb-card" data-type="tv" data-id="655" data-genres="Sci-Fi,Adventure" aria-label="Star Trek: The Next Generation"></button>
+            <button class="tmdb-card" data-type="tv" data-id="76479" data-genres="Action,Sci-Fi" aria-label="The Boys"></button>
+            <button class="tmdb-card" data-type="tv" data-id="71912" data-genres="Fantasy,Action,Adventure" aria-label="The Witcher"></button>
+            <button class="tmdb-card" data-type="tv" data-id="75006" data-genres="Sci-Fi,Action,Fantasy" aria-label="The Umbrella Academy"></button>
+            <button class="tmdb-card" data-type="tv" data-id="84958" data-genres="Sci-Fi,Action,Adventure" aria-label="Loki"></button>
+            <button class="tmdb-card" data-type="tv" data-id="82856" data-genres="Sci-Fi,Action,Adventure" aria-label="The Mandalorian"></button>
+            <button class="tmdb-card" data-type="tv" data-id="92749" data-genres="Sci-Fi,Action,Adventure" aria-label="Moon Knight"></button>
+            <button class="tmdb-card" data-type="tv" data-id="110492" data-genres="Sci-Fi,Action,Comedy" aria-label="Peacemaker"></button>
+            <button class="tmdb-card" data-type="tv" data-id="60708" data-genres="Crime,Drama,Action" aria-label="Gotham"></button>
+            <button class="tmdb-card" data-type="tv" data-id="1412" data-genres="Action,Crime,Sci-Fi" aria-label="Arrow"></button>
+            <button class="tmdb-card" data-type="tv" data-id="60735" data-genres="Action,Sci-Fi,Drama" aria-label="The Flash"></button>
+            <button class="tmdb-card" data-type="tv" data-id="77169" data-genres="Action,Drama" aria-label="Cobra Kai"></button>
+            <button class="tmdb-card" data-type="tv" data-id="31941" data-genres="Comedy" aria-label="Blue Mountain State"></button>
+            <button class="tmdb-card" data-type="tv" data-id="2316" data-genres="Comedy" aria-label="the office"></button>
+            <button class="tmdb-card" data-type="tv" data-id="1668" data-genres="Comedy,Romance" aria-label="Friends"></button>
+            <button class="tmdb-card" data-type="tv" data-id="1400" data-genres="Comedy" aria-label="Seinfeld"></button>
+            <button class="tmdb-card" data-type="tv" data-id="8592" data-genres="Comedy" aria-label="Parks and Recreation"></button>
+            <button class="tmdb-card" data-type="tv" data-id="1418" data-genres="Comedy,Romance" aria-label="The Big Bang Theory"></button>
+            <button class="tmdb-card" data-type="tv" data-id="1416" data-genres="Drama" aria-label="Grey's Anatomy"></button>
+            <button class="tmdb-card" data-type="tv" data-id="3452" data-genres="Comedy" aria-label="Frasier"></button>
+            <button class="tmdb-card" data-type="tv" data-id="4589" data-genres="Comedy" aria-label="Arrested Development"></button>
+            <button class="tmdb-card" data-type="tv" data-id="1421" data-genres="Comedy" aria-label="Modern Family"></button>
+            <button class="tmdb-card" data-type="tv" data-id="2004" data-genres="Comedy,Family" aria-label="Malcolm in the Middle"></button>
+            <button class="tmdb-card" data-type="tv" data-id="1422" data-genres="Comedy,Family" aria-label="The Middle"></button>
+            <button class="tmdb-card" data-type="tv" data-id="71728" data-genres="Comedy,Family" aria-label="Young Sheldon"></button>
+            <button class="tmdb-card" data-type="tv" data-id="252" data-genres="Comedy,Drama" aria-label="Everybody Hates Chris"></button>
+            <button class="tmdb-card" data-type="tv" data-id="34307" data-genres="Drama,Comedy" aria-label="Shameless"></button>
+            <button class="tmdb-card" data-type="tv" data-id="285552" data-genres="Comedy,Drama" aria-label="The New Norm"></button>
+            <button class="tmdb-card" data-type="tv" data-id="59186" data-genres="Comedy" aria-label="Impractical Jokers"></button>
+            <button class="tmdb-card" data-type="tv" data-id="1408" data-genres="Drama,Mystery" aria-label="House"></button>
+            <button class="tmdb-card" data-type="tv" data-id="71712" data-genres="Drama" aria-label="The Good Doctor"></button>
+            <button class="tmdb-card" data-type="tv" data-id="1429" data-genres="Animation,Action,Fantasy" aria-label="Attack on Titan"></button>
+            <button class="tmdb-card" data-type="tv" data-id="46260" data-genres="Animation,Action,Adventure" aria-label="Naruto"></button>
+            <button class="tmdb-card" data-type="tv" data-id="31910" data-genres="Animation,Action,Adventure" aria-label="Naruto: Shippuden"></button>
+            <button class="tmdb-card" data-type="tv" data-id="37854" data-genres="Animation,Action,Adventure" aria-label="One Piece"></button>
+            <button class="tmdb-card" data-type="tv" data-id="2604" data-genres="Animation,Action,Adventure,Comedy" aria-label="The Boondocks"></button>
+            <button class="tmdb-card" data-type="tv" data-id="12971" data-genres="Animation,Action,Fantasy,Adventure" aria-label="Dragon Ball Z"></button>
+            <button class="tmdb-card" data-type="tv" data-id="46298" data-genres="Animation,Action,Adventure,Fantasy" aria-label="Hunter X Hunter"></button>
+            <button class="tmdb-card" data-type="tv" data-id="127532" data-genres="Action,Adventure,Fantasy,Animation,Sci-Fi" aria-label="Solo Leveling"></button>
+            <button class="tmdb-card" data-type="tv" data-id="114410" data-genres="Animation,Action,Fantasy" aria-label="Chainsaw Man"></button>
+            <button class="tmdb-card" data-type="tv" data-id="13916" data-genres="Animation,Mystery,Fantasy" aria-label="Death Note"></button>
+            <button class="tmdb-card" data-type="tv" data-id="95557" data-genres="Animation,Action,Sci-Fi" aria-label="Invincible"></button>
+            <button class="tmdb-card" data-type="tv" data-id="105248" data-genres="Animation,Sci-Fi,Action" aria-label="Cyberpunk: Edgerunners"></button>
+            <button class="tmdb-card" data-type="tv" data-id="2190" data-genres="Animation,Comedy" aria-label="South Park"></button>
+            <button class="tmdb-card" data-type="tv" data-id="60625" data-genres="Animation,Comedy,Sci-Fi" aria-label="Rick and Morty"></button>
+            <button class="tmdb-card" data-type="tv" data-id="456" data-genres="Animation,Comedy,Family" aria-label="The Simpsons"></button>
+            <button class="tmdb-card" data-type="tv" data-id="1434" data-genres="Animation,Comedy" aria-label="Family Guy"></button>
+            <button class="tmdb-card" data-type="tv" data-id="1433" data-genres="Animation,Comedy" aria-label="American Dad"></button>
+            <button class="tmdb-card" data-type="tv" data-id="615" data-genres="Animation,Comedy,Sci-Fi" aria-label="Futurama"></button>
+            <button class="tmdb-card" data-type="tv" data-id="251" data-genres="Animation,Comedy" aria-label="Aqua Teen Hunger Force"></button>
+            <button class="tmdb-card" data-type="tv" data-id="126506" data-genres="Animation,Comedy" aria-label="Smiling Friends"></button>
+            <button class="tmdb-card" data-type="tv" data-id="387" data-genres="Animation,Kids,Comedy" aria-label="Spongebob Squarepants"></button>
+            <button class="tmdb-card" data-type="tv" data-id="40075" data-genres="Mystery,Sci-Fi,Comedy,Animation,Kids" aria-label="Gravity Falls"></button>
+            <button class="tmdb-card" data-type="tv" data-id="15260" data-genres="Animation,Fantasy,Adventure" aria-label="Adventure Time"></button>
+            <button class="tmdb-card" data-type="tv" data-id="31132" data-genres="Animation,Comedy,Family" aria-label="Regular Show"></button>
+            <button class="tmdb-card" data-type="tv" data-id="37606" data-genres="Animation,Comedy,Family" aria-label="The Amazing World of Gumball"></button>
+            <button class="tmdb-card" data-type="tv" data-id="63401" data-genres="Animation,Comedy,Kids" aria-label="We Bare Bears"></button>
+            <button class="tmdb-card" data-type="tv" data-id="32726" data-genres="Animation,Comedy,Family" aria-label="Bob's Burgers'"></button>
+            <button class="tmdb-card" data-type="tv" data-id="68073" data-genres="Animation,Kids,Family" aria-label="The LOUD HOUSE"></button>
+            <button class="tmdb-card" data-type="tv" data-id="35094" data-genres="Animation,Kids" aria-label="Wild Kratts"></button>
+            <button class="tmdb-card" data-type="tv" data-id="1877" data-genres="Animation,Comedy,Family,Kids,Sci-Fi,Fantasy" aria-label="Phineas and Ferb"></button>
+            <button class="tmdb-card" data-type="tv" data-id="3902" data-genres="Animation,Comedy,Family,Kids" aria-label="Shaun the Sheep"></button>
+            <button class="tmdb-card" data-type="tv" data-id="38693" data-genres="Kids,Action,Adventure,Sci-Fi,Fantasy,Animation,Comedy,Family" aria-label="Ninjago: Masters of Spinjitzu"></button>
+            <button class="tmdb-card" data-type="tv" data-id="80805" data-genres="Kids,Animation,Comedy,Family" aria-label="The Epic Tales of Captain Underpants"></button>
+            <button class="tmdb-card" data-type="tv" data-id="26732" data-genres="Animation,Kids,Comedy,Action,Adventure,Sci-Fi,Fantasy" aria-label="Super Mario World"></button>
+            <button class="tmdb-card" data-type="tv" data-id="119051" data-genres="Mystery,Fantasy,Crime" aria-label="Wednesday"></button>
+            <button class="tmdb-card" data-type="tv" data-id="245703" data-genres="Mystery,Drama,Crime" aria-label="Dept. Q"></button>
+            <button class="tmdb-card" data-type="tv" data-id="129552" data-genres="Mystery,Drama,Action" aria-label="Night Agent"></button>
+            <button class="tmdb-card" data-type="tv" data-id="200875" data-genres="Mystery,Drama,Horror" aria-label="IT: Welcome to Derry"></button>
+            <button class="tmdb-card" data-type="tv" data-id="157741" data-genres="Drama" aria-label="Landman"></button>
+            <button class="tmdb-card" data-type="tv" data-id="108978" data-genres="Action,Drama,Crime" aria-label="Reacher"></button>
+            <button class="tmdb-card" data-type="tv" data-id="247168" data-genres="Comedy" aria-label="Chad Powers"></button>
+            
+
+        </div>
+    </div>
+<div id="christmas-page" class="content-page">
+    <h1 class="text-3xl font-bold mb-6 text-white text-center">
+        <i data-lucide="gift" class="w-6 h-6 inline-block mr-2 text-red-400"></i>
         Christmas Movies
     </h1>
-<div class="flex flex-col md:flex-row gap-4 mb-8 max-w-4xl mx-auto w-full items-center">
-<div class="relative w-full md:w-2/3">
-<input class="w-full p-3 pl-10 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-accent-main outline-none" id="christmasSearch" oninput="filterContent('christmas')" placeholder="Search Christmas movies..." type="text"/>
-<i class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" data-lucide="search"></i>
+
+    <div class="flex flex-col md:flex-row gap-4 mb-8 max-w-4xl mx-auto w-full items-center">
+        <div class="relative w-full md:w-2/3">
+            <input type="text" id="christmasSearch" placeholder="Search Christmas movies..."
+                    oninput="filterContent('christmas')"
+                    class="w-full p-3 pl-10 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-accent-main outline-none">
+            <i data-lucide="search" class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+
+        <select id="christmasGenreFilter" onchange="filterContent('christmas')"
+                class="w-full md:w-1/3 p-3 rounded-xl bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-accent-main outline-none appearance-none cursor-pointer">
+        </select>
+    </div>
+
+    <!-- Christmas Movie Grid -->
+    <div class="grid" id="christmasGrid">
+        <button class="tmdb-card" data-type="movie" data-id="10719" data-genres="Family,Comedy" aria-label="Elf"></button>
+        <button class="tmdb-card" data-type="movie" data-id="771" data-genres="Comedy,Family" aria-label="Home Alone"></button>
+        <button class="tmdb-card" data-type="movie" data-id="772" data-genres="Comedy,Family" aria-label="Home Alone 2: Lost in New York"></button>
+        <button class="tmdb-card" data-type="movie" data-id="9714" data-genres="Comedy,Family" aria-label="Home Alone 3"></button>
+        <button class="tmdb-card" data-type="movie" data-id="12536" data-genres="Comedy,Family" aria-label="Home Alone 4"></button>
+        <button class="tmdb-card" data-type="movie" data-id="134375" data-genres="Comedy,Family" aria-label="Home Alone: The Holiday Heist"></button>
+        <button class="tmdb-card" data-type="movie" data-id="5255" data-genres="Family" aria-label="The Polar Express"></button>
+        <button class="tmdb-card" data-type="movie" data-id="9479" data-genres="Family,Animation" aria-label="The Nightmare Before Christmas"></button>
+        <button class="tmdb-card" data-type="movie" data-id="17979" data-genres="Family,Animation" aria-label="A Christmas Carol"></button>
+        <button class="tmdb-card" data-type="movie" data-id="8871" data-genres="Family,Comedy" aria-label="How the Grinch Stole Christmas"></button>
+        <button class="tmdb-card" data-type="movie" data-id="360920" data-genres="Family,Comedy,Animation" aria-label="The Grinch"></button>
+        <button class="tmdb-card" data-type="movie" data-id="845781" data-genres="Comedy" aria-label="Red One"></button>
+        <button class="tmdb-card" data-type="movie" data-id="927" data-genres="Comedy" aria-label="Gremlins"></button>
+        <button class="tmdb-card" data-type="movie" data-id="26809" data-genres="Animation,Family" aria-label="Prep & Landing"></button>
+        <button class="tmdb-card" data-type="movie" data-id="14059" data-genres="Family" aria-label="Snow Buddies"></button>
+        <button class="tmdb-card" data-type="movie" data-id="1218762" data-genres="Romance,Comedy" aria-label="Jingle Bell Heist"></button>
+        <button class="tmdb-card" data-type="movie" data-id="1430593" data-genres="Romance,Comedy" aria-label="Tinsel Town"></button>
+        <button class="tmdb-card" data-type="movie" data-id="1581" data-genres="Comedy,Romance" aria-label="The Holiday"></button>
+        <button class="tmdb-card" data-type="movie" data-id="1097870" data-genres="Comedy" aria-label="Dear Santa"></button>
+        <button class="tmdb-card" data-type="movie" data-id="1537084" data-genres="Family,Romance,Comedy" aria-label="Three Wisest Men"></button>
+        <button class="tmdb-card" data-type="movie" data-id="645757" data-genres="Animation,Comedy,Family" aria-label="That Christmas"></button>
+        <button class="tmdb-card" data-type="movie" data-id="549053" data-genres="Romance,Comedy" aria-label="Last Christmas"></button>
+        <button class="tmdb-card" data-type="movie" data-id="527435" data-genres="Family,Comedy" aria-label="The Christmas Chronicles"></button>
+        <button class="tmdb-card" data-type="movie" data-id="654028" data-genres="Family,Comedy" aria-label="The Christmas Chronicles: Part Two"></button>
+        <button class="tmdb-card" data-type="movie" data-id="802217" data-genres="Family,Comedy" aria-label="8-Bit Christmas"></button>
+        <button class="tmdb-card" data-type="movie" data-id="840430" data-genres="Family,Comedy" aria-label="The Holdovers"></button>
+        <button class="tmdb-card" data-type="movie" data-id="287903" data-genres="Comedy" aria-label="Krampus"></button>
+        <button class="tmdb-card" data-type="movie" data-id="615666" data-genres="Family" aria-label="A Boy Called Christmas"></button>
+
+    </div>
 </div>
-<select class="w-full md:w-1/3 p-3 rounded-xl bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-accent-main outline-none appearance-none cursor-pointer" id="christmasGenreFilter" onchange="filterContent('christmas')">
-</select>
-</div>
-<!-- Christmas Movie Grid -->
-<div class="grid" id="christmasGrid">
-<button aria-label="Elf" class="tmdb-card" data-genres="Family,Comedy" data-id="10719" data-type="movie"></button>
-<button aria-label="Home Alone" class="tmdb-card" data-genres="Comedy,Family" data-id="771" data-type="movie"></button>
-<button aria-label="Home Alone 2: Lost in New York" class="tmdb-card" data-genres="Comedy,Family" data-id="772" data-type="movie"></button>
-<button aria-label="Home Alone 3" class="tmdb-card" data-genres="Comedy,Family" data-id="9714" data-type="movie"></button>
-<button aria-label="Home Alone 4" class="tmdb-card" data-genres="Comedy,Family" data-id="12536" data-type="movie"></button>
-<button aria-label="Home Alone: The Holiday Heist" class="tmdb-card" data-genres="Comedy,Family" data-id="134375" data-type="movie"></button>
-<button aria-label="The Polar Express" class="tmdb-card" data-genres="Family" data-id="5255" data-type="movie"></button>
-<button aria-label="The Nightmare Before Christmas" class="tmdb-card" data-genres="Family,Animation" data-id="9479" data-type="movie"></button>
-<button aria-label="A Christmas Carol" class="tmdb-card" data-genres="Family,Animation" data-id="17979" data-type="movie"></button>
-<button aria-label="How the Grinch Stole Christmas" class="tmdb-card" data-genres="Family,Comedy" data-id="8871" data-type="movie"></button>
-<button aria-label="The Grinch" class="tmdb-card" data-genres="Family,Comedy,Animation" data-id="360920" data-type="movie"></button>
-<button aria-label="Red One" class="tmdb-card" data-genres="Comedy" data-id="845781" data-type="movie"></button>
-<button aria-label="Gremlins" class="tmdb-card" data-genres="Comedy" data-id="927" data-type="movie"></button>
-<button aria-label="Prep &amp; Landing" class="tmdb-card" data-genres="Animation,Family" data-id="26809" data-type="movie"></button>
-<button aria-label="Snow Buddies" class="tmdb-card" data-genres="Family" data-id="14059" data-type="movie"></button>
-<button aria-label="Jingle Bell Heist" class="tmdb-card" data-genres="Romance,Comedy" data-id="1218762" data-type="movie"></button>
-<button aria-label="Tinsel Town" class="tmdb-card" data-genres="Romance,Comedy" data-id="1430593" data-type="movie"></button>
-<button aria-label="The Holiday" class="tmdb-card" data-genres="Comedy,Romance" data-id="1581" data-type="movie"></button>
-<button aria-label="Dear Santa" class="tmdb-card" data-genres="Comedy" data-id="1097870" data-type="movie"></button>
-<button aria-label="Three Wisest Men" class="tmdb-card" data-genres="Family,Romance,Comedy" data-id="1537084" data-type="movie"></button>
-<button aria-label="That Christmas" class="tmdb-card" data-genres="Animation,Comedy,Family" data-id="645757" data-type="movie"></button>
-<button aria-label="Last Christmas" class="tmdb-card" data-genres="Romance,Comedy" data-id="549053" data-type="movie"></button>
-<button aria-label="The Christmas Chronicles" class="tmdb-card" data-genres="Family,Comedy" data-id="527435" data-type="movie"></button>
-<button aria-label="The Christmas Chronicles: Part Two" class="tmdb-card" data-genres="Family,Comedy" data-id="654028" data-type="movie"></button>
-<button aria-label="8-Bit Christmas" class="tmdb-card" data-genres="Family,Comedy" data-id="802217" data-type="movie"></button>
-<button aria-label="The Holdovers" class="tmdb-card" data-genres="Family,Comedy" data-id="840430" data-type="movie"></button>
-<button aria-label="Krampus" class="tmdb-card" data-genres="Comedy" data-id="287903" data-type="movie"></button>
-<button aria-label="A Boy Called Christmas" class="tmdb-card" data-genres="Family" data-id="615666" data-type="movie"></button>
-</div>
-</div>
-<div class="content-page" id="chad-page">
-<h1 class="text-3xl font-bold mb-6 text-white text-center">
-<i class="w-6 h-6 inline-block mr-2 text-yellow-400" data-lucide="crown"></i>
+
+<div id="chad-page" class="content-page">
+    <h1 class="text-3xl font-bold mb-6 text-white text-center">
+        <i data-lucide="crown" class="w-6 h-6 inline-block mr-2 text-yellow-400"></i>
         Special
     </h1>
-<div class="grid" id="chadGrid">
-<button class="tmdb-card" data-id="42444" data-type="tv"></button>
+
+    <div class="grid" id="chadGrid">
+        <button class="tmdb-card" data-type="tv" data-id="42444"></button>
+    </div>
 </div>
-</div>
-<div class="content-page" id="settings-page">
-<h1 class="text-3xl font-bold mb-6 text-white"><i class="w-6 h-6 inline-block mr-2" data-lucide="settings"></i> Appearance &amp; Settings</h1>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-<div class="p-6 rounded-xl bg-gray-900 shadow-xl border border-gray-800">
-<h3 class="text-xl font-bold text-white mb-4">Theme Selector</h3>
-<button class="theme-button w-full p-3 mb-3 rounded-lg border-2 border-transparent text-white bg-fuchsia-900 hover:border-fuchsia-500" onclick="changeTheme('cyberpunk')">
+
+
+            <div id="settings-page" class="content-page">
+                <h1 class="text-3xl font-bold mb-6 text-white"><i data-lucide="settings" class="w-6 h-6 inline-block mr-2"></i> Appearance & Settings</h1>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                    <div class="p-6 rounded-xl bg-gray-900 shadow-xl border border-gray-800">
+                        <h3 class="text-xl font-bold text-white mb-4">Theme Selector</h3>
+
+                        <button class="theme-button w-full p-3 mb-3 rounded-lg border-2 border-transparent text-white bg-fuchsia-900 hover:border-fuchsia-500" onclick="changeTheme('cyberpunk')">
                             Cinematic Noir (Default)
                             <div class="h-4 rounded-sm mt-2" style="background-color: #0a0014; border: 1px solid #ff0090;"></div>
-</button>
-<button class="theme-button w-full p-3 mb-3 rounded-lg border-2 border-transparent text-white font-bold relative overflow-hidden bg-[#111a33] hover:border-[#ff2f4b] hover:shadow-[0_0_18px_#ff2f4b,0_0_32px_#00ff9d] transition duration-300" onclick="changeTheme('christmas')">
-<!-- Twinkling lights -->
-<div class="absolute inset-0 pointer-events-none flex justify-between px-2">
-<div class="w-2 h-2 rounded-full bg-[#ff2f4b] animate-pulse"></div>
-<div class="w-2 h-2 rounded-full bg-[#00ff9d] animate-ping"></div>
-<div class="w-2 h-2 rounded-full bg-[#ff2f4b] animate-pulse"></div>
-<div class="w-2 h-2 rounded-full bg-[#00ff9d] animate-ping"></div>
-<div class="w-2 h-2 rounded-full bg-[#ff2f4b] animate-pulse"></div>
-</div>
+                        </button>
+                        <button class="theme-button w-full p-3 mb-3 rounded-lg border-2 border-transparent 
+                text-white font-bold relative overflow-hidden
+                bg-[#111a33] 
+                hover:border-[#ff2f4b] 
+                hover:shadow-[0_0_18px_#ff2f4b,0_0_32px_#00ff9d]
+                transition duration-300"
+        onclick="changeTheme('christmas')">
+
+    <!-- Twinkling lights -->
+    <div class="absolute inset-0 pointer-events-none flex justify-between px-2">
+        <div class="w-2 h-2 rounded-full bg-[#ff2f4b] animate-pulse"></div>
+        <div class="w-2 h-2 rounded-full bg-[#00ff9d] animate-ping"></div>
+        <div class="w-2 h-2 rounded-full bg-[#ff2f4b] animate-pulse"></div>
+        <div class="w-2 h-2 rounded-full bg-[#00ff9d] animate-ping"></div>
+        <div class="w-2 h-2 rounded-full bg-[#ff2f4b] animate-pulse"></div>
+    </div>
 
     Christmas Magic
 
     <!-- Theme Preview Bar -->
-<div class="h-4 rounded-sm mt-3 shadow-inner" style="
+    <div class="h-4 rounded-sm mt-3 shadow-inner"
+         style="
             background: linear-gradient(90deg, #ff2f4b, #00ff9d);
             border: 1px solid #ff2f4b;
          ">
-</div>
+    </div>
 </button>
-<button class="theme-button w-full p-3 mb-3 rounded-lg border-2 border-transparent text-white bg-blue-900 hover:border-blue-400" onclick="changeTheme('midnight')">
+
+                        <button class="theme-button w-full p-3 mb-3 rounded-lg border-2 border-transparent text-white bg-blue-900 hover:border-blue-400" onclick="changeTheme('midnight')">
                             Midnight Blue
                             <div class="h-4 rounded-sm mt-2" style="background-color: #0c1622; border: 1px solid #4686ff;"></div>
-</button>
-<button class="theme-button w-full p-3 mb-3 rounded-lg border-2 border-transparent text-white bg-green-700 hover:border-green-400" onclick="changeTheme('spotify')">
+                        </button>
+                        <button class="theme-button w-full p-3 mb-3 rounded-lg border-2 border-transparent text-white bg-green-700 hover:border-green-400" onclick="changeTheme('spotify')">
                             Spotify Green
                             <div class="h-4 rounded-sm mt-2" style="background-color: #121212; border: 1px solid #1db954;"></div>
-</button>
-<button class="theme-button w-full p-3 mb-3 rounded-lg border-2 border-transparent text-white bg-purple-900 hover:border-purple-400" onclick="changeTheme('2022purple')">
+                        </button>
+                        <button class="theme-button w-full p-3 mb-3 rounded-lg border-2 border-transparent text-white bg-purple-900 hover:border-purple-400" onclick="changeTheme('2022purple')">
                             2022 Purple
                             <div class="h-4 rounded-sm mt-2" style="background-color: #3a0b44; border: 1px solid #9b4dff;"></div>
-</button>
-<button class="theme-button w-full p-3 mb-3 rounded-lg border-2 border-transparent text-white bg-red-900 hover:border-red-500" onclick="changeTheme('crimson')">
+                        </button>
+                        <button class="theme-button w-full p-3 mb-3 rounded-lg border-2 border-transparent text-white bg-red-900 hover:border-red-500" onclick="changeTheme('crimson')">
                             Crimson Noir
                             <div class="h-4 rounded-sm mt-2" style="background-color: #1a0004; border: 1px solid #ff1744;"></div>
-</button>
-<button class="theme-button w-full p-3 mb-3 rounded-lg border-2 border-transparent text-white bg-slate-800 hover:border-amber-400" onclick="changeTheme('solarized')">
+                        </button>
+                        <button class="theme-button w-full p-3 mb-3 rounded-lg border-2 border-transparent text-white bg-slate-800 hover:border-amber-400" onclick="changeTheme('solarized')">
                             Solarized Dark
                             <div class="h-4 rounded-sm mt-2" style="background-color: #002b36; border: 1px solid #b58900;"></div>
-</button>
-<button class="theme-button w-full p-3 mb-3 rounded-lg border-2 border-transparent text-gray-900 bg-gray-100 hover:border-blue-500" onclick="changeTheme('light')">
+                        </button>
+                        <button class="theme-button w-full p-3 mb-3 rounded-lg border-2 border-transparent text-gray-900 bg-gray-100 hover:border-blue-500" onclick="changeTheme('light')">
                             Flashbang (Light)
                             <div class="h-4 rounded-sm mt-2" style="background-color: #f0f0f0; border: 1px solid #3b82f6;"></div>
-</button>
-</div>
-<div class="p-6 rounded-xl bg-gray-900 shadow-xl border border-gray-800">
-<h3 class="text-xl font-bold text-white mb-4">Tab Cloak &amp; Data Management</h3>
-<p class="text-gray-400 mb-4">Change the browser tab title and icon using presets below for discretion.</p>
-<button class="w-full p-3 rounded-lg font-bold bg-cyan-600 text-black hover:bg-cyan-500 mb-3" onclick="tabCloak()">
-<i class="w-5 h-5 inline-block mr-2" data-lucide="eye-off"></i> Change Tab Title &amp; Icon
                         </button>
-<div class="mt-8 border-t border-gray-700 pt-4">
-<h3 class="text-lg font-bold text-white mb-3">Data Management</h3>
-<button class="w-full p-3 rounded-lg font-bold bg-gray-700 text-white hover:bg-gray-600 mb-3" onclick="loadPrivacy()">
+                    </div>
+
+
+                    <div class="p-6 rounded-xl bg-gray-900 shadow-xl border border-gray-800">
+                        <h3 class="text-xl font-bold text-white mb-4">Tab Cloak & Data Management</h3>
+                        <p class="text-gray-400 mb-4">Change the browser tab title and icon using presets below for discretion.</p>
+                        <button class="w-full p-3 rounded-lg font-bold bg-cyan-600 text-black hover:bg-cyan-500 mb-3" onclick="tabCloak()">
+                            <i data-lucide="eye-off" class="w-5 h-5 inline-block mr-2"></i> Change Tab Title & Icon
+                        </button>
+
+                        <div class="mt-8 border-t border-gray-700 pt-4">
+                            <h3 class="text-lg font-bold text-white mb-3">Data Management</h3>
+                            <button class="w-full p-3 rounded-lg font-bold bg-gray-700 text-white hover:bg-gray-600 mb-3" onclick="loadPrivacy()">
                                 View Privacy Policy
                             </button>
-</div>
-</div>
-</div>
-</div>
-</main>
-</div>
-<div aria-hidden="true" class="modal-backdrop" id="modalBackdrop" role="dialog">
-<div aria-modal="true" class="modal" id="modal" role="document">
-<div class="w-full h-full relative">
-<div class="modal-header" id="modalHeader">
-<div class="modal-title" id="modalTitle">Title</div>
-<button aria-pressed="false" class="modal-btn" id="fullscreenBtn" title="Enter fullscreen">
-<i class="w-4 h-4" data-lucide="maximize"></i>
-</button>
-<button class="modal-btn" id="closeBtn" title="Close">
-<i class="w-4 h-4" data-lucide="x"></i>
-</button>
-</div>
-<iframe allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen="" class="modal-frame" id="modalFrame" loading="lazy" src="" title="Video frame">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+    <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-hidden="true">
+        <div id="modal" class="modal" role="document" aria-modal="true">
+            <div class="w-full h-full relative">
+                <div class="modal-header" id="modalHeader">
+                    <div id="modalTitle" class="modal-title">Title</div>
+                    <button id="fullscreenBtn" class="modal-btn" title="Enter fullscreen" aria-pressed="false">
+                        <i data-lucide="maximize" class="w-4 h-4"></i>
+                    </button>
+                    <button id="closeBtn" class="modal-btn" title="Close">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+<iframe id="modalFrame" class="modal-frame"
+    src=""
+    title="Video frame"
+    loading="lazy"
+    allowfullscreen
+    allow="autoplay; fullscreen; encrypted-media; picture-in-picture">
 </iframe>
-</div>
-</div>
-</div>
-<div aria-hidden="true" class="se-ctrls" id="seControls">
-<label for="seasonSelect">Season</label>
-<select id="seasonSelect"></select>
-<label for="episodeSelect">Episode</label>
-<select id="episodeSelect"></select>
-</div>
-<script>window.__TMDB_LISTS = {"movie":[{"id":"278","genres":"Drama,Crime"},{"id":"238","genres":"Crime,Drama"},{"id":"240","genres":"Crime,Drama"},{"id":"680","genres":"Crime,Drama"},{"id":"550","genres":"Drama,Thriller"},{"id":"807","genres":"Crime,Mystery,Thriller"},{"id":"1124","genres":"Drama,Mystery,Thriller"},{"id":"27205","genres":"Action,Sci-Fi,Thriller"},{"id":"157336","genres":"Sci-Fi,Adventure,Drama"},{"id":"872585","genres":"Drama,History"},{"id":"603","genres":"Action,Sci-Fi"},{"id":"37165","genres":"Drama,Sci-Fi"},{"id":"13","genres":"Drama,Romance"},{"id":"98","genres":"Action,Adventure,Drama"},{"id":"597","genres":"Drama,Romance,History"},{"id":"424","genres":"Drama,History,War"},{"id":"497","genres":"Drama,Fantasy"},{"id":"857","genres":"War,Drama"},{"id":"244786","genres":"Drama"},{"id":"496243","genres":"Drama,Thriller"},{"id":"313369","genres":"Drama,Romance,Music"},{"id":"37799","genres":"Drama,History"},{"id":"398978","genres":"Crime,Drama,History"},{"id":"389","genres":"Drama"},{"id":"329","genres":"Sci-Fi,Adventure"},{"id":"330","genres":"Sci-Fi,Adventure,Action"},{"id":"331","genres":"Sci-Fi,Adventure,Action,Thriller"},{"id":"135397","genres":"Sci-Fi,Adventure,Action,Thriller"},{"id":"351286","genres":"Sci-Fi,Adventure,Action,Thriller"},{"id":"507086","genres":"Sci-Fi,Adventure,Action"},{"id":"1234821","genres":"Sci-Fi,Adventure,Action"},{"id":"120","genres":"Adventure,Fantasy,Action"},{"id":"121","genres":"Adventure,Fantasy,Action"},{"id":"122","genres":"Adventure,Fantasy,Action"},{"id":"671","genres":"Fantasy,Adventure,Family"},{"id":"672","genres":"Fantasy,Adventure,Family"},{"id":"673","genres":"Fantasy,Adventure,Family"},{"id":"674","genres":"Fantasy,Adventure,Family"},{"id":"675","genres":"Fantasy,Adventure,Family"},{"id":"767","genres":"Fantasy,Adventure,Family"},{"id":"12444","genres":"Fantasy,Adventure,Family"},{"id":"12445","genres":"Fantasy,Adventure,Family"},{"id":"19995","genres":"Sci-Fi,Action,Adventure"},{"id":"76600","genres":"Sci-Fi,Adventure,Fantasy"},{"id":"438631","genres":"Sci-Fi,Adventure,Drama"},{"id":"693134","genres":"Sci-Fi,Adventure,Action"},{"id":"140607","genres":"Sci-Fi,Action,Adventure"},{"id":"181808","genres":"Sci-Fi,Action,Adventure"},{"id":"181812","genres":"Sci-Fi,Action,Adventure"},{"id":"1891","genres":"Sci-Fi,Adventure,Action"},{"id":"105","genres":"Adventure,Comedy,Sci-Fi"},{"id":"335984","genres":"Sci-Fi,Thriller,Drama"},{"id":"76341","genres":"Action,Sci-Fi,Adventure"},{"id":"39254","genres":"Action,Sci-Fi,Drama"},{"id":"667538","genres":"Sci-Fi,Action,Adventure"},{"id":"848326","genres":"Sci-Fi,Action"},{"id":"617126","genres":"Science,Adventure"},{"id":"10196","genres":"Action,Fantasy"},{"id":"1771","genres":"Action,Adventure,Sci-Fi"},{"id":"24428","genres":"Action,Sci-Fi,Adventure"},{"id":"99861","genres":"Action,Sci-Fi,Adventure"},{"id":"118340","genres":"Sci-Fi,Action,Adventure"},{"id":"283995","genres":"Sci-Fi,Action,Adventure"},{"id":"284052","genres":"Fantasy,Action,Adventure"},{"id":"559","genres":"Action,Adventure,Sci-Fi"},{"id":"315635","genres":"Action,Sci-Fi,Adventure"},{"id":"429617","genres":"Action,Sci-Fi,Adventure"},{"id":"497698","genres":"Action,Sci-Fi,Thriller"},{"id":"299536","genres":"Action,Sci-Fi,Adventure"},{"id":"299534","genres":"Action,Sci-Fi,Adventure"},{"id":"634649","genres":"Action,Sci-Fi,Adventure"},{"id":"505642","genres":"Action,Adventure,Sci-Fi"},{"id":"453395","genres":"Fantasy,Action,Adventure"},{"id":"155","genres":"Action,Crime,Drama"},{"id":"49026","genres":"Action,Thriller,Crime"},{"id":"475557","genres":"Crime,Drama,Thriller"},{"id":"889737","genres":"Crime,Drama,Thriller"},{"id":"1061474","genres":"Science,Fiction,Adventure,Action"},{"id":"207703","genres":"Crime,Comedy,Action"},{"id":"603692","genres":"Action,Thriller,Crime"},{"id":"615457","genres":"Action,Thriller"},{"id":"1007734","genres":"Action,Thriller"},{"id":"545609","genres":"Action,Thriller"},{"id":"575264","genres":"Action,Thriller,Adventure"},{"id":"361743","genres":"Action,Drama"},{"id":"1271","genres":"Action,War"},{"id":"677179","genres":"Drama,Action"},{"id":"949","genres":"Crime,Drama,Action"},{"id":"24","genres":"Action,Crime,Thriller"},{"id":"500","genres":"Crime,Thriller"},{"id":"274","genres":"Drama,Crime,Thriller"},{"id":"1359","genres":"Thriller,Drama,Crime"},{"id":"670","genres":"Action,Drama,Mystery"},{"id":"6977","genres":"Crime,Drama,Thriller"},{"id":"385687","genres":"Action,Thriller,Crime"},{"id":"168259","genres":"Action,Thriller"},{"id":"346364","genres":"Horror,Thriller"},{"id":"474350","genres":"Horror,Thriller"},{"id":"646385","genres":"Horror,Mystery,Thriller"},{"id":"756999","genres":"Horror,Thriller"},{"id":"1197137","genres":"Horror,Thriller"},{"id":"536554","genres":"Horror,Thriller"},{"id":"1071585","genres":"Horror,Thriller"},{"id":"507089","genres":"Horror,Thriller"},{"id":"23827","genres":"Horror,Mystery"},{"id":"1078605","genres":"Horror,Mystery"},{"id":"345940","genres":"Sci-Fi,Action,Horror"},{"id":"615656","genres":"Sci-Fi,Action,Horror"},{"id":"9532","genres":"Horror,Thriller,Supernatural"},{"id":"9358","genres":"Horror,Thriller,Supernatural"},{"id":"9286","genres":"Horror,Thriller,Supernatural"},{"id":"19912","genres":"Horror,Thriller,Supernatural"},{"id":"55779","genres":"Horror,Thriller,Supernatural"},{"id":"574475","genres":"Horror,Thriller,Supernatural"},{"id":"948","genres":"Horror,Slasher"},{"id":"11281","genres":"Horror,Slasher"},{"id":"10676","genres":"Horror,Science Fiction"},{"id":"11357","genres":"Horror,Slasher"},{"id":"11361","genres":"Horror,Slasher"},{"id":"10987","genres":"Horror,Thriller"},{"id":"11675","genres":"Horror,Thriller"},{"id":"11442","genres":"Horror,Slasher"},{"id":"2082","genres":"Horror,Slasher"},{"id":"24150","genres":"Horror,Slasher"},{"id":"424139","genres":"Horror,Thriller"},{"id":"610253","genres":"Horror,Slasher"},{"id":"616820","genres":"Horror,Thriller"},{"id":"8467","genres":"Comedy"},{"id":"100042","genres":"Comedy"},{"id":"4247","genres":"Comedy"},{"id":"4248","genres":"Comedy"},{"id":"4256","genres":"Comedy"},{"id":"4257","genres":"Comedy"},{"id":"4258","genres":"Comedy"},{"id":"18785","genres":"Comedy"},{"id":"228967","genres":"Comedy, Action"},{"id":"288171","genres":"Comedy"},{"id":"38365","genres":"Comedy,Family"},{"id":"109418","genres":"Comedy,Family"},{"id":"33217","genres":"Comedy,Family"},{"id":"60307","genres":"Comedy,Family"},{"id":"82650","genres":"Comedy,Family"},{"id":"417830","genres":"Comedy,Family,Teen"},{"id":"774741","genres":"Animation,Comedy,Family"},{"id":"897192","genres":"Animation,Comedy,Family"},{"id":"1123093","genres":"Animation,Comedy,Family"},{"id":"76492","genres":"Animation,Comedy,Family,Fantasy"},{"id":"159824","genres":"Animation,Comedy,Family,Fantasy"},{"id":"400155","genres":"Animation,Comedy,Family,Fantasy"},{"id":"585083","genres":"Animation,Comedy,Family,Fantasy"},{"id":"9502","genres":"Animation,Family,Comedy,Action,Adventure"},{"id":"49444","genres":"Animation,Family,Comedy,Action,Adventure"},{"id":"140300","genres":"Animation,Family,Comedy,Action,Adventure"},{"id":"1011985","genres":"Animation,Family,Comedy,Action,Adventure"},{"id":"11836","genres":"Family,Comedy,Adventure,Animation"},{"id":"228165","genres":"Family,Comedy,Adventure,Animation"},{"id":"1104845","genres":"Animation,Comedy"},{"id":"12","genres":"Animation,Family,Comedy"},{"id":"127380","genres":"Animation,Family,Comedy"},{"id":"629542","genres":"Family,Comedy,Crime,Action,Adventure,Animation"},{"id":"1175942","genres":"Family,Comedy,Crime,Action,Adventure,Animation"},{"id":"502356","genres":"Animation,Adventure,Comedy"},{"id":"150540","genres":"Animation,Comedy,Family"},{"id":"277834","genres":"Animation,Adventure,Family"},{"id":"1241982","genres":"Animation,Adventure,Family"},{"id":"354912","genres":"Animation,Family,Fantasy"},{"id":"269149","genres":"Animation,Comedy,Family"},{"id":"328111","genres":"Animation,Comedy,Family"},{"id":"137106","genres":"Animation,Adventure,Comedy"},{"id":"1022787","genres":"Family,Comedy,Adventure,Animation,Science"},{"id":"227973","genres":"Animation,Family"},{"id":"268531","genres":"Animation,Comedy,Family"},{"id":"14836","genres":"Animation,Fantasy,Thriller"},{"id":"129","genres":"Animation,Fantasy,Adventure"},{"id":"378064","genres":"Drama,Animation,Romance"},{"id":"116149","genres":"Family,Comedy,Adventure"},{"id":"346648","genres":"Family,Comedy,Adventure"},{"id":"516729","genres":"Family,Comedy,Adventure"},{"id":"77174","genres":"Family,Adventure,Comedy"},{"id":"346698","genres":"Comedy,Adventure,Fantasy"},{"id":"310","genres":"Comedy,Fantasy"},{"id":"3049","genres":"Comedy,Crime"},{"id":"12133","genres":"Comedy"},{"id":"8363","genres":"Comedy"},{"id":"120467","genres":"Comedy,Drama"},{"id":"194","genres":"Comedy,Romance"},{"id":"515001","genres":"Comedy,War,Drama"},{"id":"14574","genres":"War,Drama"},{"id":"324786","genres":"Drama,War"},{"id":"598","genres":"Crime,Drama"},{"id":"1417","genres":"Fantasy,Drama,War"},{"id":"619264","genres":"Drama,Science,Thriller"},{"id":"1125510","genres":"Drama,Science,Thriller"},{"id":"950387","genres":"Family,Fantasy,Comedy,Adventure"},{"id":"10588","genres":"Family,Comedy,Adventure,Fantasy"},{"id":"803796","genres":"Fantasy,Music,Comedy,Animation"},{"id":"533533","genres":"Sci-Fi,Adventure,Action"},{"id":"1228246","genres":"Horror,Thriller"}],"tv":[{"id":"37680","genres":"Comedy,Drama"},{"id":"1399","genres":"Fantasy,Drama,Action"},{"id":"100088","genres":"Drama,Action,Horror"},{"id":"1402","genres":"Drama,Horror,Action"},{"id":"66732","genres":"Mystery,Drama,Sci-Fi"},{"id":"87108","genres":"Drama,History"},{"id":"87739","genres":"Drama"},{"id":"65494","genres":"Drama,History"},{"id":"1396","genres":"Crime,Drama,Thriller"},{"id":"60059","genres":"Crime,Drama"},{"id":"1398","genres":"Crime,Drama"},{"id":"1438","genres":"Crime,Drama,Thriller"},{"id":"1405","genres":"Crime,Drama,Thriller"},{"id":"131927","genres":"Crime,Drama,Mystery"},{"id":"219937","genres":"Crime,Drama"},{"id":"259909","genres":"Crime,Drama"},{"id":"46648","genres":"Crime,Drama,Mystery"},{"id":"60622","genres":"Crime,Drama,Comedy"},{"id":"60574","genres":"Crime,Drama,Action"},{"id":"63351","genres":"Crime,Drama,History"},{"id":"71694","genres":"Crime,Drama"},{"id":"1409","genres":"Crime,Drama,Thriller"},{"id":"71446","genres":"Crime,Action,Drama"},{"id":"42009","genres":"Sci-Fi,Drama"},{"id":"106379","genres":"Sci-Fi,Action,Adventure"},{"id":"4087","genres":"Mystery,Sci-Fi,Drama"},{"id":"1920","genres":"Drama,Mystery,Thriller"},{"id":"4607","genres":"Adventure,Fantasy,Drama"},{"id":"93405","genres":"Action,Drama,Thriller"},{"id":"110316","genres":"Mystery,Sci-Fi,Action"},{"id":"655","genres":"Sci-Fi,Adventure"},{"id":"76479","genres":"Action,Sci-Fi"},{"id":"71912","genres":"Fantasy,Action,Adventure"},{"id":"75006","genres":"Sci-Fi,Action,Fantasy"},{"id":"84958","genres":"Sci-Fi,Action,Adventure"},{"id":"82856","genres":"Sci-Fi,Action,Adventure"},{"id":"92749","genres":"Sci-Fi,Action,Adventure"},{"id":"110492","genres":"Sci-Fi,Action,Comedy"},{"id":"60708","genres":"Crime,Drama,Action"},{"id":"1412","genres":"Action,Crime,Sci-Fi"},{"id":"60735","genres":"Action,Sci-Fi,Drama"},{"id":"77169","genres":"Action,Drama"},{"id":"31941","genres":"Comedy"},{"id":"2316","genres":"Comedy"},{"id":"1668","genres":"Comedy,Romance"},{"id":"1400","genres":"Comedy"},{"id":"8592","genres":"Comedy"},{"id":"1418","genres":"Comedy,Romance"},{"id":"1416","genres":"Drama"},{"id":"3452","genres":"Comedy"},{"id":"4589","genres":"Comedy"},{"id":"1421","genres":"Comedy"},{"id":"2004","genres":"Comedy,Family"},{"id":"1422","genres":"Comedy,Family"},{"id":"71728","genres":"Comedy,Family"},{"id":"252","genres":"Comedy,Drama"},{"id":"34307","genres":"Drama,Comedy"},{"id":"285552","genres":"Comedy,Drama"},{"id":"59186","genres":"Comedy"},{"id":"1408","genres":"Drama,Mystery"},{"id":"71712","genres":"Drama"},{"id":"1429","genres":"Animation,Action,Fantasy"},{"id":"46260","genres":"Animation,Action,Adventure"},{"id":"31910","genres":"Animation,Action,Adventure"},{"id":"37854","genres":"Animation,Action,Adventure"},{"id":"2604","genres":"Animation,Action,Adventure,Comedy"},{"id":"12971","genres":"Animation,Action,Fantasy,Adventure"},{"id":"46298","genres":"Animation,Action,Adventure,Fantasy"},{"id":"127532","genres":"Action,Adventure,Fantasy,Animation,Sci-Fi"},{"id":"114410","genres":"Animation,Action,Fantasy"},{"id":"13916","genres":"Animation,Mystery,Fantasy"},{"id":"95557","genres":"Animation,Action,Sci-Fi"},{"id":"105248","genres":"Animation,Sci-Fi,Action"},{"id":"2190","genres":"Animation,Comedy"},{"id":"60625","genres":"Animation,Comedy,Sci-Fi"},{"id":"456","genres":"Animation,Comedy,Family"},{"id":"1434","genres":"Animation,Comedy"},{"id":"1433","genres":"Animation,Comedy"},{"id":"615","genres":"Animation,Comedy,Sci-Fi"},{"id":"251","genres":"Animation,Comedy"},{"id":"126506","genres":"Animation,Comedy"},{"id":"387","genres":"Animation,Kids,Comedy"},{"id":"40075","genres":"Mystery,Sci-Fi,Comedy,Animation,Kids"},{"id":"15260","genres":"Animation,Fantasy,Adventure"},{"id":"31132","genres":"Animation,Comedy,Family"},{"id":"37606","genres":"Animation,Comedy,Family"},{"id":"63401","genres":"Animation,Comedy,Kids"},{"id":"32726","genres":"Animation,Comedy,Family"},{"id":"68073","genres":"Animation,Kids,Family"},{"id":"35094","genres":"Animation,Kids"},{"id":"1877","genres":"Animation,Comedy,Family,Kids,Sci-Fi,Fantasy"},{"id":"3902","genres":"Animation,Comedy,Family,Kids"},{"id":"38693","genres":"Kids,Action,Adventure,Sci-Fi,Fantasy,Animation,Comedy,Family"},{"id":"80805","genres":"Kids,Animation,Comedy,Family"},{"id":"26732","genres":"Animation,Kids,Comedy,Action,Adventure,Sci-Fi,Fantasy"},{"id":"119051","genres":"Mystery,Fantasy,Crime"},{"id":"245703","genres":"Mystery,Drama,Crime"},{"id":"129552","genres":"Mystery,Drama,Action"},{"id":"200875","genres":"Mystery,Drama,Horror"},{"id":"157741","genres":"Drama"},{"id":"108978","genres":"Action,Drama,Crime"},{"id":"247168","genres":"Comedy"}]};</script><script>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <div id="seControls" class="se-ctrls" aria-hidden="true">
+        <label for="seasonSelect">Season</label>
+        <select id="seasonSelect"></select>
+        <label for="episodeSelect">Episode</label>
+        <select id="episodeSelect"></select>
+    </div>
+
+    <script>
         const modalBackdrop = document.getElementById('modalBackdrop');
         const modal = document.getElementById('modal');
         const modalFrame = document.getElementById('modalFrame');
@@ -1594,10 +1590,10 @@ function setupAdBlockerObserver() {
                     <h4 class="text-lg font-bold text-white mb-2 border-b border-gray-700 pb-1">Custom Cloaking</h4>
 
                     <label for="tab-title-input" class="font-bold text-white block mb-1">Set Tab Title:</label>
-                    <input type="text" id="tab-title-input" placeholder="Enter tab title" oninput="cloakName(this.value)" class="w-full bg-gray-800 border border-gray-700 text-white p-2 rounded-lg mb-4 outline-none">
+                    <input type="text" id="tab-title-input" placeholder="Enter new tab name..." oninput="cloakName(this.value)" class="w-full bg-gray-800 border border-gray-700 text-white p-2 rounded-lg mb-4 outline-none">
 
                     <label for="tab-icon-input" class="font-bold text-white block mb-1">Set Tab Icon (URL):</label>
-                    <input type="text" id="tab-icon-input" placeholder="Enter tab icon (lucide name)" oninput='cloakIcon(this.value)' class="w-full bg-gray-800 border border-gray-700 text-white p-2 rounded-lg mb-4 outline-none">
+                    <input type="text" id="tab-icon-input" placeholder="Enter new icon URL..." oninput='cloakIcon(this.value)' class="w-full bg-gray-800 border border-gray-700 text-white p-2 rounded-lg mb-4 outline-none">
                 </div>
             `;
             openPopup("Tab Cloak Settings", content);
@@ -1992,158 +1988,35 @@ window.addEventListener('keyup', (ev) => {
             const savedTheme = localStorage.getItem('theme') || 'cyberpunk';
             changeTheme(savedTheme, false);
 
-            
-            // Build TMDb cards dynamically (prevents mobile crashes from 300+ concurrent fetches)
-            const LISTS = (window.__TMDB_LISTS || {movie:[], tv:[]});
-
-            const gridBuilt = { movie:false, tv:false };
-            const gridBuildInFlight = { movie:false, tv:false };
-
-            function createCardFromItem(type, item){
-                const btn = document.createElement('button');
-                btn.className = 'tmdb-card';
-                btn.type = 'button';
-                btn.setAttribute('aria-label', (type === 'tv' ? 'TV show' : 'Movie') + ' ' + item.id);
-                btn.dataset.type = type;
-                btn.dataset.id = String(item.id);
-                btn.dataset.genres = item.genres || '';
-                initCard(btn); // builds shell + click handler
-                return btn;
-            }
-
-            async function fillCardsWithLimit(cards, apiKey, concurrency){
-                concurrency = Math.max(1, Number(concurrency || 6));
-                let i = 0;
-
-                async function worker(){
-                    while (i < cards.length){
-                        const idx = i++;
-                        const c = cards[idx];
-                        try { await fillCard(c, apiKey); } catch(e) {}
-                    }
-                }
-                const workers = Array.from({length: Math.min(concurrency, cards.length)}, worker);
-                await Promise.all(workers);
-            }
-
-            function ensureGridBuilt(type){
-                if (gridBuilt[type] || gridBuildInFlight[type]) return;
-                const grid = document.getElementById(type === 'tv' ? 'tvGrid' : 'movieGrid');
-                if (!grid) return;
-
-                gridBuildInFlight[type] = true;
-
-                const isMobile = !!window.__IS_MOBILE;
-                const initialLimit = isMobile ? 24 : 96;
-                const concurrency = isMobile ? 4 : 10;
-
-                const items = (LISTS[type] || []);
-                const initialItems = items.slice(0, initialLimit);
-
-                const frag = document.createDocumentFragment();
-                const created = [];
-                for (const it of initialItems){
-                    const c = createCardFromItem(type, it);
-                    created.push(c);
-                    frag.appendChild(c);
-                }
-                grid.appendChild(frag);
-
-                // Load API key once, then hydrate cards in a safe concurrency limit
-                (async () => {
-                    let apiKey;
-                    try {
-                        apiKey = __TMDB_API_KEY || await loadApiKey();
-                        __TMDB_API_KEY = apiKey;
-                    } catch (e) {
-                        gridBuildInFlight[type] = false;
-                        return;
-                    }
-
-                    await fillCardsWithLimit(created, apiKey, concurrency);
-                    requestAnimationFrame(animateAll);
-
-                    // Add "Load more" if needed
-                    if (items.length > initialItems.length && !grid.querySelector('.load-more-wrap')){
-                        const wrap = document.createElement('div');
-                        wrap.className = 'load-more-wrap';
-                        wrap.style.gridColumn = '1 / -1';
-                        wrap.style.display = 'flex';
-                        wrap.style.justifyContent = 'center';
-                        wrap.style.margin = '14px 0 10px';
-
-                        const btn = document.createElement('button');
-                        btn.className = 'btn-glow';
-                        btn.type = 'button';
-                        btn.textContent = 'Load more';
-                        btn.style.maxWidth = '260px';
-                        btn.style.width = '100%';
-
-                        let offset = initialItems.length;
-
-                        btn.addEventListener('click', async () => {
-                            btn.disabled = true;
-                            btn.style.opacity = '0.7';
-                            const batchSize = isMobile ? 18 : 60;
-                            const next = items.slice(offset, offset + batchSize);
-                            offset += next.length;
-
-                            const frag2 = document.createDocumentFragment();
-                            const created2 = [];
-                            for (const it of next){
-                                const c = createCardFromItem(type, it);
-                                created2.push(c);
-                                frag2.appendChild(c);
-                            }
-                            // insert before load-more row
-                            wrap.parentNode.insertBefore(frag2, wrap);
-
-                            await fillCardsWithLimit(created2, apiKey, concurrency);
-
-                            btn.disabled = false;
-                            btn.style.opacity = '1';
-
-                            if (offset >= items.length){
-                                wrap.remove();
-                            }
-                        });
-
-                        wrap.appendChild(btn);
-                        grid.appendChild(wrap);
-                    }
-
-                    gridBuilt[type] = true;
-                    gridBuildInFlight[type] = false;
-                })();
-            }
-
+            const allCards = Array.from(document.querySelectorAll('.tmdb-card'));
             populateGenreFilter('movie');
             populateGenreFilter('tv');
             populateGenreFilter('christmas');
 
-            // Override switchPage to lazy-build grids before showing
-            const _switchPage = switchPage;
-            switchPage = function(pageId, updateHistory=true){
-                if (pageId === 'movies') ensureGridBuilt('movie');
-                if (pageId === 'tv') ensureGridBuilt('tv');
-                return _switchPage(pageId, updateHistory);
-            };
-
             (async function init(){
-                // Determine which view to load first
+                let apiKey;
+                try {
+                    apiKey = await loadApiKey();
+                    __TMDB_API_KEY = apiKey;
+                } catch (e) {
+                    return;
+                }
+
+                for (const card of allCards) initCard(card);
+                await Promise.all(allCards.map(c => fillCard(c, apiKey)));
+
+                requestAnimationFrame(animateAll);
+
                 const searchParams = new URLSearchParams(window.location.search);
                 const view = searchParams.get('view') || 'movies';
-
-                if (view === 'tv') ensureGridBuilt('tv');
-                else ensureGridBuilt('movie');
-
                 switchPage(view, false);
 
                 if (typeof lucide !== 'undefined') {
                     lucide.createIcons();
                 }
+
             })();
-});
+        });
     </script>
 <script>
 function showUpdateLog() {
@@ -2160,37 +2033,45 @@ function hideUpdateLog() {
 
 document.getElementById("updateLog").addEventListener("click", hideUpdateLog);
 </script>
-<div class="popup-backdrop" id="popupOverlay">
-<div class="popup bg-gray-900 rounded-xl shadow-2xl border border-gray-800">
-<div class="popup-header bg-gray-800">
-<h3 class="text-white text-lg font-bold" id="popupTitle">Title</h3>
-<button class="text-2xl text-gray-400 hover:text-white transition" id="popupClose" onclick="closePopup()">×</button>
-</div>
-<div class="popup-body" id="popupBody">
-</div>
-</div>
-</div>
+
+    <div id="popupOverlay" class="popup-backdrop">
+        <div class="popup bg-gray-900 rounded-xl shadow-2xl border border-gray-800">
+            <div class="popup-header bg-gray-800">
+                <h3 id="popupTitle" class="text-white text-lg font-bold">Title</h3>
+                <button id="popupClose" onclick="closePopup()" class="text-2xl text-gray-400 hover:text-white transition">×</button>
+            </div>
+            <div id="popupBody" class="popup-body">
+            </div>
+        </div>
+    </div>
 <!-- UPDATE LOG BUTTON -->
-<button class="fixed bottom-6 right-4 px-4 py-3 bg-black/40 backdrop-blur-md rounded-xl border border-white/10 shadow-lg text-white font-medium hover:bg-black/60 transition z-[6000] update-btn" id="updateBtn" onclick="showUpdateLog()">
+<button id="updateBtn" class="fixed bottom-6 right-4 px-4 py-3 
+       bg-black/40 backdrop-blur-md 
+       rounded-xl border border-white/10 
+       shadow-lg text-white font-medium 
+       hover:bg-black/60 transition z-[6000] update-btn"
+       onclick="showUpdateLog()">
     Update Log
 </button>
+
+
 <!-- UPDATE LOG POPUP -->
-<div class="update-log-backdrop" id="updateLog">
-<div class="update-log-box" onclick="event.stopPropagation()">
-<span class="update-close-btn" onclick="hideUpdateLog()">✕</span>
-<h2 class="text-2xl font-bold mb-4">Update v1.4.1</h2>
-<h3 class="text-1.5xl font-bold mb-3">Movies</h3>
-<ul class="list-disc pl-5 space-y-2 text-gray-300">
-<li>Added Five Nights at Freddy's 2</li>
-</ul>
-<h3 class="text-1.5xl font-bold mb-3"></h3>
-<h3 class="text-1.5xl font-bold mb-3">Christmas Update 🎄</h3>
-<ul class="list-disc pl-5 space-y-2 text-gray-300">
-<li>Falling Snowflakes</li>
-<li>New Christmas Theme in Settings</li>
-<li>Added Christmas Tab + Movies</li>
-</ul>
-</div>
+<div id="updateLog" class="update-log-backdrop">
+    <div class="update-log-box" onclick="event.stopPropagation()">
+        <span class="update-close-btn" onclick="hideUpdateLog()">✕</span>
+        <h2 class="text-2xl font-bold mb-4">Update v1.4.1</h2>
+        <h3 class="text-1.5xl font-bold mb-3">Movies</h3>
+        <ul class="list-disc pl-5 space-y-2 text-gray-300">
+            <li>Added Five Nights at Freddy's 2</li>
+        </ul>
+        <h3 class="text-1.5xl font-bold mb-3"></h3>
+        <h3 class="text-1.5xl font-bold mb-3">Christmas Update 🎄</h3>
+        <ul class="list-disc pl-5 space-y-2 text-gray-300">
+            <li>Falling Snowflakes</li>
+            <li>New Christmas Theme in Settings</li>
+            <li>Added Christmas Tab + Movies</li>
+        </ul>
+    </div>
 </div>
 <script>
 const updateBtn = document.getElementById("updateBtn");
@@ -2240,41 +2121,11 @@ function startSnow() {
 }
 
 // Start the snowfall on page load
-if (!window.__IS_MOBILE && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) { startSnow(); }
+startSnow();
 </script>
-<script>
-  // Load disable-devtool only on desktop; some mobile browsers mis-detect and can cause reload/crash loops.
-  (function(){
-    if (window.__IS_MOBILE) return;
-    const s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/whatareyoutryingtodo/disable-devtool.min.js';
-    s.setAttribute('disable-devtool-auto', '');
-    document.head.appendChild(s);
-  })();
-</script>
-<script>
-  // --- Mobile mode switcher ---
-  (function () {
-    const body = document.getElementById('appBody') || document.body;
-
-    function isProbablyMobile() {
-      // Use both viewport + touch. (Avoid UA sniffing when possible.)
-      const small = window.matchMedia && window.matchMedia('(max-width: 820px)').matches;
-      const touch = ('ontouchstart' in window) || (navigator.maxTouchPoints || 0) > 0;
-      return small && touch;
-    }
-
-    function applyMobileClass() {
-      const on = isProbablyMobile();
-      body.classList.toggle('is-mobile', on);
-      // Adjust app padding if header is bottom-fixed
-      // (CSS already handles it, but this keeps future tweaks easy.)
-    }
-
-    applyMobileClass();
-    window.addEventListener('resize', applyMobileClass, { passive: true });
-    window.addEventListener('orientationchange', applyMobileClass, { passive: true });
-  })();
-</script>
+<script
+  src="https://cdn.jsdelivr.net/npm/whatareyoutryingtodo/disable-devtool.min.js"
+  disable-devtool-auto
+></script>
 </body>
 </html>
