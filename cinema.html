@@ -580,6 +580,57 @@
     }
 }
 
+    /* --- Mobile mode (auto) --- */
+.nav-label{display:none;}
+@media (max-width: 820px){
+    body{ overflow:auto; }
+    #app-container{ padding-top:0; padding-bottom:76px; }
+    header{ top:auto; bottom:0; }
+    header nav{ width:100%; justify-content:space-around; gap:0 !important; }
+    .nav-link{ display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 12px !important; }
+    .nav-link-icon{ width:24px; height:24px; }
+    .nav-label{ display:block; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-muted); }
+    .nav-link:hover .nav-label, .nav-link.active .nav-label{ color:var(--accent-main); text-shadow: 0 0 10px rgba(255,255,255,0.15); }
+
+    .content-page{ padding:16px; }
+    .home-page{ min-height: calc(100vh - 76px); }
+
+    .logo-container{ transform: translateY(0); padding: 24px 0; }
+    .glowing-ring{ width: 340px; height: 200px; border-width: 14px; }
+    .logo-word{ font-size: 3.2rem; line-height: 0.9; }
+    .logo-word.-mb-16{ margin-bottom: -2.6rem !important; }
+    .logo-word.mt-8{ margin-top: 1.2rem !important; }
+
+    /* Search/filters stack nicely */
+    .suggestions-btn{ width:100%; }
+    #movies-page .max-w-4xl, #tv-page .max-w-4xl{ padding-left: 0; padding-right: 0; }
+
+    /* Fullscreen-ish player on phones */
+    .modal-backdrop{ padding: 0; }
+    .modal{ width: 100vw; height: 100vh; border-radius: 0; }
+    .modal-header{ top: 10px; left: 10px; right: 10px; }
+    .modal-title{ max-width: 55vw; }
+
+    /* Season/Episode controls above the bottom nav */
+    .se-ctrls{ left: 10px; right: 10px; bottom: 86px; width: auto; justify-content: space-between; }
+    .se-ctrls select{ flex:1; min-width: 0; }
+}
+
+/* Force mobile mode when JS adds .is-mobile */
+body.is-mobile{ overflow:auto; }
+body.is-mobile #app-container{ padding-top:0; padding-bottom:76px; }
+body.is-mobile header{ top:auto; bottom:0; }
+body.is-mobile header nav{ width:100%; justify-content:space-around; gap:0 !important; }
+body.is-mobile .nav-link{ display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 12px !important; }
+body.is-mobile .nav-label{ display:block; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-muted); }
+body.is-mobile .nav-link:hover .nav-label, body.is-mobile .nav-link.active .nav-label{ color:var(--accent-main); }
+body.is-mobile .content-page{ padding:16px; }
+body.is-mobile .home-page{ min-height: calc(100vh - 76px); }
+body.is-mobile .modal-backdrop{ padding:0; }
+body.is-mobile .modal{ width:100vw; height:100vh; border-radius:0; }
+body.is-mobile .se-ctrls{ left:10px; right:10px; bottom:86px; width:auto; justify-content:space-between; }
+body.is-mobile .se-ctrls select{ flex:1; min-width:0; }
+
     </style>
 </head>
 <body class="h-screen flex flex-col antialiased" id="appBody">
@@ -589,18 +640,22 @@
 
             <a href="javascript:switchPage('movies')" id="nav-movies" class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" aria-label="Movies">
                 <i data-lucide="clapperboard" class="w-6 h-6 nav-link-icon"></i>
+                <span class="nav-label">Movies</span>
             </a>
             <a href="javascript:switchPage('tv')" id="nav-tv" class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" aria-label="TV Shows">
                 <i data-lucide="monitor-dot" class="w-6 h-6 nav-link-icon"></i>
+                <span class="nav-label">TV</span>
             </a>
 <a href="javascript:switchPage('christmas')" 
    id="nav-christmas" 
    class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" 
    aria-label="Christmas Movies">
     <i data-lucide="gift" class="w-6 h-6 nav-link-icon text-red-400"></i>
+                <span class="nav-label">Xmas</span>
 </a>
             <a href="javascript:switchPage('settings')" id="nav-settings" class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" aria-label="Settings">
                 <i data-lucide="settings" class="w-6 h-6 nav-link-icon"></i>
+                <span class="nav-label">Settings</span>
             </a>
         </nav>
     </header>
@@ -2127,5 +2182,29 @@ startSnow();
   src="https://cdn.jsdelivr.net/npm/whatareyoutryingtodo/disable-devtool.min.js"
   disable-devtool-auto
 ></script>
+<script>
+  // --- Mobile mode switcher ---
+  (function () {
+    const body = document.getElementById('appBody') || document.body;
+
+    function isProbablyMobile() {
+      // Use both viewport + touch. (Avoid UA sniffing when possible.)
+      const small = window.matchMedia && window.matchMedia('(max-width: 820px)').matches;
+      const touch = ('ontouchstart' in window) || (navigator.maxTouchPoints || 0) > 0;
+      return small && touch;
+    }
+
+    function applyMobileClass() {
+      const on = isProbablyMobile();
+      body.classList.toggle('is-mobile', on);
+      // Adjust app padding if header is bottom-fixed
+      // (CSS already handles it, but this keeps future tweaks easy.)
+    }
+
+    applyMobileClass();
+    window.addEventListener('resize', applyMobileClass, { passive: true });
+    window.addEventListener('orientationchange', applyMobileClass, { passive: true });
+  })();
+</script>
 </body>
 </html>
