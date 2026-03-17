@@ -1123,9 +1123,9 @@ const GENRES = {
     if (type === 'tv') {
         const s = parseInt(season || 1, 10) || 1;
         const e = parseInt(episode || 1, 10) || 1;
-        return `https://vidsrc.to/embed/tv/${encodeURIComponent(id)}/${s}/${e}`;
+        return `https://vidsrc.io/embed/tv/${encodeURIComponent(id)}/${s}/${e}`;
     } else {
-        return `https://vidsrc.to/embed/movie/${encodeURIComponent(id)}`;
+        return `https://vidsrc.io/embed/movie/${encodeURIComponent(id)}`;
     }
 }
 function setupNavigationBlocking() {
@@ -1980,34 +1980,6 @@ document.getElementById("modalBackdrop").addEventListener("click", (e) => {
     }
 });
 </script>
-<script>
-function startSnow() {
-    const snowContainer = document.getElementById("snow-container");
 
-    setInterval(() => {
-        const flake = document.createElement("div");
-        flake.classList.add("snowflake");
-
-        flake.textContent = "❄";
-        flake.style.left = Math.random() * 100 + "vw";
-        flake.style.fontSize = (Math.random() * 10 + 10) + "px";
-        flake.style.opacity = Math.random();
-        flake.style.animationDuration = (Math.random() * 5 + 5) + "s";
-        flake.style.transform = `translateX(${Math.random() * 20 - 10}px)`;
-
-        snowContainer.appendChild(flake);
-
-        // remove when done falling
-        setTimeout(() => flake.remove(), 12000);
-    }, 150);
-}
-
-// Start the snowfall on page load
-startSnow();
-</script>
-<script
-  src="https://cdn.jsdelivr.net/npm/whatareyoutryingtodo/disable-devtool.min.js"
-  disable-devtool-auto
-></script>
 </body>
 </html>
