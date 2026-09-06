@@ -547,7 +547,7 @@
     <div id="app-container">
         <main id="content-viewport" tabindex="-1">
 <div id="list-page" class="content-page"><h1>My List</h1><p class="section-note">Your saved movies and shows, kept in this browser.</p><div id="savedGrid" class="grid"></div></div>
-<div id="history-page" class="content-page"><h1>Recently watched</h1><p class="section-note">Last opened titles and episodes. Playback timestamps aren’t available from this player.</p><button class="cinema-button" id="clearHistory">Clear history</button><div id="historyGrid" class="grid"></div></div>
+<div id="history-page" class="content-page"><h1>Recently watched</h1><p class="section-note">Last opened titles and episodes. Playback progress is saved when the player reports it.</p><button class="cinema-button" id="clearHistory">Clear history</button><div id="historyGrid" class="grid"></div></div>
 
             <div id="home-page" class="content-page active home-page flex items-center justify-center relative">
                 <div class="logo-container">
@@ -573,7 +573,7 @@
             </div>
 
 
-<div id="movies-page" class="content-page"><div id="featured"></div>
+<div id="movies-page" class="content-page"><div id="featured"></div><section id="continueMovies" class="continue-section" hidden><h2>Continue Watching</h2><p class="section-note">Pick up where you left off.</p><div class="continue-row"></div></section>
         <h1 class="text-3xl font-bold mb-6 text-white text-center">
             <i data-lucide="clapperboard" class="w-6 h-6 inline-block mr-2 text-red-500"></i>
             Movies
@@ -812,7 +812,7 @@
     </div>
 
     <!-- tv -->
-    <div id="tv-page" class="content-page">
+    <div id="tv-page" class="content-page"><section id="continueTV" class="continue-section" hidden><h2>Continue Watching</h2><p class="section-note">Pick up where you left off.</p><div class="continue-row"></div></section>
         <h1 class="text-3xl font-bold mb-6 text-white text-center">
             <i data-lucide="monitor-dot" class="w-6 h-6 inline-block mr-2 text-cyan-400"></i>
             TV Shows

@@ -65,8 +65,8 @@ function hideDialog(el) {
  if (opener?.isConnected && !opener.closest('[inert]')) opener.focus();
  else (dialogs.at(-1)?.el.querySelector('button') || document.querySelector(`[data-page="${activePage}"]`))?.focus();
 }
-async function api(path) {
- const response = await fetch(`https://api.themoviedb.org/3/${path}?api_key=${API_KEY}`, {signal: AbortSignal.timeout(12000)});
+async function api(path, extra = '') {
+ const response = await fetch(`https://api.themoviedb.org/3/${path}?api_key=${API_KEY}${extra}`, {signal: AbortSignal.timeout(12000)});
  if (!response.ok) throw new Error(`Metadata request failed (${response.status})`);
  return response.json();
 }
@@ -80,10 +80,11 @@ function enqueue(run, priority) { return new Promise((resolve,reject) => { const
 function ensureDetails(item, priority = false) {
  if (detailsCache.has(item.key)) return detailsCache.get(item.key);
  const promise = enqueue(async () => {
-  const data = await api(`${item.type}/${item.id}`);
-  Object.assign(item, {title:data.title || data.name || item.title, poster:data.poster_path, backdrop:data.backdrop_path, overview:data.overview, year:(data.release_date || data.first_air_date || '').slice(0,4), rating:data.vote_average || 0, runtime:data.runtime, seasons:(data.seasons || []).filter(s=>s.episode_count > 0), loaded:true});
+  const data = await api(`${item.type}/${item.id}`, '&append_to_response=external_ids');
+  Object.assign(item, {title:data.title || data.name || item.title, poster:data.poster_path, backdrop:data.backdrop_path, overview:data.overview, year:(data.release_date || data.first_air_date || '').slice(0,4), rating:data.vote_average || 0, runtime:data.runtime, imdb:data.imdb_id || data.external_ids?.imdb_id, seasons:(data.seasons || []).filter(s=>s.episode_count > 0), loaded:true});
   if (data.genres?.length) item.genres = [...new Set(data.genres.flatMap(g=>g.name.replace('Science Fiction','Sci-Fi').replace('Sci-Fi & Fantasy','Sci-Fi,Fantasy').replace('Action & Adventure','Action,Adventure').split(',')))];
   renderItemCards(item);
+  renderContinueWatching();
   scheduleFilter(item.type);
   return item;
  }, priority).catch(error => { detailsCache.delete(item.key); item.failed = true; renderItemCards(item); throw error; });
@@ -164,8 +165,9 @@ function switchPage(pageId, updateHistory = true) {
  document.querySelectorAll('.content-page').forEach(p=>p.classList.toggle('active',p.id===`${pageId}-page`));
  document.querySelectorAll('[data-page]').forEach(a=>{ const active=a.dataset.page===pageId; a.classList.toggle('active',active); if(active) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
  contentViewport.scrollTop=0;
- if(updateHistory) { const url=new URL(location.href);url.searchParams.set('view',pageId);history.pushState(null,'',url); }
+ if(updateHistory) { const url=new URL(location.href);url.searchParams.set('view',pageId);url.searchParams.delete('title');history.pushState(null,'',url); }
  if(pageId==='list'||pageId==='history') renderLibrary();
+ if(pageId==='movies'||pageId==='tv')renderContinueWatching();
  if(pageId==='movies'||pageId==='tv') filterContent(pageId==='movies'?'movie':'tv');
 }
 async function loadSortMetadata(type) {
@@ -174,11 +176,14 @@ async function loadSortMetadata(type) {
  filterContent(type);
 }
 function renderFeatured() {
- const movies=[...catalog.values()].filter(i=>i.type==='movie'&&!i.special);
- const feature=movies.find(i=>i.id==='693134') || movies[0];
+ const movies=[...catalog.values()].filter(i=>i.type==='movie'&&!i.special).sort((a,b)=>Number(a.id)-Number(b.id));
+ const day=Math.floor(Date.now()/86400000);
+ if(spotlightDay===day)return;
+ spotlightDay=day;
+ const feature=movies[day % movies.length];
  if(feature) {
   $('featured').innerHTML=`<section class="feature"><div class="feature-copy"><p class="eyebrow">TONIGHT’S SPOTLIGHT</p><h1>${escapeHTML(feature.title)}</h1><p id="featureSynopsis">Explore tonight’s featured film, or find your next favorite below.</p><button class="cinema-button primary" data-detail="${feature.key}">Explore film</button></div></section>`;
-  ensureDetails(feature,true).then(i=> { const el=$('featured').firstElementChild; if(i.backdrop) el.style.backgroundImage=`linear-gradient(90deg,rgba(7,9,18,.96),rgba(7,9,18,.25)),url("${posterURL(i.backdrop,'w1280')}")`; $('featureSynopsis').textContent=i.overview || 'Explore tonight’s featured film.'; }).catch(()=>{});
+  ensureDetails(feature,true).then(i=> { if(spotlightDay!==day)return;const el=$('featured').firstElementChild; if(i.backdrop) el.style.backgroundImage=`linear-gradient(90deg,rgba(7,9,18,.96),rgba(7,9,18,.25)),url("${posterURL(i.backdrop,'w1280')}")`; $('featureSynopsis').textContent=i.overview || 'Explore tonight’s featured film.'; }).catch(()=>{});
  }
 
 }
@@ -187,10 +192,11 @@ function renderDetails(item, loading = false, error = false) {
  const focusedId=$('detailsContent').contains(document.activeElement)?document.activeElement.id:null;
  const record=watched[item.key];
  const facts=[item.type==='tv'?'TV show':'Movie',item.year,item.rating?`★ ${item.rating.toFixed(1)} / 10`:null,item.runtime?`${item.runtime} min`:null,item.type==='tv'&&item.seasons?`${item.seasons.filter(s=>s.season_number>0).length} seasons`:null].filter(Boolean);
- $('detailsContent').innerHTML=`<div class="detail-heading">${item.poster?`<img src="${posterURL(item.poster)}" alt="" class="detail-poster">`:''}<div><p class="eyebrow">${escapeHTML(item.genres.join(' · '))}</p><h2 id="detailsTitle">${escapeHTML(item.title)}</h2><p class="section-note">${escapeHTML(facts.join(' · '))}</p><p>${escapeHTML(item.overview || (loading?'Loading title details…':error?'Details are unavailable right now. You can still open the player.':'No synopsis available.'))}</p>${record&&item.type==='tv'?`<p>Last opened: season ${record.season||1}, episode ${record.episode||1}.</p>`:''}<div class="detail-actions"><button id="detailWatch" class="cinema-button primary">${record&&item.type==='tv'?'Open last episode':'Watch'}</button><button id="detailSave" class="cinema-button"></button>${randomType?'<button id="tryAgain" class="cinema-button">Try again</button>':''}${error?'<button id="retryDetails" class="cinema-button">Retry details</button>':''}</div></div></div>`;
+ $('detailsContent').innerHTML=`<div class="detail-heading">${item.poster?`<img src="${posterURL(item.poster)}" alt="" class="detail-poster">`:''}<div><p class="eyebrow">${escapeHTML(item.genres.join(' · '))}</p><h2 id="detailsTitle">${escapeHTML(item.title)}</h2><p class="section-note">${escapeHTML(facts.join(' · '))}</p><p>${escapeHTML(item.overview || (loading?'Loading title details…':error?'Details are unavailable right now. You can still open the player.':'No synopsis available.'))}</p>${record&&item.type==='tv'?`<p>Last opened: season ${record.season||1}, episode ${record.episode||1}.</p>`:''}<div class="detail-actions"><button id="detailWatch" class="cinema-button primary">${record&&item.type==='tv'?'Open last episode':'Watch'}</button><button id="detailSave" class="cinema-button"></button><button id="detailShare" class="cinema-button">Copy title link</button>${randomType?'<button id="tryAgain" class="cinema-button">Try again</button>':''}${error?'<button id="retryDetails" class="cinema-button">Retry details</button>':''}</div></div></div>`;
  updateDetailSave();
  $('detailWatch').onclick=()=>openModalForCard(item);
  $('detailSave').onclick=()=>toggleSave(item.key);
+ $('detailShare').onclick=()=>shareTitle(item);
  if($('tryAgain')) $('tryAgain').onclick=()=>pickForMe(randomType,item.key);
  if($('retryDetails')) $('retryDetails').onclick=()=>showDetails(item.key,randomType);
  if(focusedId)$(focusedId)?.focus();
@@ -207,16 +213,22 @@ function pickForMe(type,exclude) {
  let pool=visibleItems(type); if(pool.length>1)pool=pool.filter(i=>i.key!==exclude);
  if(pool.length)showDetails(pool[Math.floor(Math.random()*pool.length)].key,type);
 }
-function buildVidlinkUrl(type,id,season=1,episode=1) { return type==='tv'?`https://vidsrc.io/embed/tv/${encodeURIComponent(id)}/${season}/${episode}`:`https://vidsrc.io/embed/movie/${encodeURIComponent(id)}`; }
+function buildVidlinkUrl(type,id,season=1,episode=1) {
+ const url=new URL(type==='tv'?`https://vidsrc.io/embed/tv/${encodeURIComponent(id)}/${season}/${episode}`:`https://vidsrc.io/embed/movie/${encodeURIComponent(id)}`);
+ const progress=watched[`${type}:${id}`]?.progress?.[type==='tv'?`${season}:${episode}`:'movie'];
+ if(progress && !progress.finished && Number.isFinite(progress.position) && progress.position>0)url.searchParams.set('startAt',String(Math.floor(progress.position)));
+ return url.href;
+}
 function recordOpened() {
  if(!current)return;
  const old=watched[current.key] || {};
- watched[current.key]={...old,season:Number(seasonSelect.value)||1,episode:Number(episodeSelect.value)||1,opened:Date.now()};
- saveStore('cinema.history.v1',watched);renderItemCards(current);
+ watched[current.key]={...old,season:current.type==='tv'?(Number(seasonSelect.value)||1):1,episode:current.type==='tv'?(Number(episodeSelect.value)||1):1,opened:Date.now(),hiddenFromContinue:false};
+ saveStore('cinema.history.v1',watched);renderItemCards(current);renderContinueWatching();
 }
 function playSelection() {
  if(!current)return;
- modalFrame.src=buildVidlinkUrl(current.type,current.id,Number(seasonSelect.value)||1,Number(episodeSelect.value)||1);
+ playbackTarget={key:current.key,season:Number(seasonSelect.value)||1,episode:Number(episodeSelect.value)||1};
+ modalFrame.src=buildVidlinkUrl(current.type,current.id,playbackTarget.season,playbackTarget.episode);
  recordOpened();updateEpisodeButtons();
  $('playerStatus').textContent='Player opened. If it stays blank, try Reload player.';
 }
@@ -227,7 +239,7 @@ async function getEpisodes(item,season) {
 }
 async function loadEpisodes(season, desired = 1) {
  const item=current;if(!item)return;
- const version=++playerVersion;
+ const version=++playerVersion;playbackTarget=null;
  seasonSelect.disabled=true;episodeSelect.disabled=true;
  $('previousEpisode').disabled=true;$('nextEpisode').disabled=true;$('markWatched').disabled=true;
  $('playerStatus').textContent='Loading episodes…';modalFrame.src='about:blank';
@@ -272,7 +284,7 @@ async function stepEpisode(delta) {
  await loadEpisodes(seasonSelect.value,delta<0?-1:1);
 }
 async function openModalForCard(item) {
- hideDetails();current=item;const version=++playerVersion;
+ hideDetails();current=item;playbackTarget=null;const version=++playerVersion;
  $('modalTitle').textContent=item.title;$('playerStatus').textContent='Opening player…';modalFrame.src='about:blank';
  seControls.style.display=item.type==='tv'?'flex':'none';seControls.setAttribute('aria-hidden',String(item.type!=='tv'));
  showDialog(modalBackdrop);
@@ -287,7 +299,7 @@ async function openModalForCard(item) {
  seasonSelect.value=[...seasonSelect.options].some(o=>o.value===String(target))?String(target):seasonSelect.options[0].value;
  await loadEpisodes(seasonSelect.value,previous?.episode||1);
 }
-function closeModal() { ++playerVersion;current=null;modalFrame.src='about:blank';hideDialog(modalBackdrop);if(document.fullscreenElement)document.exitFullscreen().catch(()=>{}); }
+function closeModal() { ++playerVersion;current=null;playbackTarget=null;modalFrame.src='about:blank';hideDialog(modalBackdrop);if(document.fullscreenElement)document.exitFullscreen().catch(()=>{}); }
 function showUpdateLog(){showDialog($('updateLog'));}
 function hideUpdateLog(){hideDialog($('updateLog'));}
 
@@ -318,17 +330,19 @@ function initializeCinema() {
   if(!current)return;const record=watched[current.key];if(!record)return;
   const key=`${seasonSelect.value}:${episodeSelect.value}`;const completed=record.completed||[];
   record.completed=completed.includes(key)?completed.filter(k=>k!==key):[...completed,key];
-  saveStore('cinema.history.v1',watched);updateEpisodeButtons();
+  saveStore('cinema.history.v1',watched);updateEpisodeButtons();renderContinueWatching();
  };
  seasonSelect.onchange=()=>loadEpisodes(seasonSelect.value);
  episodeSelect.onchange=playSelection;
  $('closeBtn').onclick=closeModal;$('detailsClose').onclick=hideDetails;
  $('fullscreenBtn').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await modalFrame.requestFullscreen();}catch{announce('Fullscreen is unavailable in this browser.');}};
  document.addEventListener('fullscreenchange',()=>{const full=!!document.fullscreenElement;$('fullscreenLabel').textContent=full?'Exit fullscreen':'Fullscreen';$('fullscreenBtn').setAttribute('aria-pressed',String(full));});
- $('clearHistory').onclick=()=>openPopup('Clear watch history?','<p>This removes remembered episodes and watched checkmarks from this browser. Your saved list stays available.</p>',true,{text:'Clear history',action:()=>{const keys=Object.keys(watched);watched={};saveStore('cinema.history.v1',watched);keys.forEach(k=>{if(catalog.has(k))renderItemCards(catalog.get(k));});renderLibrary();closePopup();}});
+ $('clearHistory').onclick=()=>openPopup('Clear watch history?','<p>This removes remembered episodes and watched checkmarks from this browser. Your saved list stays available.</p>',true,{text:'Clear history',action:()=>{const keys=Object.keys(watched);watched={};saveStore('cinema.history.v1',watched);keys.forEach(k=>{if(catalog.has(k))renderItemCards(catalog.get(k));});renderLibrary();renderContinueWatching();closePopup();}});
  document.addEventListener('click',event=>{
   const target=event.target.closest('button,a');if(!target)return;
   if(target.dataset.page){event.preventDefault();switchPage(target.dataset.page);}
+  else if(target.dataset.resume)openModalForCard(catalog.get(target.dataset.resume));
+  else if(target.dataset.dismissContinue){const key=target.dataset.dismissContinue;if(watched[key]){watched[key].hiddenFromContinue=true;saveStore('cinema.history.v1',watched);renderContinueWatching();announce('Removed from Continue Watching.');}}
   else if(target.dataset.detail)showDetails(target.dataset.detail);
   else if(target.dataset.save)toggleSave(target.dataset.save);
   else if(target.dataset.pick)pickForMe(target.dataset.pick);
@@ -350,7 +364,10 @@ function initializeCinema() {
  const keys=new Set();
  window.addEventListener('keydown',e=>{if(dialogs.length||e.target.matches('input,textarea,select,[contenteditable]'))return;keys.add(e.key.toLowerCase());if(['c','h','a','d'].every(k=>keys.has(k))){keys.clear();switchPage('chad');}});
  window.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>keys.clear());
- window.addEventListener('popstate',()=>switchPage(new URLSearchParams(location.search).get('view')||'movies',false));
+ window.addEventListener('popstate',()=>{switchPage(new URLSearchParams(location.search).get('view')||'movies',false);openSharedTitle();});
+ window.addEventListener('message',receivePlayerProgress);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)renderFeatured();});
+ setInterval(renderFeatured,60000);
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
  contentViewport.addEventListener('pointermove',event=>{
   if(reduced.matches||event.pointerType!=='mouse')return;
@@ -362,6 +379,7 @@ function initializeCinema() {
  reduced.addEventListener('change',()=>document.querySelectorAll('.tmdb-card').forEach(c=>c.style.transform=''));
  switchPage(new URLSearchParams(location.search).get('view')||'movies',false);
  renderFeatured();
+ openSharedTitle();
  if(typeof lucide!=='undefined')lucide.createIcons();
  if(!readStore('cinema.notice.v1',false))openPopup('Before you watch','<p>The embedded player may show ads or open other tabs. Close any unwanted tabs. An ad blocker may help.</p>',true,{text:'Got it',action:()=>{saveStore('cinema.notice.v1',true);closePopup();}});
 }
@@ -469,7 +487,7 @@ function initializeCinema() {
                     <p class="mb-2">This policy describes how we handle your information when you use Tinkle Party Cinema.</p>
 
                     <h3 class="text-lg font-semibold text-white mt-4 mb-2">Data Processing</h3>
-                    <p class="mb-2">We use your <strong>local browser storage</strong> (localStorage) to save your theme, watchlist, recently opened titles, selected episodes, watched checkmarks, and notice preferences. These preferences stay in this browser. Requests to TMDb and the embedded video provider are sent to those services, which have their own privacy practices.</p>
+                    <p class="mb-2">We use your <strong>local browser storage</strong> (localStorage) to save your theme, watchlist, recently opened titles, selected episodes, playback progress, watched checkmarks, and notice preferences. These preferences stay in this browser. Requests to TMDb and the embedded video provider are sent to those services, which have their own privacy practices.</p>
                     <p class="mb-2">We use <strong>TMDb API</strong> (The Movie Database) to fetch poster images, titles, and TV season information. Catalog genres are available immediately and are refreshed when title details load.</p>
                 </div>
                 <button class="w-full p-3 rounded-lg font-bold bg-gray-700 text-white hover:bg-gray-600 mt-4" onclick="closePopup()">Close Policy</button>
@@ -477,5 +495,89 @@ function initializeCinema() {
             openPopup("Privacy Policy", content);
         }
 
+
+// VidSrc event/resume contract: https://vidsrc.io/vidsrc/docs/#player-events
+const PLAYER_ORIGINS = new Set(['https://vidsrc.io','https://vidsrcme.ru','https://vidsrcme.su','https://vidsrc-me.ru','https://vidsrc-me.su','https://vidsrc-embed.ru','https://vidsrc-embed.su','https://vsrc.su','https://vidsrc2.ru']);
+let playbackTarget = null;
+let spotlightDay = null;
+function progressKey(item, season, episode) { return item.type === 'tv' ? `${season}:${episode}` : 'movie'; }
+function getProgress(item, record = watched[item.key]) {
+ return record?.progress?.[progressKey(item,record.season || 1,record.episode || 1)];
+}
+function remainingLabel(progress) {
+ if (!progress || !Number.isFinite(progress.position) || !Number.isFinite(progress.duration) || progress.duration <= 0) return 'Progress unavailable';
+ return `${Math.ceil(Math.max(0,progress.duration-progress.position)/60)} min left`;
+}
+function renderContinueWatching() {
+ const entries=Object.entries(watched).filter(([key,record])=>{
+  const item=catalog.get(key);if(!item || !record || record.hiddenFromContinue)return false;
+  const progress=getProgress(item,record);
+  return !progress?.finished && !(item.type==='tv' && record.completed?.includes(`${record.season || 1}:${record.episode || 1}`));
+ }).sort((a,b)=>(b[1].opened||0)-(a[1].opened||0));
+ for(const [key] of entries){const item=catalog.get(key);if(!item.loaded&&!item.failed)ensureDetails(item).catch(()=>{});}
+ for (const id of ['continueMovies','continueTV']) {
+  const section=$(id);if(!section)continue;
+  section.hidden=!entries.length;
+  const row=section.querySelector('.continue-row');
+  const focused=row.contains(document.activeElement)?{key:document.activeElement.dataset.resume || document.activeElement.dataset.dismissContinue,action:document.activeElement.dataset.resume?'resume':'dismiss-continue'}:null;
+  row.replaceChildren();
+  for(const [key,record] of entries) {
+   const item=catalog.get(key),progress=getProgress(item,record);
+   const pct=progress?.duration>0?Math.min(100,Math.max(0,progress.position/progress.duration*100)):null;
+   const card=document.createElement('article');card.className='continue-card';card.dataset.key=key;
+   const episode=item.type==='tv'?`Season ${record.season || 1} · Episode ${record.episode || 1}`:'Movie';
+   card.innerHTML=`<button class="continue-play" data-resume="${key}" aria-label="Continue ${escapeHTML(item.title)}${item.type==='tv'?`, ${episode}`:''}">${item.backdrop || item.poster?`<img src="${posterURL(item.backdrop || item.poster,'w500')}" alt="" loading="lazy">`:'<span class="continue-placeholder" aria-hidden="true">▶</span>'}<span class="continue-copy"><strong>${escapeHTML(item.title)}</strong><span>${episode}</span><span>${remainingLabel(progress)}</span></span>${pct!==null?`<span class="watch-progress" role="progressbar" aria-label="Playback progress" aria-valuenow="${Math.round(pct)}" aria-valuemin="0" aria-valuemax="100"><span style="width:${pct}%"></span></span>`:''}</button><button class="dismiss-continue" data-dismiss-continue="${key}" aria-label="Remove ${escapeHTML(item.title)} from Continue Watching">×</button>`;
+   row.append(card);
+  }
+  if(focused) {const target=[...row.querySelectorAll(`[data-${focused.action}]`)].find(b=>b.getAttribute(`data-${focused.action}`)===focused.key);target?.focus();}
+ }
+}
+function receivePlayerProgress(event) {
+ if(!current || !playbackTarget || event.source!==modalFrame.contentWindow || !PLAYER_ORIGINS.has(event.origin))return;
+ let message=event.data;
+ if(typeof message==='string'){try{message=JSON.parse(message);}catch{return;}}
+ if(message?.type!=='PLAYER_EVENT')return;
+ const data=message.data,info=data?.player_info;
+ if(!info || info.mediaType!==current.type || !['playing','paused','seeked','completed'].includes(data.player_status))return;
+ const matchesID=info.tmdb!=null?String(info.tmdb)===current.id:current.imdb && info.imdb===current.imdb;
+ if(!matchesID || playbackTarget.key!==current.key)return;
+ if(current.type==='tv' && (Number(info.season)!==playbackTarget.season || Number(info.episode)!==playbackTarget.episode))return;
+ const position=data.player_progress,duration=data.player_duration;
+ if(typeof position!=='number'||typeof duration!=='number'||!Number.isFinite(position)||!Number.isFinite(duration)||position<0||duration<=0||position>duration+5)return;
+ const record=watched[current.key];if(!record)return;
+ const key=progressKey(current,playbackTarget.season,playbackTarget.episode);
+ const finished=data.player_status==='completed' || position>=duration;
+ record.progress={...record.progress,[key]:{position:Math.min(position,duration),duration,finished,updated:Date.now()}};
+ record.opened=Date.now();record.hiddenFromContinue=false;
+ if(current.type==='tv') {
+  const completed=Array.isArray(record.completed)?record.completed:[];
+  record.completed=finished?[...new Set([...completed,key])]:completed.filter(k=>k!==key);
+  updateEpisodeButtons();
+ }
+ saveStore('cinema.history.v1',watched);
+ $('playerStatus').textContent=finished?'Finished watching.':`${current.type==='tv'?`S${playbackTarget.season} · E${playbackTarget.episode} · `:''}${remainingLabel(record.progress[key])}`;
+ renderContinueWatching();
+}
+function titleURL(item) {
+ const url=new URL(location.href);url.search='';url.hash='';
+ url.searchParams.set('view',item.type==='tv'?'tv':'movies');url.searchParams.set('title',item.key);return url.href;
+}
+async function shareTitle(item) {
+ const url=titleURL(item);
+ if(location.protocol==='file:') {openPopup('Share this title','<p>Open Cinema on your hosted website to copy a link other people can use.</p>');return;}
+ try {
+  await navigator.clipboard.writeText(url);
+  if(selectedDetail?.key===item.key && $('detailShare'))$('detailShare').textContent='Link copied!';
+  announce('Title link copied.');
+ } catch {
+  openPopup('Copy title link',`<p>Copy this link to share ${escapeHTML(item.title)}.</p><label for="shareURL">Title link</label><input id="shareURL" class="share-url" readonly value="${escapeHTML(url)}">`);
+  requestAnimationFrame(()=>{$('shareURL').focus();$('shareURL').select();});
+ }
+}
+function openSharedTitle() {
+ const key=new URLSearchParams(location.search).get('title');if(!key)return;
+ if(!catalog.has(key)){openPopup('Title unavailable','<p>This title is not in this site’s catalog. You can find another title using search.</p>');return;}
+ showDetails(key);
+}
 
 initializeCinema();
