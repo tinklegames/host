@@ -645,9 +645,10 @@ function skipCurrentIntro() {
  if(!state?.activeIntro || state.target!==playbackTarget || !current)return;
  const end=Math.ceil(state.activeIntro.end);
  const url=new URL(buildVidlinkUrl(current.type,current.id,state.target.season,state.target.episode));url.searchParams.set('startAt',String(end));
+ url.searchParams.set('autoplay','1');
  resetEpisodeOverlay();playbackTarget={...playbackTarget};
  modalFrame.src=url.href;
- $('playerStatus').textContent='Skipping intro. The player will reload; press Play if prompted.';
+ $('playerStatus').textContent='Skipping intro with autoplay requested. Press Play if the provider still prompts.';
  $('episodeOverlayStatus').textContent='Skipping intro…';
  // Save only timestamps reported by the player, not the requested jump.
 }
