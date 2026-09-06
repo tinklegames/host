@@ -169,7 +169,7 @@
     }
 
 
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+
 
     * { box-sizing: border-box; transition: color 0.4s, background-color 0.4s, border-color 0.4s; }
     html, body { height: 100%; margin: 0; }
@@ -391,32 +391,6 @@
     pointer-events: auto !important;
 }
 
-/* Block all overlay elements that might appear above the iframe */
-.modal-frame ~ *,
-.modal-frame ~ [id*="ad"],
-.modal-frame ~ [class*="ad"],
-.modal-frame ~ [id*="popup"],
-.modal-frame ~ [class*="popup"],
-.modal-frame ~ [id*="banner"],
-.modal-frame ~ [class*="banner"] {
-    pointer-events: none !important;
-    display: none !important;
-}
-
-/* Specifically target common ad containers */
-#AdWidgetContainer,
-#ad720,
-#onexbet,
-#histats_counter,
-.histats_counter,
-[class*="ad_container"],
-[id*="ad_container"] {
-    pointer-events: none !important;
-    display: none !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-}
-
 .update-log-backdrop {
     position: fixed;
     inset: 0;
@@ -548,25 +522,32 @@
 }
 
     </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap">
+<link rel="stylesheet" href="cinema.css">
+<script src="cinema.js" defer></script>
 </head>
 <body class="h-screen flex flex-col antialiased" id="appBody">
     <div id="snow-container"></div>
     <header class="w-full flex justify-center py-2 bg-black/50 backdrop-blur-sm border-b border-white/10 shadow-lg fixed top-0 z-50">
         <nav class="flex space-x-4 sm:space-x-8 items-center h-10">
 
-            <a href="javascript:switchPage('movies')" id="nav-movies" class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" aria-label="Movies">
-                <i data-lucide="clapperboard" class="w-6 h-6 nav-link-icon"></i>
+            <a href="?view=movies" data-page="movies" id="nav-movies" class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" aria-label="Movies">
+                <i data-lucide="clapperboard" class="w-6 h-6 nav-link-icon"></i><span>Movies</span>
             </a>
-            <a href="javascript:switchPage('tv')" id="nav-tv" class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" aria-label="TV Shows">
-                <i data-lucide="monitor-dot" class="w-6 h-6 nav-link-icon"></i>
+            <a href="?view=tv" data-page="tv" id="nav-tv" class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" aria-label="TV Shows">
+                <i data-lucide="monitor-dot" class="w-6 h-6 nav-link-icon"></i><span>TV Shows</span>
             </a>
-            <a href="javascript:switchPage('settings')" id="nav-settings" class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" aria-label="Settings">
-                <i data-lucide="settings" class="w-6 h-6 nav-link-icon"></i>
+            <a href="?view=settings" data-page="settings" id="nav-settings" class="nav-link text-white/80 hover:text-white transition p-2 rounded-lg hover:bg-white/10" aria-label="Settings">
+                <i data-lucide="settings" class="w-6 h-6 nav-link-icon"></i><span>Settings</span>
             </a>
+<a href="?view=list" data-page="list" id="nav-list" class="nav-link">♡ <span>My List</span></a>
+<a href="?view=history" data-page="history" id="nav-history" class="nav-link">↺ <span>History</span></a>
         </nav>
     </header>
     <div id="app-container">
-        <main id="content-viewport">
+        <main id="content-viewport" tabindex="-1">
+<div id="list-page" class="content-page"><h1>My List</h1><p class="section-note">Your saved movies and shows, kept in this browser.</p><div id="savedGrid" class="grid"></div></div>
+<div id="history-page" class="content-page"><h1>Recently watched</h1><p class="section-note">Last opened titles and episodes. Playback timestamps aren’t available from this player.</p><button class="cinema-button" id="clearHistory">Clear history</button><div id="historyGrid" class="grid"></div></div>
 
             <div id="home-page" class="content-page active home-page flex items-center justify-center relative">
                 <div class="logo-container">
@@ -592,7 +573,7 @@
             </div>
 
 
-<div id="movies-page" class="content-page">
+<div id="movies-page" class="content-page"><div id="featured"></div><div id="discovery"></div>
         <h1 class="text-3xl font-bold mb-6 text-white text-center">
             <i data-lucide="clapperboard" class="w-6 h-6 inline-block mr-2 text-red-500"></i>
             Movies
@@ -615,7 +596,7 @@
     </button>
 </div>
 
-        <div class="grid" id="movieGrid">
+        <div class="browse-tools"><label>Sort <select id="movieSort"><option value="added">Recently added</option><option value="title">Title A–Z</option><option value="year">Year: newest</option><option value="rating">Rating: highest</option></select></label><button class="cinema-button" data-pick="movie">Pick for me</button><span id="movieCount" role="status"></span></div><div id="movieEmpty" class="empty-state" hidden>No matches. <button class="cinema-button" data-clear="movie">Clear filters</button></div><div class="grid" id="movieGrid">
             <button class="tmdb-card" data-type="movie" data-id="278" data-genres="Drama,Crime" aria-label="The Shawshank Redemption"></button>
             <button class="tmdb-card" data-type="movie" data-id="238" data-genres="Crime,Drama" aria-label="The Godfather"></button>
             <button class="tmdb-card" data-type="movie" data-id="240" data-genres="Crime,Drama" aria-label="The Godfather Part II"></button>
@@ -849,7 +830,7 @@
         </div>
 
 
-        <div class="grid" id="tvGrid">
+        <div class="browse-tools"><label>Sort <select id="tvSort"><option value="added">Recently added</option><option value="title">Title A–Z</option><option value="year">Year: newest</option><option value="rating">Rating: highest</option></select></label><button class="cinema-button" data-pick="tv">Pick for me</button><span id="tvCount" role="status"></span></div><div id="tvEmpty" class="empty-state" hidden>No matches. <button class="cinema-button" data-clear="tv">Clear filters</button></div><div class="grid" id="tvGrid">
             <button class="tmdb-card" data-type="tv" data-id="37680" data-genres="Comedy,Drama" aria-label="Suits"></button>
             <button class="tmdb-card" data-type="tv" data-id="1399" data-genres="Fantasy,Drama,Action" aria-label="Game of Thrones"></button>
             <button class="tmdb-card" data-type="tv" data-id="100088" data-genres="Drama,Action,Horror" aria-label="The Last of Us"></button>
@@ -1036,21 +1017,21 @@
 
     </div>
 
-    <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-hidden="true">
-        <div id="modal" class="modal" role="document" aria-modal="true">
-            <div class="w-full h-full relative">
+    <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+        <div id="modal" class="modal" role="document">
+            <div class="player-layout">
                 <div class="modal-header" id="modalHeader">
                     <div id="modalTitle" class="modal-title">Title</div>
                     <button id="fullscreenBtn" class="modal-btn" title="Enter fullscreen" aria-pressed="false">
-                        <i data-lucide="maximize" class="w-4 h-4"></i>
+                        <span id="fullscreenLabel">Fullscreen</span>
                     </button>
                     <button id="closeBtn" class="modal-btn" title="Close">
-                        <i data-lucide="x" class="w-4 h-4"></i>
+                        <span>Close</span>
                     </button>
                 </div>
 
 <iframe id="modalFrame" class="modal-frame"
-    src=""
+    src="about:blank"
     title="Video frame"
     loading="lazy"
     allowfullscreen
@@ -1070,859 +1051,10 @@
         <select id="episodeSelect"></select>
     </div>
 
-    <script>
-        const modalBackdrop = document.getElementById('modalBackdrop');
-        const modal = document.getElementById('modal');
-        const modalFrame = document.getElementById('modalFrame');
-        const modalTitle = document.getElementById('modalTitle');
-        const closeBtn = document.getElementById('closeBtn');
-        const fullscreenBtn = document.getElementById('fullscreenBtn');
-        const seControls = document.getElementById('seControls');
-        const seasonSelect = document.getElementById('seasonSelect');
-        const episodeSelect = document.getElementById('episodeSelect');
-        const appBody = document.getElementById('appBody');
-        const contentViewport = document.getElementById('content-viewport');
-
-        let __TMDB_API_KEY = null;
-        let __CURRENT_MODAL_CARD = null;
-        const allCardElements = [];
-const GENRES = {
-    movie: [
-        'All Genres',
-        'Action', 'Adventure', 'Animation', 'Comedy', 'Crime',
-        'Documentary', 'Drama', 'Fantasy', 'History', 'Horror',
-        'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'War', 'Western'
-    ],
-    tv: [
-        'All Genres',
-        'Action', 'Adventure', 'Animation', 'Comedy', 'Crime',
-        'Drama', 'Family', 'Kids', 'Mystery', 'Sci-Fi', 'Western'
-    ],
-    chad: [
-        '😩'
-    ]
-};
-
-
-
-        async function loadApiKey() {
-            try {
-                const apiKey = '2206ab98a3adf76bf6f6cda98e32f1b0';
-
-                if (!apiKey) throw new Error('API key not found.');
-                return apiKey;
-            } catch (e) {
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'p-4 my-4 bg-red-900 border border-red-700 text-red-100 rounded-lg max-w-lg mx-auto';
-                errorDiv.textContent = 'Failed to load API key.';
-                contentViewport.prepend(errorDiv);
-                throw e;
-            }
-        }
-
-
-        function buildVidlinkUrl(type, id, season, episode) {
-    if (type === 'tv') {
-        const s = parseInt(season || 1, 10) || 1;
-        const e = parseInt(episode || 1, 10) || 1;
-        return `https://vidsrc.io/embed/tv/${encodeURIComponent(id)}/${s}/${e}`;
-    } else {
-        return `https://vidsrc.io/embed/movie/${encodeURIComponent(id)}`;
-    }
-}
-function setupNavigationBlocking() {
-    // Block window.open from iframe
-    const iframe = document.getElementById('modalFrame');
-    iframe.addEventListener('load', function() {
-        try {
-            const iframeWindow = iframe.contentWindow;
-            
-            // Block window.open
-            iframeWindow.open = function() {
-                console.log('Blocked window.open attempt');
-                return {
-                    closed: true,
-                    focus: function() {},
-                    close: function() {},
-                    closed: true
-                };
-            };
-            
-            // Block navigation
-            iframeWindow.addEventListener('beforeunload', function(e) {
-                e.preventDefault();
-                e.returnValue = '';
-                return '';
-            });
-            
-            // Block link clicks that open new windows
-            const iframeDoc = iframe.contentDocument;
-            iframeDoc.addEventListener('click', function(e) {
-                if (e.target.tagName === 'A' && (e.target.target === '_blank' || e.target.href.includes('ads'))) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return false;
-                }
-            });
-            
-        } catch (e) {
-            console.log('Cross-origin restrictions prevent direct access');
-        }
-    });
-
-    // Block top-level navigation attempts
-    window.addEventListener('beforeunload', function(e) {
-        if (modalBackdrop.style.display === 'flex') {
-            e.preventDefault();
-            e.returnValue = 'Are you sure you want to leave? Video is playing.';
-            return e.returnValue;
-        }
-    });
-}
-async function openModalForCard(card) {
-    __CURRENT_MODAL_CARD = card;
-    const type = card.dataset.mediaType || card.dataset.type || 'movie';
-    const id = card.dataset.id;
-    const title = card.dataset.title || '';
-
-    modalTitle.textContent = title || '(untitled)';
-    modalBackdrop.style.display = 'flex';
-    modalBackdrop.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-
-    // Clear previous content
-    const modalContent = document.querySelector('.modal .w-full.h-full.relative');
-    modalContent.innerHTML = '';
-
-    // Create secure iframe
-    let url;
-    if (type === 'tv') {
-        seControls.style.display = 'flex';
-        seControls.setAttribute('aria-hidden', 'false');
-        const season = seasonSelect.value || '1';
-        const episode = episodeSelect.value || '1';
-        url = buildVidlinkUrl('tv', id, season, episode);
-    } else {
-        seControls.style.display = 'none';
-        seControls.setAttribute('aria-hidden', 'true');
-        url = buildVidlinkUrl('movie', id);
-    }
-
-    const secureIframe = createSecureIframe(url);
     
-    // Setup protection
-    setupAdBlockerObserver();
-    setupNavigationBlocking();
 
-    closeBtn.focus();
-}
-function setupAdBlockerObserver() {
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach((node) => {
-                if (node.nodeType === 1) { // Element node
-                    // Block common ad elements
-                    const adSelectors = [
-                        '[id*="ad"]',
-                        '[class*="ad"]',
-                        '[id*="pop"]',
-                        '[class*="pop"]',
-                        '[id*="banner"]',
-                        '[class*="banner"]',
-                        '#AdWidgetContainer',
-                        '#ad720',
-                        '#onexbet',
-                        '#histats_counter',
-                        '.histats_counter',
-                        '[onclick*="window.open"]',
-                        '[href*="ads"]',
-                        '[src*="ad"]'
-                    ];
-                    
-                    adSelectors.forEach(selector => {
-                        const elements = node.querySelectorAll ? node.querySelectorAll(selector) : [];
-                        elements.forEach(el => {
-                            el.style.pointerEvents = 'none';
-                            el.style.display = 'none';
-                            el.remove();
-                        });
-                    });
 
-                    // Also check the node itself
-                    adSelectors.forEach(selector => {
-                        if (node.matches && node.matches(selector)) {
-                            node.style.pointerEvents = 'none';
-                            node.style.display = 'none';
-                            node.remove();
-                        }
-                    });
-                }
-            });
-        });
-    });
-
-    // Start observing when iframe loads
-    const iframe = document.getElementById('modalFrame');
-    if (iframe) {
-        iframe.addEventListener('load', () => {
-            try {
-                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                observer.observe(iframeDoc.body, {
-                    childList: true,
-                    subtree: true,
-                    attributes: true,
-                    attributeFilter: ['style', 'class', 'id']
-                });
-            } catch (e) {
-                // Cross-origin restrictions
-                console.log('Cannot access iframe content due to CORS');
-            }
-        });
-    }
-}
-
-        function buildPosterUrl(path, size = 'w500') {
-            if (!path) return null;
-            const base = 'https://image.tmdb.org/t/p/';
-            return base + size + (path.startsWith('/') ? path : '/' + path);
-        }
-
-        const THEMES = ['spotify', 'light', '2022purple', 'cyberpunk', 'midnight', 'solarized', 'forest', 'crimson'];
-
-        function changeTheme(themeName, save = true) {
-            appBody.classList.remove(...THEMES.map(t => `theme-${t}`));
-
-            const effectiveTheme = THEMES.includes(themeName) ? themeName : 'cyberpunk';
-
-            if (effectiveTheme !== 'forest') {
-                appBody.classList.add(`theme-${effectiveTheme}`);
-            }
-
-            if (save) {
-                localStorage.setItem('theme', effectiveTheme);
-            }
-
-            document.querySelectorAll('.theme-button').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.onclick.toString().includes(`'${effectiveTheme}'`)) {
-                    btn.classList.add('active');
-                }
-            });
-        }
-
-        function populateGenreFilter(type) {
-            const filterEl = document.getElementById(`${type}GenreFilter`);
-            if (!filterEl) return;
-
-            filterEl.innerHTML = '';
-            const genres = GENRES[type] || [];
-            
-            genres.forEach(genre => {
-                const option = document.createElement('option');
-                option.value = genre === 'All Genres' ? '' : genre;
-                option.textContent = genre;
-                filterEl.appendChild(option);
-            });
-        }
-
-        function filterContent(type) {
-            const gridId = `${type}Grid`;
-            const searchId = `${type}Search`;
-            const filterId = `${type}GenreFilter`;
-
-            const grid = document.getElementById(gridId);
-            if (!grid) return;
-
-            const searchTerm = document.getElementById(searchId)?.value.toLowerCase().trim() || '';
-            const selectedGenre = document.getElementById(filterId)?.value || '';
-
-            const cards = grid.querySelectorAll('.tmdb-card');
-
-            cards.forEach(card => {
-                const title = card.dataset.title ? card.dataset.title.toLowerCase() : '';
-                const genres = card.dataset.genres ? card.dataset.genres.toLowerCase().split(',') : [];
-
-                let matchesSearch = true;
-                let matchesGenre = true;
-                if (searchTerm.length > 0) {
-                    matchesSearch = title.includes(searchTerm);
-                }
-                if (selectedGenre.length > 0) {
-                    const normalizedSelectedGenre = selectedGenre.toLowerCase();
-                    matchesGenre = genres.some(g => g.trim() === normalizedSelectedGenre);
-                }
-
-                if (matchesSearch && matchesGenre) {
-                    card.style.display = '';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-
-
-        function switchPage(pageId, updateHistory = true) {
-            document.querySelectorAll('.content-page').forEach(page => page.classList.remove('active'));
-            const targetPage = document.getElementById(`${pageId}-page`);
-            if (targetPage) {
-                targetPage.classList.add('active');
-            }
-
-            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-            const targetLink = document.getElementById(`nav-${pageId}`);
-            if (targetLink) {
-                targetLink.classList.add('active');
-            }
-
-            contentViewport.scrollTop = 0;
-
-            if (updateHistory) {
-                const url = new URL(window.location);
-                url.searchParams.set('view', pageId);
-                history.pushState(null, '', url.toString());
-            }
-
-    if (pageId === 'settings') {
-        changeTheme(localStorage.getItem('theme') || 'cyberpunk', false);
-    } else if (pageId === 'movies') {
-        populateGenreFilter('movie');
-        filterContent('movie');
-    } else if (pageId === 'tv') {
-        populateGenreFilter('tv');
-        filterContent('tv');
-    } else if (pageId === 'chad') {
-        populateGenreFilter('chad');
-        filterContent('chad');
-    }
-
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
-        }
-
-        const tabPresets = [
-            { name: "Google Classroom", icon: "https://cdn.worldvectorlogo.com/logos/google-classroom.svg" },
-            { name: "Google Drive", icon: "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png" },
-            { name: "Schoology", icon: "https://lausdschoology.azurewebsites.net/assets/images/schoology/schoologyLogo.png" },
-            { name: "Khan Academy", icon: "https://www.khanacademy.org/images/favicon.ico" },
-            { name: "IXL", icon: "https://www.ixl.com/apple-touch-icon.png" },
-        ];
-
-        function cloakIcon(url) {
-            document.querySelectorAll("link[rel~='icon']").forEach(link => link.remove());
-            const iconUrl = (url + "").trim();
-            const href = iconUrl.length === 0 ? "favicon.png" : iconUrl;
-
-            const link = document.createElement("link");
-            link.rel = "icon";
-            link.type = "image/x-icon";
-            link.href = href;
-            document.head.appendChild(link);
-
-            const iconInput = document.getElementById('tab-icon-input');
-            if (iconInput) iconInput.value = href === "favicon.png" ? "" : href;
-        }
-
-        function cloakName(string) {
-            const title = ((string + "").trim().length === 0) ? "Tinkle Party Cinema" : string;
-            document.title = title;
-            const titleInput = document.getElementById('tab-title-input');
-            if (titleInput) titleInput.value = title === "Tinkle Party Cinema" ? "" : title;
-        }
-
-        function applyPreset(name, iconUrl) {
-            cloakName(name);
-            cloakIcon(iconUrl);
-            setTimeout(closePopup, 300);
-        }
-
-        function openPopup(title, contentHTML, allowClose = true, actionButton = null) {
-            document.getElementById('popupTitle').textContent = title;
-            document.getElementById('popupBody').innerHTML = contentHTML;
-            document.getElementById('popupClose').style.display = allowClose ? 'block' : 'none';
-            document.getElementById('popupOverlay').style.display = "flex";
-
-            if (actionButton) {
-                const actionBtnEl = document.createElement('button');
-                actionBtnEl.className = 'w-full p-3 rounded-lg font-bold bg-fuchsia-600 text-white hover:bg-fuchsia-500 mt-4 transition';
-                actionBtnEl.textContent = actionButton.text;
-                actionBtnEl.onclick = actionButton.action;
-                document.getElementById('popupBody').appendChild(actionBtnEl);
-            }
-        }
-
-        function closePopup() {
-            document.getElementById('popupOverlay').style.display = "none";
-        }
-
-        function tabCloak() {
-            const popupBody = document.getElementById('popupBody');
-
-            const presetButtons = tabPresets.map(p => `
-                <button class="w-full p-3 rounded-lg font-bold bg-gray-800 text-white hover:bg-gray-700 transition flex items-center mb-2"
-                        onclick="applyPreset('${p.name.replace(/'/g, "\\'")}', '${p.icon.replace(/'/g, "\\'")}')">
-                    <img src="${p.icon}" class="w-6 h-6 mr-3 rounded-full" onerror="this.src=' '">
-                    ${p.name}
-                </button>
-            `).join('');
-
-            const content = `
-                <div class="mb-6">
-                    <h4 class="text-lg font-bold text-white mb-2 border-b border-gray-700 pb-1">Quick Presets</h4>
-                    ${presetButtons}
-                    <button class="w-full p-3 rounded-lg font-bold bg-red-600 text-white hover:bg-red-500 transition mt-2" onclick="applyPreset('Tinkle Party Cinema', '')">
-                        Reset to Default
-                    </button>
-                </div>
-
-                <div class="mb-4">
-                    <h4 class="text-lg font-bold text-white mb-2 border-b border-gray-700 pb-1">Custom Cloaking</h4>
-
-                    <label for="tab-title-input" class="font-bold text-white block mb-1">Set Tab Title:</label>
-                    <input type="text" id="tab-title-input" placeholder="Enter new tab name..." oninput="cloakName(this.value)" class="w-full bg-gray-800 border border-gray-700 text-white p-2 rounded-lg mb-4 outline-none">
-
-                    <label for="tab-icon-input" class="font-bold text-white block mb-1">Set Tab Icon (URL):</label>
-                    <input type="text" id="tab-icon-input" placeholder="Enter new icon URL..." oninput='cloakIcon(this.value)' class="w-full bg-gray-800 border border-gray-700 text-white p-2 rounded-lg mb-4 outline-none">
-                </div>
-            `;
-            openPopup("Tab Cloak Settings", content);
-
-
-            document.getElementById('tab-title-input').value = document.title === "Tinkle Party Cinema" ? '' : document.title;
-            const currentIcon = document.querySelector("link[rel~='icon']")?.href;
-            if (currentIcon && !currentIcon.endsWith('favicon.png')) {
-                document.getElementById('tab-icon-input').value = currentIcon;
-            }
-        }
-
-        function loadPrivacy() {
-            const content = `
-                <div class="max-h-96 overflow-y-auto text-gray-400">
-                    <h2 class="text-xl font-bold text-white">PRIVACY POLICY</h2>
-                    <p class="text-sm mb-3">Last updated October 2025</p>
-                    <p class="mb-2">This policy describes how we handle your information when you use Tinkle Party Cinema.</p>
-
-                    <h3 class="text-lg font-semibold text-white mt-4 mb-2">Data Processing</h3>
-                    <p class="mb-2">We use your <strong>local browser storage</strong> (localStorage) to save your theme choices and keep track of pop-up displays. This data is not saved or sent to our servers.</p>
-                    <p class="mb-2">We use <strong>TMDb API</strong> (The Movie Database) to fetch poster images, titles, and TV season information. Due to API rate limits and security constraints in this sandbox environment, the genre data you see is manually added to the HTML and not fetched from the live API.</p>
-                </div>
-                <button class="w-full p-3 rounded-lg font-bold bg-gray-700 text-white hover:bg-gray-600 mt-4" onclick="closePopup()">Close Policy</button>
-            `;
-            openPopup("Privacy Policy", content);
-        }
-
-        function setupCardDOM(card) {
-            card.innerHTML = '';
-            const inner = document.createElement('div');
-            inner.className = 'tmdb-inner';
-            const shine = document.createElement('div');
-            shine.className = 'shine';
-            const loader = document.createElement('div');
-            loader.className = 'loader';
-            loader.textContent = 'LOADING...';
-            card.appendChild(inner);
-            card.appendChild(shine);
-            card.appendChild(loader);
-        }
-
-        async function fillCard(card, apiKey) {
-            const id = card.dataset.id;
-            const type = (card.dataset.type || 'movie').toLowerCase();
-            const loader = card.querySelector('.loader');
-            const inner = card.querySelector('.tmdb-inner');
-            inner.innerHTML = '';
-            if (loader) loader.style.display = 'flex';
-
-            try {
-                const url = `https://api.themoviedb.org/3/${encodeURIComponent(type)}/${encodeURIComponent(id)}?api_key=${encodeURIComponent(apiKey)}`;
-                const res = await fetch(url);
-                if (!res.ok) {
-                    if (res.status === 404) throw new Error(`${type} ID ${id} not found.`);
-                    throw new Error('TMDb fetch failed (status ' + res.status + ').');
-                }
-                const details = await res.json();
-
-                card.dataset.title = details.title || details.name || '';
-                card.dataset.posterPath = details.poster_path || details.backdrop_path || '';
-                card.dataset.mediaType = type;
-
-                if (type === 'tv') {
-                    card.dataset.seasons = JSON.stringify(details.seasons || []);
-                    card.dataset.number_of_seasons = details.number_of_seasons || (details.seasons && details.seasons.length) || 0;
-                } else {
-                    card.dataset.seasons = '';
-                    card.dataset.number_of_seasons = '';
-                }
-
-                const path = details.poster_path || details.backdrop_path || null;
-                if (!path) {
-                    const ph = document.createElement('div');
-                    ph.className = 'placeholder';
-                    ph.textContent = card.dataset.title || 'No Poster';
-                    inner.appendChild(ph);
-                } else {
-                    const img = document.createElement('img');
-                    img.className = 'tmdb-img';
-                    img.alt = card.dataset.title || 'poster';
-                    img.draggable = false;
-                    img.src = buildPosterUrl(path, 'w780');
-                    inner.appendChild(img);
-                }
-                card.title = card.dataset.title + ' — click to stream';
-                console.log(`[TMDb] Successfully loaded: ${card.dataset.title} (${type}, ID: ${id})`);
-            } catch (err) {
-                console.error(`[TMDb Error] Failed to load ${card.dataset.title || card.dataset.id}: ${err.message}`);
-                const ph = document.createElement('div');
-                ph.className = 'placeholder bg-red-900/50';
-                ph.textContent = `Error loading: ${card.dataset.title || card.dataset.id}`;
-                inner.appendChild(ph);
-            } finally {
-                if (loader) loader.style.display = 'none';
-            }
-        }
-
-        const states = [];
-
-        function initCard(card) {
-            setupCardDOM(card);
-            const inner = card.querySelector('.tmdb-inner');
-            const shine = card.querySelector('.shine');
-            const state = {
-                el: card,
-                inner,
-                shine,
-                rect: card.getBoundingClientRect(),
-                target: { rx:0, ry:0, tz:0, px:50, py:50 },
-                state: { rx:0, ry:0, tz:0, px:50, py:50 }
-            };
-            states.push(state);
-            function updateRect(){ state.rect = card.getBoundingClientRect(); }
-            window.addEventListener('resize', updateRect, { passive:true });
-            contentViewport.addEventListener('scroll', updateRect, { passive:true });
-
-            card.addEventListener('pointerenter', (ev) => {
-                updateRect();
-                card.setPointerCapture && card.setPointerCapture(ev.pointerId);
-            });
-            card.addEventListener('pointerleave', (ev) => {
-                state.target.rx = 0; state.target.ry = 0; state.target.tz = 0; state.target.px = 50; state.target.py = 50;
-                card.releasePointerCapture && card.releasePointerCapture(ev.pointerId);
-            });
-            card.addEventListener('pointermove', (ev) => {
-                if (!state.rect) return;
-
-                const r = state.rect;
-                const cx = r.left + r.width / 2;
-                const cy = r.top + r.height / 2;
-                const nx = (ev.clientX - cx) / (r.width / 2);
-                const ny = (ev.clientY - cy) / (r.height / 2);
-
-                const maxTilt = 8;
-                const maxPop = 30;
-
-        
-                state.target.ry = nx * maxTilt;
-                state.target.rx = -ny * maxTilt;
-                
-                state.target.tz = maxPop;
-                
-                state.target.px = (nx * 20) + 50;
-                state.target.py = (ny * 20) + 50;
-            });
-
-            card.addEventListener('click', (ev) => {
-                ev.preventDefault();
-                openModalForCard(card);
-            });
-            allCardElements.push(card);
-        }
-
-        function lerp(a,b,t){ return a + (b - a) * t; }
-        function animateAll(){
-            for (const s of states) {
-                s.state.rx = lerp(s.state.rx, s.target.rx, 0.18);
-                s.state.ry = lerp(s.state.ry, s.target.ry, 0.18);
-                s.state.tz = lerp(s.state.tz, s.target.tz, 0.18);
-                s.state.px = lerp(s.state.px, s.target.px, 0.14);
-                s.state.py = lerp(s.state.py, s.target.py, 0.14);
-
-                s.el.style.transform = `perspective(900px) rotateX(${s.state.rx}deg) rotateY(${s.state.ry}deg) translateZ(${s.state.tz}px)`;
-                
-                const innerZ = s.state.tz * 0.6;
-                s.inner.style.transform = `translateZ(${innerZ}px)`;
-                s.shine.style.background = `radial-gradient(circle at ${s.state.px}% ${s.state.py}%, rgba(255,255,255,0.24), rgba(255,255,255,0.06) 28%, transparent 48%)`;
-            }
-            requestAnimationFrame(animateAll);
-        }
-
-        async function fetchSeasonEpisodes(apiKey, tvId, seasonNumber) {
-            const url = `https://api.themoviedb.org/3/tv/${encodeURIComponent(tvId)}/season/${encodeURIComponent(seasonNumber)}?api_key=${encodeURIComponent(apiKey)}`;
-            const res = await fetch(url);
-            if (!res.ok) throw new Error('Failed fetching season info.');
-            const details = await res.json();
-            return details.episodes || [];
-        }
-
-        async function updateEpisodeSelectAndFrame(card, seasonNumber) {
-            const apiKey = __TMDB_API_KEY;
-            const id = card.dataset.id;
-            seasonSelect.disabled = true;
-            episodeSelect.disabled = true;
-            try {
-                const episodes = await fetchSeasonEpisodes(apiKey, id, seasonNumber);
-                episodeSelect.innerHTML = '';
-                if (episodes.length) {
-                    for (const ep of episodes) {
-                        const opt = document.createElement('option');
-                        opt.value = ep.episode_number;
-                        const name = (ep.name || '').slice(0, 60);
-                        opt.textContent = `E${ep.episode_number}` + (name ? ` — ${name}` : '');
-                        episodeSelect.appendChild(opt);
-                    }
-                    episodeSelect.value = episodeSelect.querySelector('option')?.value || episodes[0].episode_number;
-                } else {
-                    const opt = document.createElement('option');
-                    opt.value = '1';
-                    opt.textContent = 'E1';
-                    episodeSelect.appendChild(opt);
-                }
-
-                const season = seasonSelect.value || '1';
-                const episode = episodeSelect.value || '1';
-                const url = buildVidlinkUrl('tv', id, season, episode);
-                modalFrame.src = url;
-            } catch (err) {
-                console.warn('Failed to fetch season episodes:', err);
-                const url = buildVidlinkUrl('tv', id, seasonNumber || 1, 1);
-                modalFrame.src = url;
-            } finally {
-                seasonSelect.disabled = false;
-                episodeSelect.disabled = false;
-            }
-        }
-
-        async function openModalForCard(card) {
-            __CURRENT_MODAL_CARD = card;
-            const type = card.dataset.mediaType || card.dataset.type || 'movie';
-            const id = card.dataset.id;
-            const title = card.dataset.title || '';
-
-            modalTitle.textContent = title || '(untitled)';
-            modalBackdrop.style.display = 'flex';
-            modalBackdrop.setAttribute('aria-hidden', 'false');
-            document.body.style.overflow = 'hidden';
-
-            if (type === 'tv') {
-                seControls.style.display = 'flex';
-                seControls.setAttribute('aria-hidden', 'false');
-
-                let seasons = [];
-                try { seasons = JSON.parse(card.dataset.seasons || '[]'); } catch(e) { seasons = []; }
-                const numberOfSeasons = parseInt(card.dataset.number_of_seasons || (seasons.length || 0), 10) || 0;
-
-                seasonSelect.innerHTML = '';
-                if (seasons && seasons.length) {
-                    for (const s of seasons) {
-                        const num = s.season_number;
-                        const opt = document.createElement('option');
-                        opt.value = num;
-                        opt.textContent = `S${num}` + (s.name ? ` — ${s.name}` : '');
-                        seasonSelect.appendChild(opt);
-                    }
-                } else {
-                    for (let s = 1; s <= Math.max(1, numberOfSeasons); s++) {
-                        const opt = document.createElement('option');
-                        opt.value = s;
-                        opt.textContent = `S${s}`;
-                        seasonSelect.appendChild(opt);
-                    }
-                }
-
-                seasonSelect.value = seasonSelect.querySelector('option')?.value || '1';
-                await updateEpisodeSelectAndFrame(__CURRENT_MODAL_CARD, seasonSelect.value);
-            } else {
-                seControls.style.display = 'none';
-                seControls.setAttribute('aria-hidden', 'true');
-                const url = buildVidlinkUrl('movie', id);
-                modalFrame.src = url;
-            }
-
-            closeBtn.focus();
-        }
-
-        function closeModal() {
-            modalBackdrop.style.display = 'none';
-            modalBackdrop.setAttribute('aria-hidden', 'true');
-            document.body.style.overflow = '';
-            seControls.style.display = 'none';
-            seControls.setAttribute('aria-hidden', 'true');
-            modalFrame.src = '';
-            __CURRENT_MODAL_CARD = null;
-            if (document.fullscreenElement) {
-                document.exitFullscreen && document.exitFullscreen().catch(()=>{});
-                fullscreenBtn.querySelector('i').setAttribute('data-lucide', 'minimize');
-            }
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-        }
-
-        function showAdblockerPopup() {
-            const content = `
-                <div class="text-center">
-                    <i data-lucide="shield-alert" class="w-12 h-12 inline-block text-yellow-400 mb-4" style="filter: drop-shadow(0 0 8px #facc15);"></i>
-                    <h2 class="text-2xl font-extrabold text-white mb-3">Ad-Blocker Notice</h2>
-                    <p class="text-gray-300 mb-6">
-                        please use an ad blocker when watching on this site. the listed media contains ads. we suggest you use <strong class="text-accent-secondary">uBlock Origin</strong>.
-                    </p>
-                    <p class="text-sm text-gray-500">
-                        if you get redirected to a new website/tab close it
-                    </p>
-                </div>
-            `;
-            
-            openPopup(
-                "Important Setup Step",
-                content,
-                false,
-                {
-                    text: "Got It, Continue to Site",
-                    action: () => closePopup()
-                }
-            );
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-        }
-
-        function checkAdblockerPopup() {
-                setTimeout(showAdblockerPopup, 100);
-        }
-
-
-        seasonSelect.addEventListener('change', async () => {
-            if (!__CURRENT_MODAL_CARD) return;
-            await updateEpisodeSelectAndFrame(__CURRENT_MODAL_CARD, seasonSelect.value);
-        });
-
-        episodeSelect.addEventListener('change', () => {
-            if (!__CURRENT_MODAL_CARD) return;
-            const season = seasonSelect.value || 1;
-            const episode = episodeSelect.value || 1;
-            const url = buildVidlinkUrl('tv', __CURRENT_MODAL_CARD.dataset.id, season, episode);
-            modalFrame.src = url;
-        });
-
-        modalBackdrop.addEventListener('click', (ev) => {
-            if (ev.target === modalBackdrop) closeModal();
-        });
-        closeBtn.addEventListener('click', closeModal);
-        window.addEventListener('keydown', (ev) => {
-            if (ev.key === 'Escape' && modalBackdrop.style.display === 'flex' && document.getElementById('popupOverlay').style.display !== 'flex') closeModal();
-            if (ev.key === 'Escape' && document.getElementById('popupOverlay').style.display === 'flex') closePopup();
-        });
-        
-// --- Secret CHAD page combo (press C + H + A + D at the same time) ---
-const SECRET_COMBO_KEYS = new Set(['c', 'h', 'a', 'd']);
-const currentlyPressedKeys = new Set();
-
-window.addEventListener('keydown', (ev) => {
-    const key = ev.key.toLowerCase();
-
-    // Don't trigger while typing in inputs / textareas
-    const active = document.activeElement;
-    if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) {
-        return;
-    }
-
-    // Ignore modifier-only keys
-    if (['shift', 'control', 'alt', 'meta'].includes(key)) return;
-
-    currentlyPressedKeys.add(key);
-
-    // Check if ALL combo keys are held down
-    let allDown = true;
-    SECRET_COMBO_KEYS.forEach(k => {
-        if (!currentlyPressedKeys.has(k)) allDown = false;
-    });
-
-    if (allDown) {
-        ev.preventDefault();
-        currentlyPressedKeys.clear(); // reset so it doesn't spam
-        switchPage('chad');
-    }
-});
-
-window.addEventListener('keyup', (ev) => {
-    const key = ev.key.toLowerCase();
-    currentlyPressedKeys.delete(key);
-});
-
-
-        fullscreenBtn.addEventListener('click', async () => {
-            if (!document.fullscreenElement) {
-                try {
-                    await modal.requestFullscreen();
-                    fullscreenBtn.querySelector('i').setAttribute('data-lucide', 'minimize');
-                } catch (e) {
-                    console.warn('fullscreen failed', e);
-                }
-            } else {
-                await document.exitFullscreen();
-                fullscreenBtn.querySelector('i').setAttribute('data-lucide', 'maximize');
-            }
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-        });
-
-
-        document.addEventListener('DOMContentLoaded', () => {
-            checkAdblockerPopup();
-
-            const savedTheme = localStorage.getItem('theme') || 'cyberpunk';
-            changeTheme(savedTheme, false);
-
-            const allCards = Array.from(document.querySelectorAll('.tmdb-card'));
-            populateGenreFilter('movie');
-            populateGenreFilter('tv');
-
-            (async function init(){
-                let apiKey;
-                try {
-                    apiKey = await loadApiKey();
-                    __TMDB_API_KEY = apiKey;
-                } catch (e) {
-                    return;
-                }
-
-                for (const card of allCards) initCard(card);
-                await Promise.all(allCards.map(c => fillCard(c, apiKey)));
-
-                requestAnimationFrame(animateAll);
-
-                const searchParams = new URLSearchParams(window.location.search);
-                const view = searchParams.get('view') || 'movies';
-                switchPage(view, false);
-
-                if (typeof lucide !== 'undefined') {
-                    lucide.createIcons();
-                }
-
-            })();
-        });
-    </script>
-<script>
-function showUpdateLog() {
-    const log = document.getElementById("updateLog");
-    log.classList.add("show");
-}
-
-function hideUpdateLog() {
-    const log = document.getElementById("updateLog");
-
-    log.classList.remove("show");
-
-}
-
-document.getElementById("updateLog").addEventListener("click", hideUpdateLog);
-</script>
-
-    <div id="popupOverlay" class="popup-backdrop">
+    <div id="popupOverlay" class="popup-backdrop" role="dialog" aria-modal="true" aria-labelledby="popupTitle" aria-hidden="true">
         <div class="popup bg-gray-900 rounded-xl shadow-2xl border border-gray-800">
             <div class="popup-header bg-gray-800">
                 <h3 id="popupTitle" class="text-white text-lg font-bold">Title</h3>
@@ -1944,45 +1076,26 @@ document.getElementById("updateLog").addEventListener("click", hideUpdateLog);
 
 
 <!-- UPDATE LOG POPUP -->
-<div id="updateLog" class="update-log-backdrop">
+<div id="updateLog" hidden class="update-log-backdrop" role="dialog" aria-modal="true" aria-label="Update log" aria-hidden="true">
     <div class="update-log-box" onclick="event.stopPropagation()">
-        <span class="update-close-btn" onclick="hideUpdateLog()">✕</span>
-        <h2 class="text-2xl font-bold mb-4">Update v1.4.6</h2>
-        <h3 class="text-1.5xl font-bold mb-3">🎬 TV Shows</h3>
+        <button class="update-close-btn" onclick="hideUpdateLog()" aria-label="Close update log">✕</button>
+        <h2 class="text-2xl font-bold mb-4">Update v1.5.0</h2>
+        <h3 class="text-1.5xl font-bold mb-3">🎬 Your cinema, upgraded</h3>
         <ul class="list-disc pl-5 space-y-2 text-gray-300">
-            <li>Added Swagger</li>
-            <li>Added Euphoria</li>
+            <li>Save favorites to My List and revisit your watch history.</li>
+            <li>Explore title details, featured films, and collections.</li>
+            <li>Sort the catalog or let Pick for me choose.</li>
+            <li>Remember episodes, mark them watched, and jump to the next one.</li>
+            <li>Faster loading, accessible dialogs, and browser Back support.</li>
         </ul>
         <p class="mt-6 text-xs text-gray-500 text-right">
-            Updated: 04/20/26
+            Updated: 09/06/26
         </p>
     </div>
 </div>
-<script>
-const updateBtn = document.getElementById("updateBtn");
 
-// Hide update-btn when clicking ANY tmdb card
-document.addEventListener("click", (e) => {
-    if (e.target.closest(".tmdb-card")) {
-        updateBtn.style.opacity = "0";
-        updateBtn.style.pointerEvents = "none";
-    }
-});
 
-// Show the update-btn again when modal closes
-document.getElementById("closeBtn").addEventListener("click", () => {
-    updateBtn.style.opacity = "1";
-    updateBtn.style.pointerEvents = "auto";
-});
-
-// Show the update-btn again when backdrop is clicked (closing modal)
-document.getElementById("modalBackdrop").addEventListener("click", (e) => {
-    if (e.target.id === "modalBackdrop") {
-        updateBtn.style.opacity = "1";
-        updateBtn.style.pointerEvents = "auto";
-    }
-});
-</script>
-
+<div id="detailsOverlay" class="details-overlay" role="dialog" aria-modal="true" aria-labelledby="detailsTitle" aria-hidden="true" hidden><section class="details-panel"><button id="detailsClose" class="cinema-button details-close">Close</button><div id="detailsContent"></div></section></div>
+<div id="announcement" class="sr-only" role="status"></div>
 </body>
 </html>
