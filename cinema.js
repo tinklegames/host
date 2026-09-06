@@ -491,7 +491,7 @@ function initializeCinema() {
                     <p class="mb-2">This policy describes how we handle your information when you use Tinkle Party Cinema.</p>
 
                     <h3 class="text-lg font-semibold text-white mt-4 mb-2">Data Processing</h3>
-                    <p class="mb-2">We use your <strong>local browser storage</strong> (localStorage) to save your theme, watchlist, recently opened titles, selected episodes, playback progress, watched checkmarks, and notice preferences. These preferences stay in this browser. Requests to TheIntroDB (episode intro timestamps), TMDb, and the embedded video provider are sent to those services, which have their own privacy practices.</p>
+                    <p class="mb-2">We use your <strong>local browser storage</strong> (localStorage) to save your theme, watchlist, recently opened titles, selected episodes, playback progress, watched checkmarks, and notice preferences. These preferences stay in this browser. Requests to TheIntroDB (episode intro and credits timestamps), TMDb, and the embedded video provider are sent to those services, which have their own privacy practices.</p>
                     <p class="mb-2">We use <strong>TMDb API</strong> (The Movie Database) to fetch poster images, titles, and TV season information. Catalog genres are available immediately and are refreshed when title details load.</p>
                 </div>
                 <button class="w-full p-3 rounded-lg font-bold bg-gray-700 text-white hover:bg-gray-600 mt-4" onclick="closePopup()">Close Policy</button>
@@ -586,7 +586,7 @@ function openSharedTitle() {
 }
 
 // TheIntroDB v3: https://theintrodb.org/openapi.yaml (milliseconds).
-const introCache = new Map();
+const segmentCache = new Map();
 let episodeOverlay = null;
 function resetEpisodeOverlay() {
  episodeOverlay=null;
@@ -609,25 +609,27 @@ async function findNextAiredEpisode(item, target) {
  }
  return null;
 }
-async function fetchIntroSegments(item,target,duration) {
+async function fetchEpisodeSegments(item,target,duration) {
  const key=`${item.key}:${target.season}:${target.episode}:${Math.round(duration)}`;
- if(!introCache.has(key))introCache.set(key,(async()=>{
+ if(!segmentCache.has(key))segmentCache.set(key,(async()=>{
   const url=new URL('https://api.theintrodb.org/v3/media');
   url.search=new URLSearchParams({tmdb_id:item.id,season:String(target.season),episode:String(target.episode),duration_ms:String(Math.round(duration*1000))});
   const response=await fetch(url,{signal:AbortSignal.timeout(8000),credentials:'omit'});
-  if(response.status===404)return [];
-  if(!response.ok)throw new Error('Intro timing unavailable');
+  if(response.status===404)return {intro:[],credits:[]};
+  if(!response.ok)throw new Error('Episode timing unavailable');
   const data=await response.json();
-  if(String(data.tmdb_id)!==item.id || data.type!=='tv' || Number(data.season)!==target.season || Number(data.episode)!==target.episode)return [];
-  return (Array.isArray(data.intro)?data.intro:[]).map(segment=>({start:segment.start_ms===null?0:typeof segment.start_ms==='number'?segment.start_ms/1000:NaN,end:typeof segment.end_ms==='number'?segment.end_ms/1000:NaN})).filter(s=>Number.isFinite(s.start)&&Number.isFinite(s.end)&&s.start>=0&&s.end>s.start&&s.end<duration);
- })().catch(()=>[]));
- return introCache.get(key);
+  if(String(data.tmdb_id)!==item.id || data.type!=='tv' || Number(data.season)!==target.season || Number(data.episode)!==target.episode)return {intro:[],credits:[]};
+  const intro=(Array.isArray(data.intro)?data.intro:[]).map(segment=>({start:segment.start_ms===null?0:typeof segment.start_ms==='number'?segment.start_ms/1000:NaN,end:typeof segment.end_ms==='number'?segment.end_ms/1000:NaN})).filter(s=>Number.isFinite(s.start)&&Number.isFinite(s.end)&&s.start>=0&&s.end>s.start&&s.end<duration);
+  const credits=(Array.isArray(data.credits)?data.credits:[]).map(segment=>({start:typeof segment.start_ms==='number'?segment.start_ms/1000:NaN,end:segment.end_ms===null?duration:typeof segment.end_ms==='number'?segment.end_ms/1000:NaN})).filter(s=>Number.isFinite(s.start)&&Number.isFinite(s.end)&&s.start>=0&&s.start<duration&&s.end>s.start).map(s=>({...s,end:Math.min(s.end,duration)}));
+  return {intro,credits};
+ })().catch(()=>({intro:[],credits:[]})));
+ return segmentCache.get(key);
 }
 function updateEpisodeOverlay(position,duration,finished) {
  if(!current || current.type!=='tv' || !playbackTarget)return;
  if(!episodeOverlay || episodeOverlay.target!==playbackTarget) {
-  const state={target:playbackTarget,item:current,position,duration,finished,segments:[],next:null};episodeOverlay=state;
-  fetchIntroSegments(current,playbackTarget,duration).then(segments=>{if(episodeOverlay!==state)return;state.segments=segments;paintEpisodeOverlay();});
+  const state={target:playbackTarget,item:current,position,duration,finished,segments:[],credits:[],next:null};episodeOverlay=state;
+  fetchEpisodeSegments(current,playbackTarget,duration).then(segments=>{if(episodeOverlay!==state)return;state.segments=segments.intro;state.credits=segments.credits;paintEpisodeOverlay();});
   findNextAiredEpisode(current,playbackTarget).then(next=>{if(episodeOverlay!==state)return;state.next=next;paintEpisodeOverlay();}).catch(()=>{});
  }
  Object.assign(episodeOverlay,{position,duration,finished});paintEpisodeOverlay();
@@ -637,8 +639,10 @@ function paintEpisodeOverlay() {
  const segment=!state.finished && state.segments.find(s=>state.position>=s.start && state.position<s.end);
  state.activeIntro=segment || null;
  $('skipIntro').hidden=!segment;
- $('finishNextEpisode').hidden=!(state.finished&&state.next);
- if(state.finished&&state.next)$('finishNextEpisode').textContent=`Next episode · S${state.next.season} E${state.next.episode} →`;
+ const inCredits=state.credits.some(s=>state.position>=s.start && state.position<s.end);
+ const offerNext=(state.finished || inCredits)&&state.next;
+ $('finishNextEpisode').hidden=!offerNext;
+ if(offerNext)$('finishNextEpisode').textContent=`Next episode · S${state.next.season} E${state.next.episode} →`;
 }
 function skipCurrentIntro() {
  const state=episodeOverlay;
