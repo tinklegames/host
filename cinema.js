@@ -173,23 +173,14 @@ async function loadSortMetadata(type) {
  await Promise.allSettled([...catalog.values()].filter(i=>i.type===type&&!i.special).map(i=>ensureDetails(i)));
  filterContent(type);
 }
-function renderDiscovery() {
+function renderFeatured() {
  const movies=[...catalog.values()].filter(i=>i.type==='movie'&&!i.special);
  const feature=movies.find(i=>i.id==='693134') || movies[0];
  if(feature) {
   $('featured').innerHTML=`<section class="feature"><div class="feature-copy"><p class="eyebrow">TONIGHT’S SPOTLIGHT</p><h1>${escapeHTML(feature.title)}</h1><p id="featureSynopsis">Explore tonight’s featured film, or find your next favorite below.</p><button class="cinema-button primary" data-detail="${feature.key}">Explore film</button></div></section>`;
   ensureDetails(feature,true).then(i=> { const el=$('featured').firstElementChild; if(i.backdrop) el.style.backgroundImage=`linear-gradient(90deg,rgba(7,9,18,.96),rgba(7,9,18,.25)),url("${posterURL(i.backdrop,'w1280')}")`; $('featureSynopsis').textContent=i.overview || 'Explore tonight’s featured film.'; }).catch(()=>{});
  }
- $('discovery').replaceChildren();
- const recent=movies.slice(-10).reverse();
- const rows=[['Recently added',recent]];
- for(const [name,items] of rows) {
-  if(!items.length) continue;
-  const section=document.createElement('section');section.className='discovery-section';
-  const title=document.createElement('h2');title.textContent=name;section.append(title);
-  if(name==='Recently added') { const note=document.createElement('p');note.className='section-note';note.textContent='Latest entries in this site’s catalog.';section.append(note); }
-  const row=document.createElement('div');row.className='poster-row';items.forEach(i=>row.append(makeCard(i)));section.append(row);$('discovery').append(section);
- }
+
 }
 function updateDetailSave() { const b=$('detailSave'); if(b && selectedDetail) { b.textContent=saved.includes(selectedDetail.key)?'♥ Saved to My List':'♡ Add to My List';b.setAttribute('aria-pressed',String(saved.includes(selectedDetail.key))); } }
 function renderDetails(item, loading = false, error = false) {
@@ -370,7 +361,7 @@ function initializeCinema() {
  contentViewport.addEventListener('pointerout',event=>{const card=event.target.closest('.tmdb-card');if(card&&!card.contains(event.relatedTarget))card.style.transform='';});
  reduced.addEventListener('change',()=>document.querySelectorAll('.tmdb-card').forEach(c=>c.style.transform=''));
  switchPage(new URLSearchParams(location.search).get('view')||'movies',false);
- renderDiscovery();
+ renderFeatured();
  if(typeof lucide!=='undefined')lucide.createIcons();
  if(!readStore('cinema.notice.v1',false))openPopup('Before you watch','<p>The embedded player may show ads or open other tabs. Close any unwanted tabs. An ad blocker may help.</p>',true,{text:'Got it',action:()=>{saveStore('cinema.notice.v1',true);closePopup();}});
 }
