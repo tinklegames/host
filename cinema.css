@@ -9,8 +9,8 @@ header nav { gap:10px; width:min(780px,100%); justify-content:center; }
 :where(button,a,input,select,[tabindex]):focus-visible { outline:3px solid var(--accent-secondary); outline-offset:3px; }
 button:disabled { opacity:.45; cursor:not-allowed; }
 .content-page { padding:28px max(20px,calc((100vw - 1200px)/2)); }
-.content-page h1 { font-size:2rem;font-weight:800; margin-bottom:20px; }
-.content-page h2 { font-size:1.3rem;font-weight:700; }
+.content-page h1:not(.logo-word) { font-size:2rem;font-weight:800; margin-bottom:20px; }
+.content-page h2:not(.logo-word) { font-size:1.3rem;font-weight:700; }
 .section-note { color:var(--text-secondary);font-size:.88rem;line-height:1.6;margin:8px 0 20px; }
 .cinema-button { padding:9px 14px;border-radius:8px;border:1px solid var(--text-muted);background:var(--bg-light);color:var(--text-primary);font:inherit;font-size:13px;cursor:pointer; }
 .cinema-button:hover { border-color:var(--accent-main); }
@@ -51,6 +51,7 @@ button:disabled { opacity:.45; cursor:not-allowed; }
 .modal-header { position:static;flex-shrink:0;padding:10px;display:flex; }
 .modal-title { margin-right:auto;max-width:none;flex:1;min-width:0; }
 .modal-frame { flex:1;min-height:100px;height:auto; }
+.modal-frame:fullscreen { width:100vw;height:100vh;border-radius:0; }
 /* Player controls must remain visible beside an embedded frame. */
 .modal-frame ~ * { display:flex !important;pointer-events:auto !important; }
 .modal-frame ~ [aria-hidden=true] { display:none !important; }

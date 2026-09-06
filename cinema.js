@@ -182,8 +182,7 @@ function renderDiscovery() {
  }
  $('discovery').replaceChildren();
  const recent=movies.slice(-10).reverse();
- const franchises=[['Harry Potter',/Harry Potter/i],['Middle-earth',/Lord of the Rings|Hobbit/i],['Marvel stories',/Avengers|Spider-Man|Doctor Strange|Guardians of the Galaxy|Black Panther/i]];
- const rows=[['Recently added',recent], ...franchises.map(([name,pattern])=>[name,movies.filter(i=>pattern.test(i.title))])];
+ const rows=[['Recently added',recent]];
  for(const [name,items] of rows) {
   if(!items.length) continue;
   const section=document.createElement('section');section.className='discovery-section';
@@ -316,7 +315,7 @@ function initializeCinema() {
   [...new Set([...catalog.values()].filter(i=>i.type===type&&!i.special).flatMap(i=>i.genres))].sort().forEach(g=>select.add(new Option(g,g)));
   $(`${type}Sort`).onchange=()=> {filterContent(type);if(['year','rating'].includes($(`${type}Sort`).value))loadSortMetadata(type);};
  }
- // Keep controls within the fullscreen player, not elsewhere in the document.
+ // Keep episode controls within the player dialog.
  document.querySelector('.player-layout').append(seControls);
  seControls.insertAdjacentHTML('beforeend','<button id="previousEpisode" class="cinema-button">← Previous</button><button id="nextEpisode" class="cinema-button">Next →</button><button id="markWatched" class="cinema-button" aria-pressed="false">Mark watched</button><button id="reloadEpisodes" class="cinema-button">Reload episodes</button>');
  const status=document.createElement('div');status.className='player-status';status.innerHTML='<span id="playerStatus" role="status"></span><button id="reloadPlayer" class="cinema-button">Reload player</button>';
@@ -333,7 +332,7 @@ function initializeCinema() {
  seasonSelect.onchange=()=>loadEpisodes(seasonSelect.value);
  episodeSelect.onchange=playSelection;
  $('closeBtn').onclick=closeModal;$('detailsClose').onclick=hideDetails;
- $('fullscreenBtn').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await modal.requestFullscreen();}catch{announce('Fullscreen is unavailable in this browser.');}};
+ $('fullscreenBtn').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await modalFrame.requestFullscreen();}catch{announce('Fullscreen is unavailable in this browser.');}};
  document.addEventListener('fullscreenchange',()=>{const full=!!document.fullscreenElement;$('fullscreenLabel').textContent=full?'Exit fullscreen':'Fullscreen';$('fullscreenBtn').setAttribute('aria-pressed',String(full));});
  $('clearHistory').onclick=()=>openPopup('Clear watch history?','<p>This removes remembered episodes and watched checkmarks from this browser. Your saved list stays available.</p>',true,{text:'Clear history',action:()=>{const keys=Object.keys(watched);watched={};saveStore('cinema.history.v1',watched);keys.forEach(k=>{if(catalog.has(k))renderItemCards(catalog.get(k));});renderLibrary();closePopup();}});
  document.addEventListener('click',event=>{
