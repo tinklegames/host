@@ -1030,13 +1030,16 @@
                     </button>
                 </div>
 
+<div id="videoStage" class="video-stage">
 <iframe id="modalFrame" class="modal-frame"
     src="about:blank"
     title="Video frame"
-    loading="lazy"
+    loading="eager"
     allowfullscreen
     allow="autoplay; fullscreen; encrypted-media; picture-in-picture">
 </iframe>
+<div class="episode-overlay"><button id="skipIntro" class="cinema-button" hidden title="Reload the player at the end of the intro">Skip Intro →</button><button id="finishNextEpisode" class="cinema-button primary" hidden>Next episode →</button><span id="episodeOverlayStatus" class="sr-only" role="status"></span></div>
+</div>
 
 
 

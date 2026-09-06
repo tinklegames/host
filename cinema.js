@@ -227,6 +227,7 @@ function recordOpened() {
 }
 function playSelection() {
  if(!current)return;
+ resetEpisodeOverlay();
  playbackTarget={key:current.key,season:Number(seasonSelect.value)||1,episode:Number(episodeSelect.value)||1};
  modalFrame.src=buildVidlinkUrl(current.type,current.id,playbackTarget.season,playbackTarget.episode);
  recordOpened();updateEpisodeButtons();
@@ -239,7 +240,7 @@ async function getEpisodes(item,season) {
 }
 async function loadEpisodes(season, desired = 1) {
  const item=current;if(!item)return;
- const version=++playerVersion;playbackTarget=null;
+ const version=++playerVersion;playbackTarget=null;resetEpisodeOverlay();
  seasonSelect.disabled=true;episodeSelect.disabled=true;
  $('previousEpisode').disabled=true;$('nextEpisode').disabled=true;$('markWatched').disabled=true;
  $('playerStatus').textContent='Loading episodes…';modalFrame.src='about:blank';
@@ -284,7 +285,7 @@ async function stepEpisode(delta) {
  await loadEpisodes(seasonSelect.value,delta<0?-1:1);
 }
 async function openModalForCard(item) {
- hideDetails();current=item;playbackTarget=null;const version=++playerVersion;
+ hideDetails();current=item;playbackTarget=null;resetEpisodeOverlay();const version=++playerVersion;
  $('modalTitle').textContent=item.title;$('playerStatus').textContent='Opening player…';modalFrame.src='about:blank';
  seControls.style.display=item.type==='tv'?'flex':'none';seControls.setAttribute('aria-hidden',String(item.type!=='tv'));
  showDialog(modalBackdrop);
@@ -299,7 +300,7 @@ async function openModalForCard(item) {
  seasonSelect.value=[...seasonSelect.options].some(o=>o.value===String(target))?String(target):seasonSelect.options[0].value;
  await loadEpisodes(seasonSelect.value,previous?.episode||1);
 }
-function closeModal() { ++playerVersion;current=null;playbackTarget=null;modalFrame.src='about:blank';hideDialog(modalBackdrop);if(document.fullscreenElement)document.exitFullscreen().catch(()=>{}); }
+function closeModal() { ++playerVersion;current=null;playbackTarget=null;resetEpisodeOverlay();modalFrame.src='about:blank';hideDialog(modalBackdrop);if(document.fullscreenElement)document.exitFullscreen().catch(()=>{}); }
 function showUpdateLog(){showDialog($('updateLog'));}
 function hideUpdateLog(){hideDialog($('updateLog'));}
 
@@ -334,8 +335,10 @@ function initializeCinema() {
  };
  seasonSelect.onchange=()=>loadEpisodes(seasonSelect.value);
  episodeSelect.onchange=playSelection;
+ $('skipIntro').onclick=skipCurrentIntro;
+ $('finishNextEpisode').onclick=playFinishedNextEpisode;
  $('closeBtn').onclick=closeModal;$('detailsClose').onclick=hideDetails;
- $('fullscreenBtn').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await modalFrame.requestFullscreen();}catch{announce('Fullscreen is unavailable in this browser.');}};
+ $('fullscreenBtn').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await $('videoStage').requestFullscreen();}catch{announce('Fullscreen is unavailable in this browser.');}};
  document.addEventListener('fullscreenchange',()=>{const full=!!document.fullscreenElement;$('fullscreenLabel').textContent=full?'Exit fullscreen':'Fullscreen';$('fullscreenBtn').setAttribute('aria-pressed',String(full));});
  $('clearHistory').onclick=()=>openPopup('Clear watch history?','<p>This removes remembered episodes and watched checkmarks from this browser. Your saved list stays available.</p>',true,{text:'Clear history',action:()=>{const keys=Object.keys(watched);watched={};saveStore('cinema.history.v1',watched);keys.forEach(k=>{if(catalog.has(k))renderItemCards(catalog.get(k));});renderLibrary();renderContinueWatching();closePopup();}});
  document.addEventListener('click',event=>{
@@ -355,10 +358,11 @@ function initializeCinema() {
   const top=dialogs.at(-1)?.el;
   if(event.key==='Escape' && top){event.preventDefault();({modalBackdrop:closeModal,detailsOverlay:hideDetails,popupOverlay:closePopup,updateLog:hideUpdateLog}[top.id])();return;}
   if(event.key==='Tab'&&top){
-   const focusable=[...top.querySelectorAll('button:not([disabled]),a[href],input,select:not([disabled]),iframe,[tabindex="0"]')].filter(el=>el.getClientRects().length);
+   const focusRoot=document.fullscreenElement && top.contains(document.fullscreenElement)?document.fullscreenElement:top;
+   const focusable=[...focusRoot.querySelectorAll('button:not([disabled]),a[href],input,select:not([disabled]),iframe,[tabindex="0"]')].filter(el=>el.getClientRects().length);
    const first=focusable[0],last=focusable.at(-1);
-   if(event.shiftKey&&(document.activeElement===first||!top.contains(document.activeElement))){event.preventDefault();last?.focus();}
-   else if(!event.shiftKey&&(document.activeElement===last||!top.contains(document.activeElement))){event.preventDefault();first?.focus();}
+   if(event.shiftKey&&(document.activeElement===first||!focusRoot.contains(document.activeElement))){event.preventDefault();last?.focus();}
+   else if(!event.shiftKey&&(document.activeElement===last||!focusRoot.contains(document.activeElement))){event.preventDefault();first?.focus();}
   }
  });
  const keys=new Set();
@@ -487,7 +491,7 @@ function initializeCinema() {
                     <p class="mb-2">This policy describes how we handle your information when you use Tinkle Party Cinema.</p>
 
                     <h3 class="text-lg font-semibold text-white mt-4 mb-2">Data Processing</h3>
-                    <p class="mb-2">We use your <strong>local browser storage</strong> (localStorage) to save your theme, watchlist, recently opened titles, selected episodes, playback progress, watched checkmarks, and notice preferences. These preferences stay in this browser. Requests to TMDb and the embedded video provider are sent to those services, which have their own privacy practices.</p>
+                    <p class="mb-2">We use your <strong>local browser storage</strong> (localStorage) to save your theme, watchlist, recently opened titles, selected episodes, playback progress, watched checkmarks, and notice preferences. These preferences stay in this browser. Requests to TheIntroDB (episode intro timestamps), TMDb, and the embedded video provider are sent to those services, which have their own privacy practices.</p>
                     <p class="mb-2">We use <strong>TMDb API</strong> (The Movie Database) to fetch poster images, titles, and TV season information. Catalog genres are available immediately and are refreshed when title details load.</p>
                 </div>
                 <button class="w-full p-3 rounded-lg font-bold bg-gray-700 text-white hover:bg-gray-600 mt-4" onclick="closePopup()">Close Policy</button>
@@ -556,6 +560,7 @@ function receivePlayerProgress(event) {
  }
  saveStore('cinema.history.v1',watched);
  $('playerStatus').textContent=finished?'Finished watching.':`${current.type==='tv'?`S${playbackTarget.season} · E${playbackTarget.episode} · `:''}${remainingLabel(record.progress[key])}`;
+ updateEpisodeOverlay(position,duration,finished);
  renderContinueWatching();
 }
 function titleURL(item) {
@@ -578,6 +583,80 @@ function openSharedTitle() {
  const key=new URLSearchParams(location.search).get('title');if(!key)return;
  if(!catalog.has(key)){openPopup('Title unavailable','<p>This title is not in this site’s catalog. You can find another title using search.</p>');return;}
  showDetails(key);
+}
+
+// TheIntroDB v3: https://theintrodb.org/openapi.yaml (milliseconds).
+const introCache = new Map();
+let episodeOverlay = null;
+function resetEpisodeOverlay() {
+ episodeOverlay=null;
+ $('skipIntro').hidden=true;$('finishNextEpisode').hidden=true;
+ $('skipIntro').disabled=false;$('finishNextEpisode').disabled=false;
+ $('episodeOverlayStatus').textContent='';
+}
+function airedEpisodes(episodes) {
+ const today=new Date().toISOString().slice(0,10);
+ return episodes.filter(ep=>!ep.air_date || ep.air_date<=today).sort((a,b)=>a.episode_number-b.episode_number);
+}
+async function findNextAiredEpisode(item, target) {
+ const episodes=airedEpisodes(await getEpisodes(item,target.season));
+ const next=episodes.find(ep=>ep.episode_number>target.episode);
+ if(next)return {season:target.season,episode:next.episode_number};
+ const seasons=(item.seasons||[]).filter(s=>s.season_number>target.season).sort((a,b)=>a.season_number-b.season_number);
+ for(const season of seasons) {
+  const first=airedEpisodes(await getEpisodes(item,season.season_number))[0];
+  if(first)return {season:season.season_number,episode:first.episode_number};
+ }
+ return null;
+}
+async function fetchIntroSegments(item,target,duration) {
+ const key=`${item.key}:${target.season}:${target.episode}:${Math.round(duration)}`;
+ if(!introCache.has(key))introCache.set(key,(async()=>{
+  const url=new URL('https://api.theintrodb.org/v3/media');
+  url.search=new URLSearchParams({tmdb_id:item.id,season:String(target.season),episode:String(target.episode),duration_ms:String(Math.round(duration*1000))});
+  const response=await fetch(url,{signal:AbortSignal.timeout(8000),credentials:'omit'});
+  if(response.status===404)return [];
+  if(!response.ok)throw new Error('Intro timing unavailable');
+  const data=await response.json();
+  if(String(data.tmdb_id)!==item.id || data.type!=='tv' || Number(data.season)!==target.season || Number(data.episode)!==target.episode)return [];
+  return (Array.isArray(data.intro)?data.intro:[]).map(segment=>({start:segment.start_ms===null?0:typeof segment.start_ms==='number'?segment.start_ms/1000:NaN,end:typeof segment.end_ms==='number'?segment.end_ms/1000:NaN})).filter(s=>Number.isFinite(s.start)&&Number.isFinite(s.end)&&s.start>=0&&s.end>s.start&&s.end<duration);
+ })().catch(()=>[]));
+ return introCache.get(key);
+}
+function updateEpisodeOverlay(position,duration,finished) {
+ if(!current || current.type!=='tv' || !playbackTarget)return;
+ if(!episodeOverlay || episodeOverlay.target!==playbackTarget) {
+  const state={target:playbackTarget,item:current,position,duration,finished,segments:[],next:null};episodeOverlay=state;
+  fetchIntroSegments(current,playbackTarget,duration).then(segments=>{if(episodeOverlay!==state)return;state.segments=segments;paintEpisodeOverlay();});
+  findNextAiredEpisode(current,playbackTarget).then(next=>{if(episodeOverlay!==state)return;state.next=next;paintEpisodeOverlay();}).catch(()=>{});
+ }
+ Object.assign(episodeOverlay,{position,duration,finished});paintEpisodeOverlay();
+}
+function paintEpisodeOverlay() {
+ const state=episodeOverlay;if(!state || state.target!==playbackTarget)return;
+ const segment=!state.finished && state.segments.find(s=>state.position>=s.start && state.position<s.end);
+ state.activeIntro=segment || null;
+ $('skipIntro').hidden=!segment;
+ $('finishNextEpisode').hidden=!(state.finished&&state.next);
+ if(state.finished&&state.next)$('finishNextEpisode').textContent=`Next episode · S${state.next.season} E${state.next.episode} →`;
+}
+function skipCurrentIntro() {
+ const state=episodeOverlay;
+ if(!state?.activeIntro || state.target!==playbackTarget || !current)return;
+ const end=Math.ceil(state.activeIntro.end);
+ const url=new URL(buildVidlinkUrl(current.type,current.id,state.target.season,state.target.episode));url.searchParams.set('startAt',String(end));
+ resetEpisodeOverlay();playbackTarget={...playbackTarget};
+ modalFrame.src=url.href;
+ $('playerStatus').textContent='Skipping intro. The player will reload; press Play if prompted.';
+ $('episodeOverlayStatus').textContent='Skipping intro…';
+ // Save only timestamps reported by the player, not the requested jump.
+}
+async function playFinishedNextEpisode() {
+ const state=episodeOverlay;if(!state?.next || state.target!==playbackTarget)return;
+ const {season,episode}=state.next;
+ $('finishNextEpisode').disabled=true;
+ seasonSelect.value=String(season);
+ await loadEpisodes(season,episode);
 }
 
 initializeCinema();

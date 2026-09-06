@@ -47,10 +47,10 @@ button:disabled { opacity:.45; cursor:not-allowed; }
 .modal-header { position:static;flex-shrink:0;padding:10px;display:flex; }
 .modal-title { margin-right:auto;max-width:none;flex:1;min-width:0; }
 .modal-frame { flex:1;min-height:100px;height:auto; }
-.modal-frame:fullscreen { width:100vw;height:100vh;border-radius:0; }
+
 /* Player controls must remain visible beside an embedded frame. */
-.modal-frame ~ * { display:flex !important;pointer-events:auto !important; }
-.modal-frame ~ [aria-hidden=true] { display:none !important; }
+
+
 .se-ctrls { position:static;flex-wrap:wrap;flex-shrink:0;max-width:100%;border-radius:0;background:var(--bg-surface);padding:10px; }
 .se-ctrls select { max-width:230px;min-width:0; }
 .player-status { display:flex;gap:12px;align-items:center;justify-content:space-between;padding:8px 12px;font-size:12px;color:var(--text-secondary);background:var(--bg-surface); }
@@ -95,3 +95,11 @@ button:disabled { opacity:.45; cursor:not-allowed; }
 .dismiss-continue { position:absolute;right:8px;top:8px;background:#070b17d9;color:white;border:1px solid #ffffff70;border-radius:50%;width:30px;height:30px;font-size:22px;cursor:pointer; }
 .share-url { display:block;width:100%;margin-top:12px;padding:10px;background:var(--bg-light);color:var(--text-primary);border:1px solid var(--text-muted);border-radius:6px; }
 @media(max-width:640px) { .continue-card { flex-basis:230px; } }
+
+.video-stage { position:relative;flex:1;min-height:100px;background:#000;width:100%; }
+.video-stage .modal-frame { display:block;position:absolute;inset:0;width:100%;height:100%; }
+.video-stage:fullscreen { width:100vw;height:100vh; }
+.episode-overlay { position:absolute;right:20px;bottom:76px;z-index:2;display:flex;gap:10px;flex-wrap:wrap;pointer-events:none;max-width:calc(100% - 40px); }
+.episode-overlay button { pointer-events:auto;box-shadow:0 4px 18px #0009;font-weight:700;padding:12px 18px;background:#111827ee;color:white;border:1px solid #ffffffa0; }
+.episode-overlay button:hover { background:#303b50; }
+@media(max-width:640px) { .episode-overlay { right:12px;bottom:64px; } }
