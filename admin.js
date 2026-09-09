@@ -8,7 +8,7 @@ function decodeContent(content){return new TextDecoder('utf-8',{fatal:true}).dec
 function encodeContent(content){const bytes=new TextEncoder().encode(content);let binary='';for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));return btoa(binary);}
 async function github(conn,path,options={}){
  const response=await fetch(`https://api.github.com/repos/${conn.repo}/${path}`,{...options,headers:{Accept:'application/vnd.github+json',Authorization:`Bearer ${conn.token}`,'X-GitHub-Api-Version':'2022-11-28',...(options.body?{'Content-Type':'application/json'}:{})},signal:AbortSignal.timeout(25000),credentials:'omit',cache:'no-store'});
- if(!response.ok){const error=new Error(response.status===401?'GitHub rejected this token. Check that it is valid and has not expired.':response.status===403?'GitHub denied access. Check token permissions, repository access, and rate limits.':response.status===409?'The file changed on GitHub. Click Add & publish again to retry against the latest version.':response.status===404?'GitHub could not find this resource. Check the repository, branch, and token access.':`GitHub request failed (${response.status}). Check branch rules and token permissions.`);error.status=response.status;throw error;}
+ if(!response.ok){const error=new Error(response.status===401?'GitHub rejected this token. Check that it is valid and has not expired.':response.status===403?'GitHub denied access. Check token permissions, repository access, and rate limits.':response.status===409?'The file changed on GitHub. Retry your action against the latest version.':response.status===404?'GitHub could not find this resource. Check the repository, branch, and token access.':`GitHub request failed (${response.status}). Check branch rules and token permissions.`);error.status=response.status;throw error;}
  return response.status===204?null:response.json();
 }
 async function readCatalog(conn){
@@ -24,6 +24,7 @@ function refreshPublish(){
  $('publishButton').disabled=busy||!connection||!selected||duplicate;
  $('publishTarget').textContent=connection?`Add ${selected?`“${selected.title}”`:'a title'} to ${connection.repo} → ${connection.branch} → cinema.html.`:'Connect GitHub and select a title to continue.';
  status('duplicateStatus',duplicate?'Already in your catalog.':selected&&connection?'Ready to add.':'',duplicate?'error':'success');
+ renderCatalog();
 }
 function setBusy(value){busy=value;for(const id of ['connectButton','disconnectButton','mediaType','titleSearch'])$(id).disabled=value;refreshPublish();}
 function closeResults(){results=[];activeResult=-1;$('searchResults').replaceChildren();$('searchResults').hidden=true;$('titleSearch').setAttribute('aria-expanded','false');$('titleSearch').removeAttribute('aria-activedescendant');}
@@ -41,7 +42,7 @@ async function connect(event){
   if(pages?.build_type==='workflow')throw new Error('This repository uses a custom publishing workflow. This admin page requires GitHub Pages publishing from a branch.');
   conn.pages=pages;connection=conn;catalogDocument=file.doc;
   $('githubToken').value='';$('githubToken').disabled=true;$('repository').disabled=true;$('branch').disabled=true;$('connectButton').hidden=true;$('disconnectButton').hidden=false;$('connectionBadge').textContent='Connected';
-  status('connectionStatus',pages?'Connected. Adding a title will commit the change and trigger GitHub Pages.':'Connected. Pages status is unavailable; grant Pages read access to verify publishing. Commits still trigger your configured deployment.',pages?'success':'');
+  status('connectionStatus',pages?'Connected. Adding or deleting a title will commit the change and trigger GitHub Pages.':'Connected. Pages status is unavailable; grant Pages read access to verify publishing. Commits still trigger your configured deployment.',pages?'success':'');
  }catch(error){status('connectionStatus',error.message,'error');}finally{setBusy(false);}
 }
 function disconnect(){if(busy)return;connection=null;catalogDocument=null;publication=null;clearTimeout(deployTimer);$('githubToken').value='';for(const id of ['githubToken','repository','branch'])$(id).disabled=false;$('connectButton').hidden=false;$('disconnectButton').hidden=true;$('connectionBadge').textContent='Not connected';$('checkDeployment').hidden=true;$('publishLinks').replaceChildren();status('connectionStatus','Disconnected. Token cleared.');status('publishStatus','');refreshPublish();}
@@ -85,35 +86,73 @@ function insertTitle(source,item){
  }}throw new Error('Could not find the end of the catalog. No changes were made.');
 }
 function addLink(label,url){const a=document.createElement('a');a.textContent=label;a.href=url;a.target='_blank';a.rel='noopener noreferrer';$('publishLinks').append(a);}
-async function publish(){
- if(busy||!connection||!selected)return;
- const conn=connection,item={...selected,genres:[...selected.genres]};setBusy(true);clearTimeout(searchTimer);searchAbort?.abort();++searchVersion;closeResults();clearTimeout(deployTimer);publication=null;$('checkDeployment').hidden=true;$('publishLinks').replaceChildren();status('publishStatus','Reading the latest catalog from GitHub…');
+async function publish(action='add',chosen=selected){
+ if(busy||!connection||!chosen)return;
+ const conn=connection,item={...chosen,genres:[...(chosen.genres||[])]};setBusy(true);clearTimeout(searchTimer);searchAbort?.abort();++searchVersion;closeResults();clearTimeout(deployTimer);publication=null;$('checkDeployment').hidden=true;$('publishLinks').replaceChildren();status('publishStatus','Reading the latest catalog from GitHub…');
  try{
-  const file=await readCatalog(conn);catalogDocument=file.doc;const updated=insertTitle(file.source,item);
-  status('publishStatus','Committing your title…');
-  const result=await github(conn,'contents/cinema.html',{method:'PUT',body:JSON.stringify({message:`Add ${item.type==='tv'?'TV show':'movie'}: ${item.title}`,branch:conn.branch,sha:file.sha,content:encodeContent(updated)})});
+  const file=await readCatalog(conn);catalogDocument=file.doc;const updated=action==='remove'?removeTitle(file.source,item):insertTitle(file.source,item);
+  status('publishStatus',action==='remove'?'Removing the title from GitHub…':'Committing your title…');
+  const result=await github(conn,'contents/cinema.html',{method:'PUT',body:JSON.stringify({message:`${action==='remove'?'Remove':'Add'} ${item.type==='tv'?'TV show':'movie'}: ${item.title}`,branch:conn.branch,sha:file.sha,content:encodeContent(updated)})});
   catalogDocument=new DOMParser().parseFromString(updated,'text/html');
-  publication={sha:result.commit.sha,started:Date.now(),conn,item};
+  publication={sha:result.commit.sha,started:Date.now(),conn,item,action};
   addLink('View commit',`https://github.com/${conn.repo}/commit/${result.commit.sha}`);
   status('publishStatus','Committed to GitHub. Waiting for the site to publish…','success');$('checkDeployment').hidden=false;
   await checkDeployment();
- }catch(error){status('publishStatus',error.name==='TimeoutError'||error instanceof TypeError?'Could not confirm the commit. Check GitHub before retrying; duplicate checks will prevent adding the same title twice.':error.message,'error');}finally{setBusy(false);}
+ }catch(error){status('publishStatus',error.name==='TimeoutError'||error instanceof TypeError?'Could not confirm the commit. Check GitHub before retrying; the catalog is rechecked before every change.':error.message,'error');}finally{setBusy(false);}
 }
 async function checkDeployment(){
  const pub=publication;if(!pub||connection!==pub.conn)return;clearTimeout(deployTimer);$('checkDeployment').disabled=true;
  try{
   const build=await github(pub.conn,'pages/builds/latest');if(publication!==pub)return;
   if(build.commit===pub.sha&&build.status==='built'){
-   status('publishStatus',`Published: ${pub.item.title} is live.`,'success');$('checkDeployment').hidden=true;
+   status('publishStatus',pub.action==='remove'?`Published: ${pub.item.title} was removed from the catalog.`:`Published: ${pub.item.title} is live.`,'success');$('checkDeployment').hidden=true;
    const base=pub.conn.pages?.html_url;if(base){const url=new URL('cinema.html',base);url.searchParams.set('view',pub.item.type==='tv'?'tv':'movies');addLink('Open cinema',url.href);}return;
   }
-  if(build.commit===pub.sha&&build.status==='errored'){status('publishStatus','The title was committed, but GitHub Pages reported a build failure. Check the repository’s Pages deployment.','error');return;}
+  if(build.commit===pub.sha&&build.status==='errored'){status('publishStatus','The change was committed, but GitHub Pages reported a build failure. Check the repository’s Pages deployment.','error');return;}
   status('publishStatus','Committed. GitHub Pages is still publishing this change.');
   if(Date.now()-pub.started<300000)deployTimer=setTimeout(checkDeployment,10000);
   else status('publishStatus','Committed. Publishing is taking longer than usual. Use Check publishing status or inspect GitHub Pages.');
  }catch(error){if(publication!==pub)return;status('publishStatus',`Committed successfully. Publishing status could not be verified. ${error.message}`);}finally{$('checkDeployment').disabled=false;}
 }
-$('connectForm').addEventListener('submit',connect);$('disconnectButton').onclick=disconnect;$('titleSearch').addEventListener('input',scheduleSearch);$('mediaType').onchange=scheduleSearch;$('publishButton').onclick=publish;$('checkDeployment').onclick=checkDeployment;
+function renderCatalog(){
+ const list=$('catalogList');list.replaceChildren();$('refreshCatalog').disabled=busy||!connection;
+ if(!connection||!catalogDocument){status('catalogStatus','Connect GitHub to manage your catalog.');return;}
+ const query=$('catalogSearch').value.trim().toLowerCase(),type=$('catalogType').value;
+ const entries=[...catalogDocument.querySelectorAll('#movieGrid .tmdb-card, #tvGrid .tmdb-card')].map(card=>({type:card.dataset.type,id:card.dataset.id,title:card.getAttribute('aria-label')||card.dataset.title||`Untitled (${card.dataset.id})`})).filter(item=>['movie','tv'].includes(item.type)&&/^\d+$/.test(item.id));
+ const filtered=entries.filter(item=>(type==='all'||item.type===type)&&item.title.toLowerCase().includes(query)).sort((a,b)=>a.title.localeCompare(b.title));
+ status('catalogStatus',`${filtered.length} of ${entries.length} titles${filtered.length?'':'. No matches.'}`);
+ for(const item of filtered){
+  const row=document.createElement('li'),text=document.createElement('div'),title=document.createElement('strong'),meta=document.createElement('small'),button=document.createElement('button');
+  title.textContent=item.title;meta.textContent=`${item.type==='tv'?'TV show':'Movie'} · TMDb ${item.id}`;text.append(title,meta);
+  button.type='button';button.className='danger';button.textContent='Delete';button.disabled=busy;button.setAttribute('aria-label',`Delete ${item.title}`);button.onclick=()=>requestDeletion(item);
+  row.append(text,button);list.append(row);
+ }
+}
+async function refreshCatalog(){
+ if(busy||!connection)return;setBusy(true);
+ try{catalogDocument=(await readCatalog(connection)).doc;status('connectionStatus','Catalog refreshed from GitHub.','success');}catch(error){status('connectionStatus',error.message,'error');}finally{setBusy(false);}
+}
+function requestDeletion(item){
+ if(busy||!connection)return;
+ if(!window.confirm(`Delete “${item.title}” (${item.type==='tv'?'TV show':'Movie'}, TMDb ${item.id}) from ${connection.repo}? This will remove it from cinema.html and publish the change.`))return;
+ publish('remove',item);
+ $('publishStatus').scrollIntoView({block:'center',behavior:'smooth'});
+}
+function removeTitle(source,item){
+ const doc=new DOMParser().parseFromString(source,'text/html'),gridId=item.type==='tv'?'tvGrid':'movieGrid';
+ if(!['movie','tv'].includes(item.type)||!/^\d+$/.test(item.id)||doc.querySelectorAll(`[id="${gridId}"]`).length!==1)throw new Error('Catalog structure is ambiguous. No changes were made.');
+ const opening=new RegExp(`<div\\b[^>]*\\bid=["']${gridId}["'][^>]*>`,'i').exec(source);if(!opening)throw new Error('Could not locate the catalog.');
+ const start=opening.index+opening[0].length,divs=/<!--[\s\S]*?-->|<\/?div\b[^>]*>/gi;divs.lastIndex=start;let depth=1,token,end=-1;
+ while((token=divs.exec(source))){if(token[0].startsWith('<!--'))continue;depth+=/^<\//.test(token[0])?-1:1;if(depth===0){end=token.index;break;}}
+ if(end<0)throw new Error('Could not locate the end of the catalog.');
+ const content=source.slice(start,end),buttons=/<!--[\s\S]*?-->|<button\b(?:[^>"']|"[^"]*"|'[^']*')*>[\s\S]*?<\/button\s*>/gi,matches=[];
+ while((token=buttons.exec(content))){if(token[0].startsWith('<!--'))continue;const card=new DOMParser().parseFromString(token[0],'text/html').querySelector('button.tmdb-card');if(card?.dataset.type===item.type&&card.dataset.id===item.id)matches.push({start:start+token.index,end:start+buttons.lastIndex});}
+ if(!matches.length)throw new Error('This title is no longer in the catalog. Nothing was committed.');
+ if(matches.length!==1)throw new Error('Multiple matching entries were found. No changes were made.');
+ return source.slice(0,matches[0].start)+source.slice(matches[0].end);
+}
+$('catalogSearch').addEventListener('input',renderCatalog);$('catalogType').onchange=renderCatalog;$('refreshCatalog').onclick=refreshCatalog;
+$('connectForm').addEventListener('submit',connect);$('disconnectButton').onclick=disconnect;$('titleSearch').addEventListener('input',scheduleSearch);$('mediaType').onchange=scheduleSearch;$('publishButton').onclick=()=>publish();$('checkDeployment').onclick=checkDeployment;
 $('titleSearch').addEventListener('keydown',event=>{if(event.key==='Escape'){++searchVersion;searchAbort?.abort();clearTimeout(searchTimer);closeResults();return;}if(!results.length)return;if(event.key==='ArrowDown'||event.key==='ArrowUp'){event.preventDefault();highlight((activeResult+(event.key==='ArrowDown'?1:-1)+results.length)%results.length);}else if(event.key==='Enter'&&activeResult>=0){event.preventDefault();selectTitle(results[activeResult].id,$('mediaType').value);}});
 document.addEventListener('click',event=>{if(!event.target.closest('.search-area'))closeResults();});
 document.addEventListener('error',event=>{if(event.target.tagName==='IMG')event.target.hidden=true;},true);
