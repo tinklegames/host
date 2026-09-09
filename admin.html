@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src https://api.github.com https://api.themoviedb.org; img-src 'self' https://image.tmdb.org; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Cinema Admin</title>
+<link rel="stylesheet" href="admin.css"><script src="admin.js" defer></script>
+</head>
+<body>
+<header><a href="cinema.html">← Back to cinema</a><span>TINKLE CINEMA</span></header>
+<main>
+<p class="eyebrow">CATALOG MANAGER</p><h1>Add something worth watching.</h1>
+<p class="intro">Search a title, check its details, and publish it to your cinema.</p>
+<section class="panel">
+<div class="section-heading"><h2>1. Connect GitHub</h2><span id="connectionBadge">Not connected</span></div>
+<form id="connectForm">
+<div class="fields"><label>Repository<input id="repository" value="tinklegames/host" required spellcheck="false" autocomplete="off"></label><label>Branch<input id="branch" value="main" required spellcheck="false" autocomplete="off"></label></div>
+<label>GitHub access token<input id="githubToken" type="password" placeholder="Paste your fine-grained access token" required autocomplete="off" spellcheck="false"></label>
+<p class="help">Kept in memory for this visit and sent only to GitHub. Refreshing or disconnecting clears it.</p>
+<div class="actions"><button id="connectButton" type="submit">Connect</button><button id="disconnectButton" type="button" class="secondary" hidden>Disconnect</button></div>
+</form>
+<details><summary>First-time setup</summary><p>Create a <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">fine-grained GitHub token</a> for <strong>tinklegames/host</strong>. Set <strong>Contents: Read and write</strong> and <strong>Pages: Read-only</strong>. Choose an expiration date. Do not add the token to your site files.</p><p>This page edits <code>cinema.html</code> on the selected branch. GitHub Pages must publish that branch’s root folder. Anyone can open the admin page; publishing requires a token with access to the repository.</p></details>
+<p id="connectionStatus" role="status"></p>
+</section>
+<section class="panel">
+<h2>2. Find a movie or TV show</h2>
+<label>Type<select id="mediaType"><option value="movie">Movie</option><option value="tv">TV show</option></select></label>
+<div class="search-area"><label for="titleSearch">Search by title</label><input id="titleSearch" type="search" placeholder="Start typing a title…" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="searchResults"><div id="searchResults" role="listbox" aria-label="Matching titles" hidden></div></div>
+<p id="searchStatus" class="help" role="status">Enter at least two characters.</p>
+<div id="selection" hidden><div class="selection-layout"><img id="selectedPoster" alt="" hidden><div class="metadata"><h3 id="selectedTitle"></h3><p id="selectedOverview"></p><dl><div><dt>TMDb ID</dt><dd id="selectedId"></dd></div><div><dt>Year</dt><dd id="selectedYear"></dd></div><div><dt>Genres</dt><dd id="selectedGenres"></dd></div></dl></div></div><p id="duplicateStatus" role="status"></p></div>
+</section>
+<section class="panel publish-panel"><h2>3. Publish</h2><p id="publishTarget">Connect GitHub and select a title to continue.</p><button id="publishButton" disabled>Add &amp; publish</button><p id="publishStatus" role="status" aria-live="polite"></p><div id="publishLinks" class="actions"></div><button id="checkDeployment" class="secondary" hidden>Check publishing status</button></section>
+</main><footer>Title metadata and artwork provided by TMDb. This product uses the TMDb API but is not endorsed or certified by TMDb.</footer>
+</body></html>
