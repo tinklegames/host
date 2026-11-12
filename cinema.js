@@ -213,9 +213,13 @@ function pickForMe(type,exclude) {
  let pool=visibleItems(type); if(pool.length>1)pool=pool.filter(i=>i.key!==exclude);
  if(pool.length)showDetails(pool[Math.floor(Math.random()*pool.length)].key,type);
 }
-function buildVidlinkUrl(type,id,season=1,episode=1) {
- const url=new URL(type==='tv'?`https://vidrock.to/embed/tv/${encodeURIComponent(id)}/${season}/${episode}`:`https://vidrock.to/embed/movie/${encodeURIComponent(id)}`);
+function buildVidrockUrl(type,id,season=1,episode=1) {
+ // VidRock accepts TMDB IDs in /movie/{id} and /tv/{id}/{season}/{episode}.
+ const url=new URL(type==='tv'
+  ? `https://vidrock.to/tv/${encodeURIComponent(id)}/${season}/${episode}`
+  : `https://vidrock.to/movie/${encodeURIComponent(id)}`);
  const progress=watched[`${type}:${id}`]?.progress?.[type==='tv'?`${season}:${episode}`:'movie'];
+ // Keep the resume parameter; whether VidRock honors it depends on its current player implementation.
  if(progress && !progress.finished && Number.isFinite(progress.position) && progress.position>0)url.searchParams.set('startAt',String(Math.floor(progress.position)));
  return url.href;
 }
@@ -229,7 +233,7 @@ function playSelection() {
  if(!current)return;
  resetEpisodeOverlay();
  playbackTarget={key:current.key,season:Number(seasonSelect.value)||1,episode:Number(episodeSelect.value)||1};
- modalFrame.src=buildVidlinkUrl(current.type,current.id,playbackTarget.season,playbackTarget.episode);
+ modalFrame.src=buildVidrockUrl(current.type,current.id,playbackTarget.season,playbackTarget.episode);
  recordOpened();updateEpisodeButtons();
  $('playerStatus').textContent='Player opened. If it stays blank, try Reload player.';
 }
@@ -501,7 +505,7 @@ function initializeCinema() {
 
 
 // VidSrc event/resume contract: https://vidsrc.io/vidsrc/docs/#player-events
-const PLAYER_ORIGINS = new Set(['https://vidrock.to','https://vidsrcme.ru','https://vidsrcme.su','https://vidsrc-me.ru','https://vidsrc-me.su','https://vidsrc-embed.ru','https://vidsrc-embed.su','https://vsrc.su','https://vidsrc2.ru']);
+const PLAYER_ORIGINS = new Set(['https://vidrock.to','https://vidsrc.io','https://vidsrcme.ru','https://vidsrcme.su','https://vidsrc-me.ru','https://vidsrc-me.su','https://vidsrc-embed.ru','https://vidsrc-embed.su','https://vsrc.su','https://vidsrc2.ru']);
 let playbackTarget = null;
 let spotlightDay = null;
 function progressKey(item, season, episode) { return item.type === 'tv' ? `${season}:${episode}` : 'movie'; }
@@ -648,7 +652,7 @@ function skipCurrentIntro() {
  const state=episodeOverlay;
  if(!state?.activeIntro || state.target!==playbackTarget || !current)return;
  const end=Math.ceil(state.activeIntro.end);
- const url=new URL(buildVidlinkUrl(current.type,current.id,state.target.season,state.target.episode));url.searchParams.set('startAt',String(end));
+ const url=new URL(buildVidrockUrl(current.type,current.id,state.target.season,state.target.episode));url.searchParams.set('startAt',String(end));
  url.searchParams.set('autoplay','1');
  resetEpisodeOverlay();playbackTarget={...playbackTarget};
  modalFrame.src=url.href;
