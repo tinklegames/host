@@ -214,7 +214,7 @@ function pickForMe(type,exclude) {
  if(pool.length)showDetails(pool[Math.floor(Math.random()*pool.length)].key,type);
 }
 function buildVidlinkUrl(type,id,season=1,episode=1) {
- const url=new URL(type==='tv'?`https://vidsrc.io/embed/tv/${encodeURIComponent(id)}/${season}/${episode}`:`https://vidsrc.io/embed/movie/${encodeURIComponent(id)}`);
+ const url=new URL(type==='tv'?`https://vidrock.to/embed/tv/${encodeURIComponent(id)}/${season}/${episode}`:`https://vidrock.to/embed/movie/${encodeURIComponent(id)}`);
  const progress=watched[`${type}:${id}`]?.progress?.[type==='tv'?`${season}:${episode}`:'movie'];
  if(progress && !progress.finished && Number.isFinite(progress.position) && progress.position>0)url.searchParams.set('startAt',String(Math.floor(progress.position)));
  return url.href;
@@ -501,7 +501,7 @@ function initializeCinema() {
 
 
 // VidSrc event/resume contract: https://vidsrc.io/vidsrc/docs/#player-events
-const PLAYER_ORIGINS = new Set(['https://vidsrc.io','https://vidsrcme.ru','https://vidsrcme.su','https://vidsrc-me.ru','https://vidsrc-me.su','https://vidsrc-embed.ru','https://vidsrc-embed.su','https://vsrc.su','https://vidsrc2.ru']);
+const PLAYER_ORIGINS = new Set(['https://vidrock.to','https://vidsrcme.ru','https://vidsrcme.su','https://vidsrc-me.ru','https://vidsrc-me.su','https://vidsrc-embed.ru','https://vidsrc-embed.su','https://vsrc.su','https://vidsrc2.ru']);
 let playbackTarget = null;
 let spotlightDay = null;
 function progressKey(item, season, episode) { return item.type === 'tv' ? `${season}:${episode}` : 'movie'; }
